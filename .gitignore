@@ -9,6 +9,7 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
-
+package-lock.json/
+package/
 # macOS
 .DS_Store
