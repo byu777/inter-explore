@@ -1,4 +1,5 @@
 require('./models/Users');
+
 const express = require('express');
 
 const mongoose = require('mongoose');
@@ -13,8 +14,6 @@ const app = express();
 app.use(bodyParser.json());
 
 app.use(authentication);
-
-
 
 const mongoUri = 'mongodb+srv://user:123@cluster0.1ozdh.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 
