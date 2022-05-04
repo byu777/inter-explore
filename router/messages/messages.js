@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
-const User = mongoose.model('User');
+const Users = mongoose.model('Users');
 
 module.exports = (req,res,next) => {
 
@@ -16,7 +16,7 @@ module.exports = (req,res,next) => {
             return res.status(401).send({ error:' you must login'});
         }
         const { userId} = payload;
-        const user = await User.findById(userId);
+        const user = await Users.findById(userId);
         req.user =user;
         next();
     });
