@@ -10,7 +10,7 @@ import Signup from './../screens/Signup';
 import Welcome from './../screens/Welcome';
 
 // Colors
-import {Colors} from './../components/styles';
+import {Colors} from './../components/LoginStyles';
 const { brand, darkLight, primary, tertiary} = Colors;
 
 const Stack = createNativeStackNavigator();
