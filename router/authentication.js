@@ -1,8 +1,8 @@
 const express = require('express');
-
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
-const User = mongoose.model('User');
+
+const User = mongoose.model('Users');
 
 const router = express.Router();
 
@@ -21,30 +21,34 @@ return res.status(422).send(err.message);
 
 
 });
-//add this too
+
 router.post('/signin', async (req,res)=> {
     const {email, password } = req.body;
-    if (!email || !password){
-     return res.status(422).send({ error: 'Must provide email and passward'});
+    if (!email){
+     return res.status(422).send({ error: 'Must provide email'});
+    }
+
+    if (!password){
+     return res.status(422).send({ error: 'Must provide password'});
     }
    
-    const user = User.findOne({email, password});
-  //  console.log(user);
-    if(!user) {
-        return res.status(422).send({ error: 'email not found'});
-    }
-    try{
-        await user.comparePassword(password);
- const token = jwt.sign({ userId: user._id, password: user.password}, 'MY_SECRET_KEY');
-    res.send(token);
+    User.findOne({ email: email }, async function(err, user) {
+        if(user) {
+            console.log(user);
+            user.comparePassword(password, function(err, isMatch) {
+                if (err) throw err;
+                console.log('passowrd:', isMatch); // -> Password123: true
+            });
+       
+        }else{
+            return res.status(422).send({ error: 'Email Not Found'});
+        }
+    
+    });
 
-    }
-    catch (err){
-       // console.log(user);
-       // console.log(password);
-        console.log(err);
-        return res.status(422).send({ error: 'Must provide with password'});
-    }
+
+
+    
    });
 
 

@@ -38,7 +38,7 @@ const userSchema = new mongoose.Schema ({
     //add this 
 
     userSchema.pre('save',function(next){
-        const user = this;
+        var user = this;
         if(!user.isModified('password')){
             return next();
         }
@@ -57,20 +57,13 @@ const userSchema = new mongoose.Schema ({
         });
         });
     });
-    userSchema.methods.comparePassword = function(pass) {
-        return new Promise((resolve,reject) =>{ 
-            bcrypt.compare(pass,user.password, (err, isMatch) => {
-                if(err){
-                    return reject (err);
-                }
-                if (!isMatch){
-                    return reject(false);
-                }
-                resolve(true);
-            });
-
+    
+    userSchema.methods.comparePassword = function(password, cb) {
+        bcrypt.compare(password, this.password, function(err, isMatch) {
+            if (err) return cb(err);
+            cb(null, isMatch);
         });
     } 
 
 
-    module.exports = mongoose.model('User', userSchema);
+    module.exports = mongoose.model('Users', userSchema);
