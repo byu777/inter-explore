@@ -8,6 +8,9 @@ const bodyParser = require('body-parser');
 
 const authentication = require('./authentication');
 
+// add this
+const message = require('./messages/messages');
+
 
 const app = express();
 
@@ -32,8 +35,9 @@ mongoose.connection.on('error', (err) => {
     console.log('errors with connecting to mongoDB',err)
 });
 
-app.get('/',(req,res) => {
-res.send('Hi there!');
+// add message and change send 
+app.get('/', message,(req,res) => {
+res.send('your email: $ { req.user.email}');
 });
 
 app.listen(3000,()=>{
