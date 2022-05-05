@@ -104,7 +104,7 @@ const MessageBoardLayout = ({ navigation }) => {
           <View style={mb_styles.mb_image_container}>
             <Image
               style={mb_styles.mb_image_container}
-              source={require("./assets/favicon.png")}
+              source={require("../assets/favicon/favicon.png")}
             ></Image>
             <Button
               title="Go"
@@ -125,29 +125,7 @@ const MessageBoardLayout = ({ navigation }) => {
           <View style={mb_styles.mb_image_container}>
             <Image
               style={mb_styles.mb_image_container}
-              source={require("./assets/favicon.png")}
-              onPress={() => navigation.navigate("Chatrooms", { name: "Jane" })}
-            ></Image>
-            <Button
-              title="Go"
-              onPress={() => navigation.navigate("Chatrooms", { name: "Jane" })}
-            />
-          </View>
-          <View style={mb_styles.list_item_description}>
-            <Text style={{ flexShrink: 1 }}>
-              lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            </Text>
-            <Text style={{ flexShrink: 1 }}>
-              lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            </Text>
-          </View>
-        </View>
-
-        <View style={mb_styles.list_item_inbox}>
-          <View style={mb_styles.mb_image_container}>
-            <Image
-              style={mb_styles.mb_image_container}
-              source={require("./assets/favicon.png")}
+              source={require("../assets/favicon/favicon.png")}
               onPress={() => navigation.navigate("Chatrooms", { name: "Jane" })}
             ></Image>
             <Button
@@ -169,7 +147,29 @@ const MessageBoardLayout = ({ navigation }) => {
           <View style={mb_styles.mb_image_container}>
             <Image
               style={mb_styles.mb_image_container}
-              source={require("./assets/favicon.png")}
+              source={require("../assets/favicon/favicon.png")}
+              onPress={() => navigation.navigate("Chatrooms", { name: "Jane" })}
+            ></Image>
+            <Button
+              title="Go"
+              onPress={() => navigation.navigate("Chatrooms", { name: "Jane" })}
+            />
+          </View>
+          <View style={mb_styles.list_item_description}>
+            <Text style={{ flexShrink: 1 }}>
+              lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
+            </Text>
+            <Text style={{ flexShrink: 1 }}>
+              lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
+            </Text>
+          </View>
+        </View>
+
+        <View style={mb_styles.list_item_inbox}>
+          <View style={mb_styles.mb_image_container}>
+            <Image
+              style={mb_styles.mb_image_container}
+              source={require("../assets/favicon/favicon.png")}
             ></Image>
             <Button
               title="Go"
@@ -225,7 +225,7 @@ const ChatroomScreen = ({ navigation }) => {
           <View style={chatroom_styles.image_container}>
             <Image
               style={chatroom_styles.image_container}
-              source={require("./assets/favicon.png")}
+              source={require("../assets/favicon/favicon.png")}
             ></Image>
           </View>
           <Text>
@@ -237,7 +237,7 @@ const ChatroomScreen = ({ navigation }) => {
           <View style={chatroom_styles.image_container}>
             <Image
               style={chatroom_styles.image_container}
-              source={require("./assets/favicon.png")}
+                            source={require("../assets/favicon/favicon.png")}
             ></Image>
           </View>
           <Text>
@@ -249,7 +249,7 @@ const ChatroomScreen = ({ navigation }) => {
           <View style={chatroom_styles.image_container}>
             <Image
               style={chatroom_styles.image_container}
-              source={require("./assets/favicon.png")}
+                            source={require("../assets/favicon/favicon.png")}
             ></Image>
           </View>
           <Text>
@@ -261,7 +261,7 @@ const ChatroomScreen = ({ navigation }) => {
           <View style={chatroom_styles.image_container}>
             <Image
               style={chatroom_styles.image_container}
-              source={require("./assets/favicon.png")}
+                            source={require("../assets/favicon/favicon.png")}
             ></Image>
           </View>
           <Text>
@@ -273,7 +273,7 @@ const ChatroomScreen = ({ navigation }) => {
           <View style={chatroom_styles.image_container}>
             <Image
               style={chatroom_styles.image_container}
-              source={require("./assets/favicon.png")}
+                            source={require("../assets/favicon/favicon.png")}
             ></Image>
           </View>
           <Text>
