@@ -27,12 +27,15 @@ import {
   TextLinkContent,
 } from "./../components/LoginStyles";
 import KeyboardAvoidingWrapper from "./../components/KeyboardAvoidingWrapper";
+import axios from "axios";
 
 // Colors
 const { darkLight } = Colors;
 
 const Login = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
+
+
 
   return (
     <KeyboardAvoidingWrapper>
@@ -48,6 +51,8 @@ const Login = ({ navigation }) => {
             initialValues={{ email: "", password: "" }}
             onSubmit={(values) => {
               console.log(values);
+              axios.post('/signup', () => {values.email, values.password }).then(
+                (console.log(response)))
               navigation.navigate("Welcome");
             }}
           >

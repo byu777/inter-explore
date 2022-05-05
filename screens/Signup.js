@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext} from "react";
 import { StatusBar } from "expo-status-bar";
 import { View, TouchableOpacity } from "react-native";
 //icons
@@ -28,11 +28,15 @@ import {
   RightIconSignup
 } from "./../components/LoginStyles";
 import KeyboardAvoidingWrapper from "./../components/KeyboardAvoidingWrapper";
+import { Context as AuthContext } from './../context/AuthContext'; 
+
+import axios from 'axios';
 
 // Colors
 const { brand, darkLight, primary } = Colors;
 
 const Signup = ({ navigation }) => {
+  const {state, signup} = useContext(AuthContext);
   const [hidePassword, setHidePassword] = useState(true);
   const [show, setShow] = useState(false);
   const [date, setDate] = useState(new Date(2000, 0, 1));
@@ -74,10 +78,20 @@ const Signup = ({ navigation }) => {
               dateOfBirth: "",
               password: "",
               confirmPassword: "",
+              firstName: "",
+              username: ""
             }}
             onSubmit={(values) => {
               console.log(values);
+
+              axios.post('https://5b58-2001-569-7ef4-6100-f824-916a-7919-9a99.ngrok.io/signup', () => {values.email, values.password })
+              .then((response) => {
+                const result = response.data;
+                console.log(result);
+              })
+              .catch(error => console.log(error + " failed again idiot"))
               navigation.navigate("Welcome");
+
             }}
           >
             {({ handleChange, handleBlur, handleSubmit, values }) => (

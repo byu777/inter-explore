@@ -8,6 +8,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from './../screens/Login';
 import Signup from './../screens/Signup';
 import Welcome from './../screens/Welcome';
+import { Provider as AuthProvider} from './../context/AuthContext';
 
 // Colors
 import {Colors} from './../components/LoginStyles';
@@ -40,4 +41,11 @@ const RootStack = () => {
     )
 }
 
-export default RootStack;
+const App = RootStack
+export default () => {
+    return (
+        <AuthProvider>
+            <App />
+        </AuthProvider>
+    )
+};

@@ -14,6 +14,10 @@ const message = require('./messages/messages');
 
 const app = express();
 
+cors
+const cors = require('cors')
+app.use(cors())
+
 app.use(bodyParser.json());
 
 app.use(authentication);
