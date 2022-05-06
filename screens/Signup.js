@@ -1,12 +1,10 @@
 import React, { useState, useContext} from "react";
 import { StatusBar } from "expo-status-bar";
-import { View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, Text } from "react-native";
 //icons
-import { Octicons, Ionicons, Fontisto } from "@expo/vector-icons";
+import { Octicons, Ionicons } from "@expo/vector-icons";
 //formik
 import { Formik } from "formik";
-// DateTimePicker
-import DateTimePicker from "@react-native-community/datetimepicker";
 // Components
 import {
   StyledContainer,
@@ -14,7 +12,6 @@ import {
   PageTitle,
   SubTitle,
   StyledFormArea,
-  LeftIcon,
   StyledInputLabel,
   StyledTextInput,
   Colors,
@@ -30,79 +27,47 @@ import {
 import KeyboardAvoidingWrapper from "./../components/KeyboardAvoidingWrapper";
 import { Context as AuthContext } from './../context/AuthContext'; 
 
-import axios from 'axios';
-
 // Colors
 const { brand, darkLight, primary } = Colors;
 
 const Signup = ({ navigation }) => {
-  const {state, signup} = useContext(AuthContext);
+  // State to hide and show
   const [hidePassword, setHidePassword] = useState(true);
-  const [show, setShow] = useState(false);
-  const [date, setDate] = useState(new Date(2000, 0, 1));
-
-  // Actual date of birth to be sent
-  const [dob, setDob] = useState();
-
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShow(false);
-    setDate(currentDate);
-    setDob(currentDate);
-  };
-
-  const showDatePicker = () => {
-    setShow(true);
-  };
+  
+  // States for user sign up
+  const {state, signup} = useContext(AuthContext);
 
   return (
     <KeyboardAvoidingWrapper>
       <StyledContainer>
         <StatusBar style="dark" />
         <InnerContainer>
-          <PageTitle>Flower Crib</PageTitle>
+          <PageTitle>Inter-Explore</PageTitle>
           <SubTitle>Account Signup</SubTitle>
-          {show && (
-            <DateTimePicker
-              testID="dateTimePicker"
-              value={date}
-              mode="date"
-              is24Hour={true}
-              onChange={onChange}
-            />
-          )}
           <Formik
             initialValues={{
-              fullName: "",
               email: "",
-              dateOfBirth: "",
               password: "",
-              confirmPassword: "",
               firstName: "",
-              username: ""
+              userName: "",
+              primaryInterest: "",
+              secondaryInterest: "",
             }}
             onSubmit={(values) => {
               console.log(values);
-
-              axios.post('https://5b58-2001-569-7ef4-6100-f824-916a-7919-9a99.ngrok.io/signup', () => {values.email, values.password })
-              .then((response) => {
-                const result = response.data;
-                console.log(result);
-              })
-              .catch(error => console.log(error + " failed again idiot"))
-              navigation.navigate("Welcome");
-
+              signup(values)
+              //navigation.navigate("Welcome")
             }}
           >
             {({ handleChange, handleBlur, handleSubmit, values }) => (
               <StyledFormArea>
                 <MyTextInput
-                  label="Full Name"
+                  label="First Name"
                   placeholder=""
                   placeholderTextColor={darkLight}
-                  onChangeText={handleChange("fullName")}
-                  onBlur={handleBlur("fullName")}
-                  values={values.email}
+                  onChangeText={handleChange("firstName")}
+                  onBlur={handleBlur("firstName")}
+                  values={values.firstName}
                   keyboardType="email-address"
                 />
                 <MyTextInput
@@ -115,15 +80,13 @@ const Signup = ({ navigation }) => {
                   keyboardType="email-address"
                 />
                 <MyTextInput
-                  label="Date of Birth"
-                  placeholder="YYYY-MM-DD"
+                  label="Username"
+                  placeholder=""
                   placeholderTextColor={darkLight}
-                  onChangeText={handleChange("dateOfBirth")}
-                  onBlur={handleBlur("dateOfBirth")}
-                  values={dob ? dob.toDateString() : ""}
-                  isDate={true}
-                  editable={false}
-                  showDatePicker={showDatePicker}
+                  onChangeText={handleChange("userName")}
+                  onBlur={handleBlur("userName")}
+                  values={values.userName}
+                  keyboardType="email-address"
                 />
                 <MyTextInput
                   label="Password"
@@ -138,16 +101,21 @@ const Signup = ({ navigation }) => {
                   setHidePassword={setHidePassword}
                 />
                 <MyTextInput
-                  label="Confirm Password"
+                  label="Primary Interest"
                   placeholder=""
                   placeholderTextColor={darkLight}
-                  onChangeText={handleChange("confirmPassword")}
-                  onBlur={handleBlur("confirmPassword")}
-                  values={values.password}
-                  secureTextEntry={hidePassword}
-                  isPassword={true}
-                  hidePassword={hidePassword}
-                  setHidePassword={setHidePassword}
+                  onChangeText={handleChange("primaryInterest")}
+                  onBlur={handleBlur("primaryInterest")}
+                  isPassword={false}
+                  values={values.primaryInterest}
+                />
+                <MyTextInput
+                  label="Secondary Interest"
+                  placeholder=""
+                  placeholderTextColor={darkLight}
+                  onChangeText={handleChange("secondaryInterest")}
+                  onBlur={handleBlur("secondaryInterest")}
+                  values={values.secondaryInterest}
                 />
                 <StyledButton onPress={handleSubmit}>
                   <ButtonText>Signup</ButtonText>
@@ -170,26 +138,15 @@ const Signup = ({ navigation }) => {
 
 const MyTextInput = ({
   label,
-  icon,
   isPassword,
   hidePassword,
   setHidePassword,
-  isDate,
-  showDatePicker,
   ...props
 }) => {
   return (
     <View>
-      <LeftIcon>
-        <Octicons name={icon} size={30} color={brand} />
-      </LeftIcon>
       <StyledInputLabel>{label}</StyledInputLabel>
-      {!isDate && <StyledTextInput {...props} />}
-      {isDate && (
-        <TouchableOpacity onPress={showDatePicker}>
-          <StyledTextInput {...props} />
-        </TouchableOpacity>
-      )}
+      <StyledTextInput {...props} />
       {isPassword && (
         <RightIconSignup onPress={() => setHidePassword(!hidePassword)}>
           <Ionicons

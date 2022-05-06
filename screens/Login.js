@@ -1,13 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { StatusBar } from "expo-status-bar";
 import { View } from "react-native";
-
 //icons
 import { Ionicons } from "@expo/vector-icons";
-
 //formik
 import { Formik } from "formik";
-
 // Components
 import {
   StyledContainer,
@@ -27,7 +24,7 @@ import {
   TextLinkContent,
 } from "./../components/LoginStyles";
 import KeyboardAvoidingWrapper from "./../components/KeyboardAvoidingWrapper";
-import axios from "axios";
+import { Context as AuthContext } from './../context/AuthContext'; 
 
 // Colors
 const { darkLight } = Colors;
@@ -35,6 +32,7 @@ const { darkLight } = Colors;
 const Login = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
 
+  const {state, signin} = useContext(AuthContext);
 
 
   return (
@@ -51,9 +49,8 @@ const Login = ({ navigation }) => {
             initialValues={{ email: "", password: "" }}
             onSubmit={(values) => {
               console.log(values);
-              axios.post('/signup', () => {values.email, values.password }).then(
-                (console.log(response)))
-              navigation.navigate("Welcome");
+              signin(values)
+              //navigation.navigate("Welcome")
             }}
           >
             {({ handleChange, handleBlur, handleSubmit, values }) => (

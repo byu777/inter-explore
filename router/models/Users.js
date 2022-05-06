@@ -23,12 +23,12 @@ const userSchema = new mongoose.Schema ({
         require: true
     },
 
-    primaryInterests:{
+    primaryInterest:{
         type: String,
         require: true
     },
 
-    secondaryInterests:{
+    secondaryInterest:{
         type: String,
         require: true
     }

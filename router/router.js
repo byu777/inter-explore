@@ -14,7 +14,6 @@ const message = require('./messages/messages');
 
 const app = express();
 
-cors
 const cors = require('cors')
 app.use(cors())
 
@@ -42,7 +41,7 @@ mongoose.connection.on('error', (err) => {
 // add message and change send 
 app.get('/', message,(req,res) => {
 res.send('your email: $ { req.user.email}');
-});
+}); 
 
 app.listen(3000,()=>{
 console.log('Listening on port 3000');
