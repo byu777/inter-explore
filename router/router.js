@@ -13,6 +13,7 @@ const app = express();
 
 const cors = require('cors')
 app.use(cors())
+const rooms = ['general','tech','final','midterm'];
 
 app.use(bodyParser.json());
 
@@ -48,7 +49,15 @@ const io = require('socket.io')(server, {
         methods: ['GET', 'POST']
     }
 })
+app.get('/rooms', message, (req, res) => {
+    res.send('empty}');
+});
 
+io.on('connecttion',(socket) =>{
+  socket.on('join-room ', async (room)=>{
+      socket.join(room);
+  })
+});
 server.listen(PORT, () => {
     console.log('listening to port', PORT)
 })
