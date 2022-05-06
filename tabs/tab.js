@@ -3,27 +3,29 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Profile from "../screens/Profile";
 import MessageBoardPage from "../screens/messageboard";
+import Chatroom from "../screens/chatroom";
 import LandingPage from "../screens/landing_page";
+import MakeEventPage from "../screens/create_event";
 
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 
 const Tab = createBottomTabNavigator();
 
-const CustomTabBarButtons = ({ children, onPress }) => (
-  <TouchableOpacity
-    style={{
-      top: -30,
-      justifyContent: "center",
-      alignItems: "center",
-      ...tabStyles.shadow,
-    }}
-    onPress={onPress}
-  >
-    <View style={{ width: 70, height: 70, borderRadius: 35, back }}>
-      {children}
-    </View>
-  </TouchableOpacity>
-);
+// const CustomTabBarButtons = ({ children, onPress }) => (
+//   <TouchableOpacity
+//     style={{
+//       top: -30,
+//       justifyContent: "center",
+//       alignItems: "center",
+//       ...tabStyles.shadow,
+//     }}
+//     onPress={onPress}
+//   >
+//     <View style={{ width: 70, height: 70, borderRadius: 35, backgroundColor: '#e32f45' }}>
+//       {children}
+//     </View>
+//   </TouchableOpacity>
+// );
 
 const Tabs = () => {
   return (
@@ -45,7 +47,7 @@ const Tabs = () => {
         }}
       >
         <Tab.Screen
-          name="Landing"
+          name="Home"
           component={LandingPage}
           options={{
             tabBarIcon: ({ focused }) => (
@@ -57,13 +59,20 @@ const Tabs = () => {
                     width: 25,
                     height: 25,
                     tintColor: focused ? "#e32f45" : "#748c94",
+                    alignSelf: 'center',
                   }}
                 />
-                <Text style={{ color: focused ? "#e32f45" : "#748c94" }}>
+                <Text style={{
+                    color: focused ? "#e32f45" : "#748c94",
+                    fontSize: 12,
+                  }}>
                   Home
                 </Text>
               </View>
-            ),
+            ), 
+            // tabBarButton: (props) => (
+            //   <CustomTabBarButtons {...props} />
+            // )
           }}
         />
         <Tab.Screen
@@ -79,6 +88,7 @@ const Tabs = () => {
                     width: 25,
                     height: 25,
                     tintColor: focused ? "#e32f45" : "#748c94",
+                    alignSelf: 'center',
                   }}
                 />
                 <Text
@@ -91,10 +101,13 @@ const Tabs = () => {
                 </Text>
               </View>
             ),
+            // tabBarButton: (props) => (
+            //   <CustomTabBarButtons {...props} />
+            // )
           }}
         />
         <Tab.Screen
-          name="MsgBoard"
+          name="Message Board"
           component={MessageBoardPage}
           options={{
             tabBarIcon: ({ focused }) => (
@@ -106,6 +119,7 @@ const Tabs = () => {
                     width: 25,
                     height: 25,
                     tintColor: focused ? "#e32f45" : "#748c94",
+                    alignSelf: 'center',
                   }}
                 />
                 <Text
@@ -114,16 +128,51 @@ const Tabs = () => {
                     fontSize: 12,
                   }}
                 >
-                  Messages
+                  Groups
                 </Text>
               </View>
-            ),
+            ), 
+            // tabBarButton: (props) => (
+            //   <CustomTabBarButtons {...props} />
+            // )
+          }}
+        />
+
+        <Tab.Screen
+          name="Chatrooms"
+          component={Chatroom}
+          options={{
+            tabBarIcon: ({ focused }) => (
+              <View>
+                <Image
+                  source={require("../assets/navbar/baseline_home_black_24dp.png")}
+                  resizeMode="contain"
+                  style={{
+                    width: 25,
+                    height: 25,
+                    tintColor: focused ? "#e32f45" : "#748c94",
+                    alignSelf: 'center',
+                  }}
+                />
+                <Text
+                  style={{
+                    color: focused ? "#e32f45" : "#748c94",
+                    fontSize: 12,
+                  }}
+                >
+                  Chat
+                </Text>
+              </View>
+            ), 
+            // tabBarButton: (props) => (
+            //   <CustomTabBarButtons {...props} />
+            // )
           }}
         />
 
         <Tab.Screen
           name="Event"
-          component={Profile}
+          component={MakeEventPage}
           options={{
             tabBarIcon: ({ focused }) => (
               <View>
@@ -134,6 +183,7 @@ const Tabs = () => {
                     width: 25,
                     height: 25,
                     tintColor: focused ? "#e32f45" : "#748c94",
+                    alignSelf: 'center',
                   }}
                 />
                 <Text
@@ -142,38 +192,13 @@ const Tabs = () => {
                     fontSize: 12,
                   }}
                 >
-                  Events
+                  Event
                 </Text>
               </View>
-            ),
-          }}
-        />
-
-        <Tab.Screen
-          name="Search"
-          component={Profile}
-          options={{
-            tabBarIcon: ({ focused }) => (
-              <View>
-                <Image
-                  source={require("../assets/navbar/baseline_home_black_24dp.png")}
-                  resizeMode="contain"
-                  style={{
-                    width: 25,
-                    height: 25,
-                    tintColor: focused ? "#e32f45" : "#748c94",
-                  }}
-                />
-                <Text
-                  style={{
-                    color: focused ? "#e32f45" : "#748c94",
-                    fontSize: 12,
-                  }}
-                >
-                  Search
-                </Text>
-              </View>
-            ),
+            ), 
+            // tabBarButton: (props) => (
+            //   <CustomTabBarButtons {...props} />
+            // )
           }}
         />
       </Tab.Navigator>
