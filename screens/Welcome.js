@@ -22,10 +22,10 @@ const Welcome = ({navigation}) => {
       <>
       <StatusBar style="dark" />
       <InnerContainer>
-          <WelcomeImage resizeMode="cover" source={require('./../assets/favicon.png')} />
+          <WelcomeImage resizeMode="cover" source={require('../assets/favicon/favicon.png')} />
         <WelcomeContainer>
             <StyledFormArea>
-            <Avatar resizeMode="cover" source={require('./../assets/favicon.png')} />
+            <Avatar resizeMode="cover" source={require('../assets/favicon/favicon.png')} />
             <PageTitle welcome={true} >Welcome Justin!</PageTitle>
             <SubTitle welcome={true} >Justin Payne</SubTitle>
             <SubTitle welcome={true} >justinthecore@gmail.com</SubTitle>

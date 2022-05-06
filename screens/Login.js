@@ -42,7 +42,7 @@ const Login = ({ navigation }) => {
         <InnerContainer>
           <PageLogo
             resizeMode="cover"
-            source={require("./../assets/favicon.png")}
+            source={require("../assets/favicon/favicon.png")}
           />
           <PageTitle>Inter-Explore</PageTitle>
           <Formik

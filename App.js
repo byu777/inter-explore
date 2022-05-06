@@ -1,8 +1,13 @@
+import LandingPage from "./screens/landing_page";
+import MessageBoardPage from "./screens/messageboard";
+import Profile from "./screens/Profile";
+import RootStack from "./screens/RootStack";
 import React from 'react';
-// react navigation stack
-import RootStack from './navigation/RootStack';
+import Tabs from "./tabs/tab";
 
 export default function App() {
-  return <RootStack/>;
+  return (
+    <Tabs/>
+    //<RootStack/>
+  );
 }
-  
