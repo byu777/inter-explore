@@ -7,7 +7,7 @@ import Tabs from "./tabs/tab";
 
 export default function App() {
   return (
-    <Tabs/>
-    //<RootStack/>
+    //<Tabs/>
+    <RootStack/>
   );
 }
