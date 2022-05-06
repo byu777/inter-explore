@@ -7,11 +7,24 @@ const User = mongoose.model("Users");
 const router = express.Router();
 
 router.post("/signup", async (req, res) => {
-// Add fullName and username
-  const {email, password, firstName, userName,primaryInterest ,secondaryInterest} = req.body;
+  // Add fullName and username
+  const { email, password, firstName, userName, primaryInterest, secondaryInterest } = req.body;
 
   try {
-    const user = new User ({email, password, firstName, userName, primaryInterest, secondaryInterest});
+    const user = new User({ email, password, firstName, userName, primaryInterest, secondaryInterest });
+    await user.save();
+    const token = jwt.sign({ userId: user._id }, "MY_SECRET_KEY");
+    res.send(token);
+  } catch (err) {
+    return res.status(422).send(err);
+  }
+});
+router.post("/", async (req, res) => {
+  // Add fullName and username
+  const { email, password, firstName, userName, primaryInterest, secondaryInterest, picture } = req.body;
+
+  try {
+    const user = new User({ email, password, firstName, userName, primaryInterest, secondaryInterest, picture });
     await user.save();
     const token = jwt.sign({ userId: user._id }, "MY_SECRET_KEY");
     res.send(token);
@@ -33,6 +46,7 @@ router.post("/signin", async (req, res) => {
   User.findOne({ email: email }, async function (err, user) {
     if (user) {
       console.log(user);
+      user.status = 'online';
       user.comparePassword(password, function (err, isMatch) {
         if (err) throw err;
         console.log("passowrd:", isMatch); // -> Password123: true
