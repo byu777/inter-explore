@@ -52,7 +52,7 @@ const LandingPage = () => {
           </View>
 
           <View style={styles.activityItems}>
-          <Image source={require("../assets/logo/80w/Icon80.png")}></Image>
+            <Image source={require("../assets/logo/80w/Icon80.png")}></Image>
             <View style={styles.verticalItems}>
               <Text>eric_kwon likes fencing!</Text>
               <Text>Eric Kwon</Text>
@@ -63,7 +63,7 @@ const LandingPage = () => {
           </View>
 
           <View style={styles.activityItems}>
-          <Image source={require("../assets/logo/80w/Icon80.png")}></Image>
+            <Image source={require("../assets/logo/80w/Icon80.png")}></Image>
             <View style={styles.verticalItems}>
               <Text>rich_mac likes snowboarding!</Text>
               <Text>Richard Mac</Text>
@@ -74,7 +74,7 @@ const LandingPage = () => {
           </View>
 
           <View style={styles.activityItems}>
-          <Image source={require("../assets/logo/80w/Icon80.png")}></Image>
+            <Image source={require("../assets/logo/80w/Icon80.png")}></Image>
             <View style={styles.verticalItems}>
               <Text>Gab_baluyut likes ice hockey!</Text>
               <Text>Gabriel Baluyut</Text>
@@ -85,7 +85,7 @@ const LandingPage = () => {
           </View>
 
           <View style={styles.activityItems}>
-          <Image source={require("../assets/logo/80w/Icon80.png")}></Image>
+            <Image source={require("../assets/logo/80w/Icon80.png")}></Image>
             <View style={styles.verticalItems}>
               <Text>Gab_baluyut likes ice hockey!</Text>
               <Text>Gabriel Baluyut</Text>
@@ -96,7 +96,7 @@ const LandingPage = () => {
           </View>
 
           <View style={styles.activityItems}>
-          <Image source={require("../assets/logo/80w/Icon80.png")}></Image>
+            <Image source={require("../assets/logo/80w/Icon80.png")}></Image>
             <View style={styles.verticalItems}>
               <Text>Gab_baluyut likes ice hockey!</Text>
               <Text>Gabriel Baluyut</Text>
@@ -107,7 +107,7 @@ const LandingPage = () => {
           </View>
 
           <View style={styles.activityItems}>
-          <Image source={require("../assets/logo/80w/Icon80.png")}></Image>
+            <Image source={require("../assets/logo/80w/Icon80.png")}></Image>
             <View style={styles.verticalItems}>
               <Text>Gab_baluyut likes ice hockey!</Text>
               <Text>Gabriel Baluyut</Text>
@@ -118,7 +118,7 @@ const LandingPage = () => {
           </View>
 
           <View style={styles.activityItems}>
-          <Image source={require("../assets/logo/80w/Icon80.png")}></Image>
+            <Image source={require("../assets/logo/80w/Icon80.png")}></Image>
             <View style={styles.verticalItems}>
               <Text>Gab_baluyut likes ice hockey!</Text>
               <Text>Gabriel Baluyut</Text>
@@ -129,50 +129,6 @@ const LandingPage = () => {
           </View>
         </View>
       </ScrollView>
-      <View style={styles.navbarContainer}>
-        <View style={styles.navbar}>
-          <Pressable
-            onPress={() =>
-              Alert.alert("Item pressed", "You pressed this button")
-            }
-            style={styles.iconBehave}
-          >
-            <Image
-              source={require("../assets/navbar/baseline_home_black_24dp.png")}
-            ></Image>
-          </Pressable>
-          <Pressable
-            onPress={() =>
-              Alert.alert("Item pressed", "You pressed this button")
-            }
-            style={styles.iconBehave}
-          >
-            <Image
-              source={require("../assets/navbar/baseline_search_black_24dp.png")}
-            ></Image>
-          </Pressable>
-          <Pressable
-            onPress={() =>
-              Alert.alert("Item pressed", "You pressed this button")
-            }
-            style={styles.iconBehave}
-          >
-            <Image
-              source={require("../assets/navbar/baseline_chat_black_24dp.png")}
-            ></Image>
-          </Pressable>
-          <Pressable
-            onPress={() =>
-              Alert.alert("Item pressed", "You pressed this button")
-            }
-            style={styles.iconBehave}
-          >
-            <Image
-              source={require("../assets/navbar/baseline_person_black_24dp.png")}
-            ></Image>
-          </Pressable>
-        </View>
-      </View>
     </SafeAreaView>
   );
 };
