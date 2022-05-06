@@ -31,6 +31,20 @@ const userSchema = new mongoose.Schema ({
     secondaryInterest:{
         type: String,
         require: true
+    },
+    
+    newMessages: {
+        type: Object,
+        default: {}
+    },
+    
+    picture: {
+        type: String,
+    },
+
+    status: {
+        type: String,
+        default: 'online'
     }
     // move this here
 });

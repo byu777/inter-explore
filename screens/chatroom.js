@@ -10,11 +10,17 @@ import {
   Alert,
 } from "react-native";
 import MakeEventPage from "./create_event";
+import Sidebar from "../components/Sidebar";
+import MessageForm from "../components/MessageForm";
 
 // ---------------------------Chatroom page ------------------------------
 const Chatroom = ({ navigation }) => {
   return (
     <SafeAreaView style={chatroom_styles.main_container}>
+
+      <Sidebar></Sidebar>
+
+      <MessageForm></MessageForm>
 
         {/* container for member list */}
         <View style={chatroom_styles.member_container}>
