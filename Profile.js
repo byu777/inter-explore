@@ -14,7 +14,7 @@ export default function Profile() {
             <View style = {{alignSelf:"center"}}>
 
                 <View style = {styles.profileImage}>
-                    <Image source={require('./assets/profile-pic.jpg')} style ={styles.Image} resizeMode="center"></Image>
+                    <Image source={require('./assets/react-generated/profile-pic.jpg')} style ={styles.Image} resizeMode="center"></Image>
                 </View>
 
                 <View style = {styles.dm}>
@@ -29,8 +29,8 @@ export default function Profile() {
             </View>
 
             <View style = {styles.infoContainer}>
-                <Text style = {[styles.text, {fontWeight: "200", fontSize:"36"}]}>Richard Mac</Text>
-                <Text style = {[styles.text, {color:"#AEB5BC", fontSize:"14"}]}>Developer</Text>
+                <Text style = {[styles.text, {fontWeight: "200", fontSize:36}]}>Richard Mac</Text>
+                <Text style = {[styles.text, {color:"#AEB5BC", fontSize:14}]}>Developer</Text>
             </View>
 
             <View style={styles.statsContainer}>
@@ -49,13 +49,13 @@ export default function Profile() {
                 </View>
 
                 <View style = {styles.interestContainer}>
-                <Text style = {[styles.text, {fontWeight: "200", fontSize:"36"}]}>Primary Interests</Text>
-                <Text style = {[styles.text, {color:"#AEB5BC", fontSize:"14"}]}>Gaming</Text>
+                <Text style = {[styles.text, {fontWeight: "200", fontSize:36}]}>Primary Interests</Text>
+                <Text style = {[styles.text, {color:"#AEB5BC", fontSize:14}]}>Gaming</Text>
                 </View>
 
                 <View style = {styles.interestContainer}>
-                <Text style = {[styles.text, {fontWeight: "200", fontSize:"36"}]}>Secondary Interests</Text>
-                <Text style = {[styles.text, {color:"#AEB5BC", fontSize:"14"}]}>Coding</Text>
+                <Text style = {[styles.text, {fontWeight: "200", fontSize:36}]}>Secondary Interests</Text>
+                <Text style = {[styles.text, {color:"#AEB5BC", fontSize:14}]}>Coding</Text>
                 </View>
 
 
