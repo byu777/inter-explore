@@ -57,6 +57,9 @@ const Signup = ({ navigation }) => {
             onSubmit={(values) => {
               console.log(values);
               signup(values)
+              if (state.successfulSignup == true) {
+                navigation.navigate("Welcome")
+              }
               //navigation.navigate("Welcome")
             }}
           >
@@ -69,7 +72,6 @@ const Signup = ({ navigation }) => {
                   onChangeText={handleChange("firstName")}
                   onBlur={handleBlur("firstName")}
                   values={values.firstName}
-                  keyboardType="email-address"
                 />
                 <MyTextInput
                   label="Email Address"
@@ -87,7 +89,6 @@ const Signup = ({ navigation }) => {
                   onChangeText={handleChange("userName")}
                   onBlur={handleBlur("userName")}
                   values={values.userName}
-                  keyboardType="email-address"
                 />
                 <MyTextInput
                   label="Password"

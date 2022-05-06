@@ -8,6 +8,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from './../screens/Login';
 import Signup from './../screens/Signup';
 import Welcome from './../screens/Welcome';
+import Tabs from './../tabs/tab'
+import Profile from './Profile';
 import { Provider as AuthProvider} from './../context/AuthContext';
 
 // Colors

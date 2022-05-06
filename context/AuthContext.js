@@ -7,7 +7,9 @@ const authReducer = (state, action) => {
     case 'add_error':
         return {...state, errorMessage: action.payload };
     case 'signup':
-      return {errorMessage: '', token: action.payload}
+      return {errorMessage: '', token: action.payload};
+    case 'success':
+      return {...state, successfulSignup: action.payload};
     default:
       return state;
   }
@@ -33,6 +35,7 @@ const signup = (dispatch) => {
       });
       await AsyncStorage.setItem('token', response.data);
       dispatch({ type: 'signup', payload: response.data})
+      dispatch({type: 'success', payload: true})
       //console.log(response.data);
     } catch (err) {
       //console.log(err);
@@ -40,6 +43,11 @@ const signup = (dispatch) => {
     }
   };
 };
+
+// maybe make another function that gets called that sets success to false and handles navigation? this might fix problems
+// currently one function does both setting signin to sucess and moving but they happen at same time so the method doesn't move properly
+// change icons
+// change colors and styling to fit app theme
 
 const signin = (dispatch) => {
     return async ({
@@ -69,5 +77,5 @@ const signout = (dispatch) => {
 export const { Provider, Context } = createDataContext(
   authReducer,
   { signin, signout, signup },
-  { token: null, errorMessage: '' }
+  { token: null, errorMessage: '', successfulSignup: false }
 );
