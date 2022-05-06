@@ -22,7 +22,8 @@ import {
   ExtraText,
   TextLink,
   TextLinkContent,
-  RightIconSignup
+  RightIconSignup, 
+  ErrorText
 } from "./../components/LoginStyles";
 import KeyboardAvoidingWrapper from "./../components/KeyboardAvoidingWrapper";
 import { Context as AuthContext } from './../context/AuthContext'; 
@@ -117,6 +118,7 @@ const Signup = ({ navigation }) => {
                   onBlur={handleBlur("secondaryInterest")}
                   values={values.secondaryInterest}
                 />
+                {state.errorMessage ? <ErrorText>{state.errorMessage}</ErrorText> : null}
                 <StyledButton onPress={handleSubmit}>
                   <ButtonText>Signup</ButtonText>
                 </StyledButton>
