@@ -51,8 +51,14 @@ const signin = (dispatch) => {
           email,
           password
         });
-        //console.log(response.isMatch);
-        await dispatch({type: 'login', payload: response.data})
+        //console.log(response.data.isMatch)
+        //console.log(response.data.token)
+        if (response.data.isMatch == true){
+          await AsyncStorage.setItem('token', response.data.token);
+          await dispatch({type: 'login', payload: response.data.token})
+        } else if (response.data.isMatch == false) {
+          dispatch({type: 'add_error', payload: 'Password is incorrect'})
+        }
       } catch (err) {
         dispatch({type: 'add_error', payload: 'Something went wrong with signin'})
       }
