@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Profile from "../screens/Profile";
 import MessageBoardPage from "../screens/messageboard";
 import LandingPage from "../screens/landing_page";
+import Admin from "../screens/admin";
 
 import { StyleSheet, Text, View, Image } from "react-native";
 
@@ -94,8 +95,8 @@ const Tabs = () => {
           }}
         />
         <Tab.Screen
-          name="MsgBoard"
-          component={MessageBoardPage}
+          name="Admin and User Management"
+          component={Admin}
           options={{
             tabBarIcon: ({ focused }) => (
               <View>
@@ -114,7 +115,7 @@ const Tabs = () => {
                     fontSize: 12,
                   }}
                 >
-                  Messages
+                  Admin
                 </Text>
               </View>
             ),
