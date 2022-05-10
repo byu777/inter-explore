@@ -1,8 +1,8 @@
 import React, { useState, useContext} from "react";
 import { StatusBar } from "expo-status-bar";
-import { View, TouchableOpacity, Text } from "react-native";
+import { View} from "react-native";
 //icons
-import { Octicons, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 //formik
 import { Formik } from "formik";
 // Components
@@ -29,14 +29,16 @@ import KeyboardAvoidingWrapper from "./../components/KeyboardAvoidingWrapper";
 import { Context as AuthContext } from './../context/AuthContext'; 
 
 // Colors
-const { brand, darkLight, primary } = Colors;
+const { darkLight } = Colors;
 
 const Signup = ({ navigation }) => {
-  // State to hide and show
+  // State to hide and show password
   const [hidePassword, setHidePassword] = useState(true);
   
   // States for user sign up
   const {state, signup} = useContext(AuthContext);
+
+  {state.token ? navigation.navigate("Tab") : null}
 
   return (
     <KeyboardAvoidingWrapper>
@@ -55,12 +57,8 @@ const Signup = ({ navigation }) => {
               secondaryInterest: "",
             }}
             onSubmit={(values) => {
-              console.log(values);
+              //console.log(values);
               signup(values)
-              if (state.successfulSignup == true) {
-                navigation.navigate("Welcome")
-              }
-              //navigation.navigate("Welcome")
             }}
           >
             {({ handleChange, handleBlur, handleSubmit, values }) => (

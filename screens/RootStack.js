@@ -7,14 +7,14 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 // screens
 import Login from './../screens/Login';
 import Signup from './../screens/Signup';
-import Welcome from './../screens/Welcome';
-import Tabs from './../tabs/tab'
-import Profile from './Profile';
+import Tab from './../tabs/tab'
+
+// Context
 import { Provider as AuthProvider} from './../context/AuthContext';
 
 // Colors
 import {Colors} from './../components/LoginStyles';
-const { brand, darkLight, primary, tertiary} = Colors;
+const { brand, tertiary} = Colors;
 
 const Stack = createNativeStackNavigator();
 
@@ -23,21 +23,22 @@ const RootStack = () => {
         <NavigationContainer>
             <Stack.Navigator 
                 screenOptions={{
-                    headerStyle: {
-                        backgroundColor: 'transparent'
-                    },
-                    headerTintColor: tertiary,
-                    headerTransparent: true,
-                    headerTitle: '',
-                    headerLeftContainerStyle: {
-                        paddingLeft: 20
-                    }
+                    headerShown: false
+                    // headerStyle: {
+                    //     backgroundColor: 'transparent'
+                    // },
+                    // headerTintColor: tertiary,
+                    // headerTransparent: true,
+                    // headerTitle: '',
+                    // headerLeftContainerStyle: {
+                    //     paddingLeft: 20
+                    // }
                 }}
                 initalRouteName="Login"
             > 
                 <Stack.Screen name="Login" component={Login} />
                 <Stack.Screen name="Signup" component={Signup} />
-                <Stack.Screen options={{headerTintColor: brand}} name="Welcome" component={Welcome} />
+                <Stack.Screen name="Tab" component={Tab} />
             </Stack.Navigator>
         </NavigationContainer>
     )

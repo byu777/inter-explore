@@ -8,15 +8,14 @@ const authReducer = (state, action) => {
         return {...state, errorMessage: action.payload };
     case 'signup':
       return {errorMessage: '', token: action.payload};
-    case 'success':
-      return {...state, successfulSignup: action.payload};
+    case 'login':
+      return {errorMessage: '', token: action.payload};
     default:
       return state;
   }
 };
 
-const signup = (dispatch) => {
-  return async ({
+const signup = (dispatch) => async ({
     email,
     password,
     firstName,
@@ -35,19 +34,12 @@ const signup = (dispatch) => {
       });
       await AsyncStorage.setItem('token', response.data);
       dispatch({ type: 'signup', payload: response.data})
-      dispatch({type: 'success', payload: true})
       //console.log(response.data);
     } catch (err) {
       //console.log(err);
       dispatch({type: 'add_error', payload: 'Something went wrong with sign up'})
     }
   };
-};
-
-// maybe make another function that gets called that sets success to false and handles navigation? this might fix problems
-// currently one function does both setting signin to sucess and moving but they happen at same time so the method doesn't move properly
-// change icons
-// change colors and styling to fit app theme
 
 const signin = (dispatch) => {
     return async ({
@@ -59,11 +51,10 @@ const signin = (dispatch) => {
           email,
           password
         });
-        console.log(response.data);
-        console.log("anything")
-        dispatch({type: 'successful_login', payload: response.data})
+        //console.log(response.isMatch);
+        await dispatch({type: 'login', payload: response.data})
       } catch (err) {
-        dispatch({type: 'add_error', payload: 'Something went wrong with sign in'})
+        dispatch({type: 'add_error', payload: 'Something went wrong with signin'})
       }
     };
   };
@@ -77,5 +68,5 @@ const signout = (dispatch) => {
 export const { Provider, Context } = createDataContext(
   authReducer,
   { signin, signout, signup },
-  { token: null, errorMessage: '', successfulSignup: false }
+  { token: null, errorMessage: ''}
 );
