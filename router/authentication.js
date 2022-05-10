@@ -36,6 +36,8 @@ router.post("/signin", async (req, res) => {
       user.comparePassword(password, function (err, isMatch) {
         if (err) throw err;
         console.log("passowrd:", isMatch); // -> Password123: true
+        const token = jwt.sign({ userId: user._id }, "MY_SECRET_KEY");
+        res.send({token});
       });
     } else {
       return res.status(422).send({ error: "Email Not Found" });
