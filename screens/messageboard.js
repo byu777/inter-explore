@@ -91,12 +91,12 @@ const MessageBoardPage = () => {
     <View>
 
       <View style={mb_styles.textinput_cont}>
-        <TextInput
+        {/* <TextInput
           style={mb_styles.textinput_search}
           onChangeText={onChangeText}
           placeholder="search.."
           value={text} //allows alphanumeric input into TextInput
-        />
+        /> */}
       </View>
 
       {/* inbox container */}
