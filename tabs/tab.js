@@ -29,7 +29,6 @@ const Tab = createBottomTabNavigator();
 
 const Tabs = () => {
   return (
-    <NavigationContainer>
       <Tab.Navigator
         tabBarOptions={{
           showLabel: false,
@@ -202,7 +201,6 @@ const Tabs = () => {
           }}
         />
       </Tab.Navigator>
-    </NavigationContainer>
   );
 };
 
