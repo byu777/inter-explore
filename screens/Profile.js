@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useContext} from "react";
 import {
   StyleSheet,
   Text,
@@ -8,8 +8,13 @@ import {
   ScrollView,
 } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Context as AuthContext } from './../context/AuthContext';
 
 export default function Profile() {
+
+  const {state} = useContext(AuthContext);
+
+  console.log(state.user);
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>

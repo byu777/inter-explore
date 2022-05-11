@@ -22,9 +22,10 @@ import {
   ExtraText,
   TextLink,
   TextLinkContent,
+  ErrorText
 } from "./../components/LoginStyles";
 import KeyboardAvoidingWrapper from "./../components/KeyboardAvoidingWrapper";
-import { Context as AuthContext } from './../context/AuthContext'; 
+import { Context as AuthContext } from './../context/AuthContext';
 
 // Colors
 const { darkLight } = Colors;
@@ -34,6 +35,7 @@ const Login = ({ navigation }) => {
 
   const {state, signin} = useContext(AuthContext);
 
+  {state.token ? navigation.navigate("Tab") : null}
 
   return (
     <KeyboardAvoidingWrapper>
@@ -42,15 +44,14 @@ const Login = ({ navigation }) => {
         <InnerContainer>
           <PageLogo
             resizeMode="cover"
-            source={require("../assets/favicon/favicon.png")}
+            source={require("./../assets/logo/180w/Icon180.png")}
           />
           <PageTitle>Inter-Explore</PageTitle>
           <Formik
             initialValues={{ email: "", password: "" }}
             onSubmit={(values) => {
-              console.log(values);
+              //console.log(values);
               signin(values)
-              //navigation.navigate("Welcome")
             }}
           >
             {({ handleChange, handleBlur, handleSubmit, values }) => (
@@ -74,6 +75,7 @@ const Login = ({ navigation }) => {
                   hidePassword={hidePassword}
                   setHidePassword={setHidePassword}
                 />
+                {state.errorMessage ? <ErrorText>{state.errorMessage}</ErrorText> : null}
                 <StyledButton onPress={handleSubmit}>
                   <ButtonText>Login</ButtonText>
                 </StyledButton>

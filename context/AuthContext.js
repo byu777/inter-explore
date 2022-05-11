@@ -1,17 +1,21 @@
 import createDataContext from "./createDataContext";
 import trackerApi from "../api/tracker";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const authReducer = (state, action) => {
   switch (action.type) {
     case 'add_error':
         return {...state, errorMessage: action.payload };
+    case 'login':
+      return {errorMessage: '', token: action.payload};
+    case 'setUser':
+      return {...state, user: action.payload};
     default:
       return state;
   }
 };
 
-const signup = (dispatch) => {
-  return async ({
+const signup = (dispatch) => async ({
     email,
     password,
     firstName,
@@ -28,13 +32,15 @@ const signup = (dispatch) => {
         primaryInterest,
         secondaryInterest,
       });
-      console.log(response.data);
+      await AsyncStorage.setItem('token', response.data.token);
+      await dispatch({ type: 'login', payload: response.data.token})
+      await dispatch({type: 'setUser', payload: response.data.user})
+      //console.log(response.data);
     } catch (err) {
-        console.log(err);
-      dispatch({type: 'add_error', payload: 'Something went wrong with sign up'})
+      //console.log(err);
+      await dispatch({type: 'add_error', payload: 'Something went wrong with sign up'})
     }
   };
-};
 
 const signin = (dispatch) => {
     return async ({
@@ -46,11 +52,18 @@ const signin = (dispatch) => {
           email,
           password
         });
-        console.log(response.data);
-        console.log("anything")
-        dispatch({type: 'successful_login', payload: response.data})
+        //console.log(response.data.isMatch)
+        //console.log(response.data.token)
+        if (response.data.isMatch == true){
+          await AsyncStorage.setItem('token', response.data.token);
+          await dispatch({type: 'login', payload: response.data.token})
+          await dispatch({type: 'setUser', payload: response.data.user})
+          //console.log(response.data.user.email + " In Auth Context")
+        } else if (response.data.isMatch == false) {
+          await dispatch({type: 'add_error', payload: 'Password is incorrect'})
+        }
       } catch (err) {
-        dispatch({type: 'add_error', payload: 'Something went wrong with sign in'})
+        await dispatch({type: 'add_error', payload: 'Something went wrong with signin'})
       }
     };
   };
@@ -64,5 +77,5 @@ const signout = (dispatch) => {
 export const { Provider, Context } = createDataContext(
   authReducer,
   { signin, signout, signup },
-  { isSignedIn: false, errorMessage: '' }
+  { token: null, errorMessage: '', user: null}
 );

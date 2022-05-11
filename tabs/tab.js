@@ -44,7 +44,6 @@ const MessageToChatStack = () => {
 
 const Tabs = () => {
   return (
-    <NavigationContainer>
       <Tab.Navigator
       screenOptions={{
         tabBarShowLabel: false,
@@ -118,7 +117,6 @@ const Tabs = () => {
           }}
         />
       </Tab.Navigator>
-    </NavigationContainer>
   );
 };
 

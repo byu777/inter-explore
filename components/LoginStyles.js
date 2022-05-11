@@ -174,3 +174,9 @@ export const TextLinkContent = styled.Text`
     color: ${brand};
     font-size: 15px;
 `
+
+export const ErrorText = styled.Text`
+    color: ${red};
+    text-align: center;
+    margin-top: 10px;
+`
