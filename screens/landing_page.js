@@ -26,7 +26,7 @@ const LandingPage = () => {
         <Text style={{ color: "#023047", fontSize: 20, textAlign: "center" }}>
           Anything you want to share?
         </Text>
-        <TextInput style={styles.inputArea} placeholder="Interest"></TextInput>
+        {/* <TextInput style={styles.inputArea} placeholder="Interest"></TextInput> */}
         <StatusBar style="auto" />
         <View style={styles.verticalItems}>
           <Text
