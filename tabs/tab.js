@@ -6,8 +6,14 @@ import MessageBoardPage from "../screens/messageboard";
 import Chatroom from "../screens/chatroom";
 import LandingPage from "../screens/landing_page";
 import MakeEventPage from "../screens/create_event";
+import EventList from "../screens/event_list";
+import { useNavigation } from '@react-navigation/native';
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, Image } from "react-native";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Stack } from "react-bootstrap";
 
 const Tab = createBottomTabNavigator();
 
@@ -27,10 +33,27 @@ const Tab = createBottomTabNavigator();
 //   </TouchableOpacity>
 // );
 
+const MessageToChatStack = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false}}>
+      <Stack.Screen name="Groups" component={MessageBoardPage} />
+      <Stack.Screen name="Chats" component={Chatroom} />
+    </Stack.Navigator>
+  );
+};
+
 const Tabs = () => {
   return (
     <NavigationContainer>
       <Tab.Navigator
+      screenOptions={{
+        tabBarShowLabel: false,
+        headerShown: true,
+        tabBarStyle: {backgroundColor: '#530127'},
+        tabBarActiveTintColor: '#ece6dd',
+        tabBarInactiveTintColor: '#db5f4d',
+      }}
+        id='our_tab'
         tabBarOptions={{
           showLabel: false,
           style: {
@@ -39,7 +62,7 @@ const Tabs = () => {
             left: 20,
             right: 20,
             elevation: 0,
-            backgroundColor: "#ffffff",
+            backgroundColor: '#00bcd4',
             borderRadius: 15,
             height: 90,
             ...tabStyles.shadow,
@@ -50,155 +73,48 @@ const Tabs = () => {
           name="Home"
           component={LandingPage}
           options={{
-            tabBarIcon: ({ focused }) => (
-              <View>
-                <Image
-                  source={require("../assets/navbar/baseline_home_black_24dp.png")}
-                  resizeMode="contain"
-                  style={{
-                    width: 25,
-                    height: 25,
-                    tintColor: focused ? "#e32f45" : "#748c94",
-                    alignSelf: 'center',
-                  }}
-                />
-                <Text style={{
-                    color: focused ? "#e32f45" : "#748c94",
-                    fontSize: 12,
-                  }}>
-                  Home
-                </Text>
-              </View>
+            tabBarIcon: ({ focused, color, size }) => (
+              <Ionicons name="home-outline" color={color} size={size} />
             ), 
-            // tabBarButton: (props) => (
-            //   <CustomTabBarButtons {...props} />
-            // )
           }}
         />
         <Tab.Screen
           name="Profile"
           component={Profile}
           options={{
-            tabBarIcon: ({ focused }) => (
-              <View>
-                <Image
-                  source={require("../assets/navbar/baseline_home_black_24dp.png")}
-                  resizeMode="contain"
-                  style={{
-                    width: 25,
-                    height: 25,
-                    tintColor: focused ? "#e32f45" : "#748c94",
-                    alignSelf: 'center',
-                  }}
-                />
-                <Text
-                  style={{
-                    color: focused ? "#e32f45" : "#748c94",
-                    fontSize: 12,
-                  }}
-                >
-                  Profile
-                </Text>
-              </View>
-            ),
-            // tabBarButton: (props) => (
-            //   <CustomTabBarButtons {...props} />
-            // )
+            tabBarIcon: ({ focused, color, size }) => (
+              <Ionicons name="person" color={color} size={size} />
+            ), 
           }}
         />
         <Tab.Screen
-          name="Message Board"
+          name="Groups"
           component={MessageBoardPage}
           options={{
-            tabBarIcon: ({ focused }) => (
-              <View>
-                <Image
-                  source={require("../assets/navbar/baseline_home_black_24dp.png")}
-                  resizeMode="contain"
-                  style={{
-                    width: 25,
-                    height: 25,
-                    tintColor: focused ? "#e32f45" : "#748c94",
-                    alignSelf: 'center',
-                  }}
-                />
-                <Text
-                  style={{
-                    color: focused ? "#e32f45" : "#748c94",
-                    fontSize: 12,
-                  }}
-                >
-                  Groups
-                </Text>
-              </View>
+            tabBarIcon: ({ focused, color, size }) => (
+              <MaterialCommunityIcons name="account-group" color={color} size={size} />
             ), 
-            // tabBarButton: (props) => (
-            //   <CustomTabBarButtons {...props} />
-            // )
           }}
         />
 
         <Tab.Screen
-          name="Chatrooms"
+          name="Chats"
           component={Chatroom}
           options={{
-            tabBarIcon: ({ focused }) => (
-              <View>
-                <Image
-                  source={require("../assets/navbar/baseline_home_black_24dp.png")}
-                  resizeMode="contain"
-                  style={{
-                    width: 25,
-                    height: 25,
-                    tintColor: focused ? "#e32f45" : "#748c94",
-                    alignSelf: 'center',
-                  }}
-                />
-                <Text
-                  style={{
-                    color: focused ? "#e32f45" : "#748c94",
-                    fontSize: 12,
-                  }}
-                >
-                  Chat
-                </Text>
-              </View>
+            tabBarBadge: 5,
+            tabBarIcon: ({ focused, color, size }) => (
+              <Ionicons name="md-chatbox-outline" color={color} size={size} />
             ), 
-            // tabBarButton: (props) => (
-            //   <CustomTabBarButtons {...props} />
-            // )
           }}
         />
 
         <Tab.Screen
           name="Event"
-          component={MakeEventPage}
+          component={EventList}
           options={{
-            tabBarIcon: ({ focused }) => (
-              <View>
-                <Image
-                  source={require("../assets/navbar/baseline_home_black_24dp.png")}
-                  resizeMode="contain"
-                  style={{
-                    width: 25,
-                    height: 25,
-                    tintColor: focused ? "#e32f45" : "#748c94",
-                    alignSelf: 'center',
-                  }}
-                />
-                <Text
-                  style={{
-                    color: focused ? "#e32f45" : "#748c94",
-                    fontSize: 12,
-                  }}
-                >
-                  Event
-                </Text>
-              </View>
+            tabBarIcon: ({ focused, color, size }) => (
+              <MaterialIcons name="event" color={color} size={size} />
             ), 
-            // tabBarButton: (props) => (
-            //   <CustomTabBarButtons {...props} />
-            // )
           }}
         />
       </Tab.Navigator>
