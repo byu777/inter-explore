@@ -7,11 +7,12 @@ import Tabs from "./tabs/tab";
 import { View, Button, SafeAreaView, BrowserRouter } from 'react-native';
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
+import MakeEventPage from "./screens/create_event";
 //import { AppContext, socket } from './context/appContext';
 
 export default function App() {
   return (
-    <Tabs/>
+    <MakeEventPage/>
     //<RootStack/>
   );
 }
