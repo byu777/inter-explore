@@ -5,7 +5,7 @@ const User = require("../router/models/Users");
   const fetchChats = asyncHandler(async (req, res) => {
     try {
         interests.find({ users: { $elemMatch: { $eq: req.user._id } } })
-        .populate("Users", "-password")
+        .populate("users", "-password")
         .populate("latestMessage")
         .sort({ updatedAt: -1 })
         .then(async (results) => {
@@ -22,20 +22,20 @@ const User = require("../router/models/Users");
   });
 
 const createGroupChat = asyncHandler(async (req, res) => {
-   var users = JSON.parse(req.body.users);
+  //  var users = JSON.parse(req.body.users);
     
-    users.push(req.user);
+    // users.push(req.user);
   
     try {
       const groupChat = await interests.create({
-        chatName: interests.InterestName,
+        InterestName: req.body.InterestName,
         users: users,
       });
   
-      const fullGroupChat = await interests.findOne({ _id: groupChat._id })
-        .populate("Users", "-password")
+    //   const fullGroupChat = await interests.findOne({ _id: groupChat._id })
+    //     .populate("Users", "-password")
 
-      res.status(200).json(fullGroupChat);
+    //  res.status(200).json(fullGroupChat);
     } catch (error) {
       res.status(400);
       throw new Error(error.message);
