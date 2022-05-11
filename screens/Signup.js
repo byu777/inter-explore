@@ -74,6 +74,7 @@ const Signup = ({ navigation }) => {
               secondaryInterest: "",
             }}
             onSubmit={(values) => {
+              console.log(values)
               if (values.email != '' && values.password != '' && values.firstName != '' &&
                values.userName != '' && values.primaryInterest != '' && values.secondaryInterest != '') {
                  if (values.email.includes("@")){
