@@ -8,7 +8,7 @@ const MessageSchema = new mongoose.Schema ({
     },
 
     content: [{
-     type: true,
+     type: String,
      require: true
     }],
     chat: {
@@ -23,4 +23,4 @@ const MessageSchema = new mongoose.Schema ({
 
 
 );
-module.exports = mongoose.model('Message', InterestSchema);
+module.exports = mongoose.model('Message', MessageSchema);

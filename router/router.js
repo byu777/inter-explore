@@ -1,5 +1,6 @@
 require('./models/Users');
-
+require('./models/Message');
+require('./models/interestGroup');
 const express = require('express');
 
 const mongoose = require('mongoose');
@@ -10,6 +11,8 @@ const authentication = require('./authentication');
 
 // add this
 const message = require('./messages/messages');
+const Messages = require('./Messagerouters');
+const interests = require('./ChatRouters');
 
 
 const app = express();
@@ -20,6 +23,8 @@ app.use(cors())
 app.use(bodyParser.json());
 
 app.use(authentication);
+app.use(Messages);
+app.use(interests);
 
 const mongoUri = 'mongodb+srv://user:123@cluster0.1ozdh.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 
@@ -43,7 +48,7 @@ app.get('/', message,(req,res) => {
 res.send('your email: $ { req.user.email}');
 }); 
 
-app.listen(3000,()=>{
+const server =app.listen(3000,()=>{
 console.log('Listening on port 3000');
 });
 
