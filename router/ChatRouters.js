@@ -6,7 +6,7 @@ const {
 } = require("../api/ChatRoute");
 const router = express.Router();
 
-router.route("/").get(protect, fetchChats);
+router.route("/").get(fetchChats);
 router.route("/group").post(createGroupChat);
 router.route("/groupadd").put(addToGroup);
 
