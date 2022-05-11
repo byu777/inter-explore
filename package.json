@@ -37,6 +37,7 @@
     "react-native": "^0.64.3",
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.10.1",
+    "react-native-select-dropdown": "^1.13.0",
     "react-native-web": "0.17.1",
     "StatusBar": "^1.0.0",
     "styled-components": "^5.3.5",
