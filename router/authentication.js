@@ -14,7 +14,7 @@ router.post("/signup", async (req, res) => {
     const user = new User ({email, password, firstName, userName, primaryInterest, secondaryInterest});
     await user.save();
     const token = jwt.sign({ userId: user._id }, "MY_SECRET_KEY");
-    res.send(token);
+    res.send({token: token, user: user});
   } catch (err) {
     return res.status(422).send(err);
   }
@@ -32,12 +32,12 @@ router.post("/signin", async (req, res) => {
 
   User.findOne({ email: email }, async function (err, user) {
     if (user) {
-      console.log(user);
+      //console.log(user);
       user.comparePassword(password, function (err, isMatch) {
         if (err) throw err;
         console.log("passowrd:", isMatch); // -> Password123: true
         const token = jwt.sign({ userId: user._id }, "MY_SECRET_KEY");
-        res.send({token});
+        res.send({token: token, isMatch: isMatch, user: user});
       });
     } else {
       return res.status(422).send({ error: "Email Not Found" });
