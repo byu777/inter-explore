@@ -1,7 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const Message = require("../router/models/Message");
 const User = require("../router/models/Users");
-const Chat = require("../router/models/interestGroup");
+const interests = require("../router/models/interestGroup");
 
 //@description     Get all Messages
 //@route           GET /api/Message/:chatId
@@ -10,7 +10,7 @@ const allMessages = asyncHandler(async (req, res) => {
   try {
     const messages = await Message.find({ chat: req.params.chatId })
       .populate("sender", "name pic email")
-      .populate("chat");
+      .populate("interests");
     res.json(messages);
   } catch (error) {
     res.status(400);
@@ -39,9 +39,9 @@ const sendMessage = asyncHandler(async (req, res) => {
     var message = await Message.create(newMessage);
 
     message = await message.populate("sender", "name pic");
-    message = await message.populate("chat");
+    message = await message.populate("interests");
     message = await User.populate(message, {
-      path: "chat.users",
+      path: "interests.users",
       select: "name pic email",
     });
 

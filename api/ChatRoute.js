@@ -5,7 +5,7 @@ const User = require("../router/models/Users");
   const fetchChats = asyncHandler(async (req, res) => {
     try {
         interests.find({ users: { $elemMatch: { $eq: req.user._id } } })
-        .populate("users", "-password")
+        .populate("Users", "-password")
         .populate("latestMessage")
         .sort({ updatedAt: -1 })
         .then(async (results) => {
