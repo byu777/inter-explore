@@ -3,7 +3,6 @@ const {
   allMessages,
   sendMessage,
 } = require("../api/MessagesRouter");
-const { protect } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
