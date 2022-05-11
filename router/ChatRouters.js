@@ -3,7 +3,7 @@ const {
   fetchChats,
   createGroupChat,
   addToGroup,
-} = require("../controllers/chatControllers");
+} = require("../api/ChatRoute");
 const router = express.Router();
 
 router.route("/").get(protect, fetchChats);
