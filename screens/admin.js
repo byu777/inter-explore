@@ -1,19 +1,46 @@
 import { StatusBar } from 'expo-status-bar';
-import React from "react";
-import { ScrollView, StyleSheet, Text, View} from 'react-native';
+import React, { useState } from "react";
+import { StyleSheet, Text, View, Button, FlatList, Pressable, Alert, Modal} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+const userOptions = () => {
+  Alert.alert("Test", "Item pressed");
+}
+
+
+
 export default function Admin() {
-  return (
-    <View backgroundColor style={{backgroundColor: "#023047"}}>
-        <ScrollView>
-            <Text style={adminStyles.titleSections}>New Interest Suggestions</Text>
-        <View style={adminStyles.userSuggestions}>
-            <Text>Suggestion 1</Text>
-        </View>
-        </ScrollView>
-      <StatusBar style="auto" />
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const interests = [
+    {interest: 'naruto', id: '1'},
+    {interest: 'naruto shippuden', id: '2'},
+    {interest: 'one piece', id: '3'},
+    {interest: 'one piece', id: '4'},
+    {interest: 'one piece', id: '5'},
+    {interest: 'one piece', id: '6'},
+    {interest: 'one piece', id: '7'},
+    {interest: 'one piece', id: '8'},
+  ];
+
+  const oneInterest = ({item}) => (
+    <View style={adminStyles.suggestionField}>
+      <Text style={adminStyles.suggestionName}>{item.interest} is cool</Text>
     </View>
+  )
+  return (
+    <SafeAreaView style={{backgroundColor: "#023047"}}>
+        <Text style={adminStyles.titleSections}>New Interest Suggestions</Text>
+        <Text style={{textAlign: "center", color: '#FFB703'}}>To approve a new suggestion, swipe to the right.</Text>
+        <Text style={{textAlign: "center", color: '#FFB703'}}>To decline a new suggestion, swipe to the left.</Text>
+        <FlatList
+        keyExtractor={(item) => item.id}
+        data={interests}
+        renderItem={oneInterest}
+        
+        />
+      <StatusBar style="auto" />
+    </SafeAreaView>
   );
 }
 
@@ -24,11 +51,20 @@ const adminStyles = StyleSheet.create({
         color: '#FFB703',
         textAlign: 'center'
     },
-    userSuggestions: {
-        flex: 1,
-        flexDirection: "column",
-        flexWrap: "wrap",
-        margin: 10,
-        borderRadius: 20,
+    suggestionName: {
+      padding: 20,
+      color: "#FFB703",
+      textAlign: 'center'
+    },
+    suggestionField: {
+        flex: 2,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        padding: 5,
+        justifyContent: 'space-evenly',
+        borderWidth: 2,
+        borderColor: "black",
+        borderRadius: 30,
+        margin: 15
     }
 })
