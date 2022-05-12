@@ -79,7 +79,7 @@ const signin = (dispatch) => {
 const signout = (dispatch) => async () => {
     await AsyncStorage.removeItem('token');
     await dispatch({type: 'signOut'})
-    console.log("Signed Out");
+    //console.log("Signed Out");
   };
 
 export const { Provider, Context } = createDataContext(

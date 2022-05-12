@@ -15,7 +15,7 @@ import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 
 // --------------------------- Message Board page -----------------------------
 
-export default function MessageBoardPage({ onPress }) {
+export default function MessageBoardPage({ navigation }) {
   return (
     <SafeAreaView style={{ backgroundColor: "#ece6dd", marginBottom: 25 }}>
       <View style={mb_styles.textinput_cont}>
@@ -46,7 +46,7 @@ export default function MessageBoardPage({ onPress }) {
           </View>
 
           <TouchableOpacity
-            onPress={onPress}
+            onPress={() => navigation.navigate("Chatroom")}
             style={mb_styles.touchables_arrow}
           >
             <Ionicons name="arrow-forward" size={25} color="#0c000e"></Ionicons>
@@ -62,7 +62,7 @@ export default function MessageBoardPage({ onPress }) {
           </View>
 
           <TouchableOpacity
-            onPress={onPress}
+            onPress={() => navigation.navigate("Chatroom")}
             style={mb_styles.touchables_arrow}
           >
             <Ionicons name="arrow-forward" size={25} color="#0c000e"></Ionicons>
@@ -78,7 +78,7 @@ export default function MessageBoardPage({ onPress }) {
           </View>
 
           <TouchableOpacity
-            onPress={onPress}
+            onPress={() => navigation.navigate("Chatroom")}
             style={mb_styles.touchables_arrow}
           >
             <Ionicons name="arrow-forward" size={25} color="#0c000e"></Ionicons>
@@ -94,7 +94,7 @@ export default function MessageBoardPage({ onPress }) {
           </View>
 
           <TouchableOpacity
-            onPress={onPress}
+            onPress={() => navigation.navigate("Chatroom")}
             style={mb_styles.touchables_arrow}
           >
             <Ionicons name="arrow-forward" size={25} color="#0c000e"></Ionicons>
