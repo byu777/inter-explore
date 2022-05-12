@@ -12,28 +12,13 @@ import Tab from './../tabs/tab'
 // Context
 import { Provider as AuthProvider} from './../context/AuthContext';
 
-// Colors
-import {Colors} from './../components/LoginStyles';
-const { brand, tertiary} = Colors;
-
 const Stack = createNativeStackNavigator();
 
 const RootStack = () => {
     return(
         <NavigationContainer>
             <Stack.Navigator 
-                screenOptions={{
-                    headerShown: false
-                    // headerStyle: {
-                    //     backgroundColor: 'transparent'
-                    // },
-                    // headerTintColor: tertiary,
-                    // headerTransparent: true,
-                    // headerTitle: '',
-                    // headerLeftContainerStyle: {
-                    //     paddingLeft: 20
-                    // }
-                }}
+                screenOptions={{headerShown: false}}
                 initalRouteName="Login"
             > 
                 <Stack.Screen name="Login" component={Login} />
