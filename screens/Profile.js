@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, {useContext, useState, useEffect} from "react";
 import {
   StyleSheet,
   Text,
@@ -6,15 +6,47 @@ import {
   SafeAreaView,
   Image,
   ScrollView,
+  TouchableOpacity,
+  Button
 } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Context as AuthContext } from './../context/AuthContext';
+import * as ImagePicker from 'expo-image-picker'
+
 
 export default function Profile() {
 
   const {state} = useContext(AuthContext);
 
+  const [image, setImage] = useState(null);
+
   console.log(state.user);
+  const firstname = state.user.firstName;
+  const primary = state.user.primaryInterest;
+  const secondary = state.user.secondaryInterest;
+  const email = state.user.email;
+
+  useEffect( async () => {
+    if(Platform.OS !== 'web'){
+      const {status} = await ImagePicker.requestMediaLibraryPermissionsAsync
+      if(status !== 'granted'){
+        alert("Permission Denied")
+      }
+    }
+  }, [])
+
+  const uploadPhoto = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing:true,
+      aspects:[4,3],
+      quality:1
+    })
+    console.log(result)
+    if(!result.cancelled){
+      setImage(result.uri)
+    }
+  }
+ 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -27,12 +59,11 @@ export default function Profile() {
           ></Ionicons>
         </View>
 
-        <View style={{ alignSelf: "center" }}>
+        <View style={{ alignSelf: "center"}}>
           <View style={styles.profileImage}>
             <Image
-              source={require("../assets/react-generated/profile-pic.jpg")}
+              source= {{uri:image}}
               style={styles.Image}
-              resizeMode="center"
             ></Image>
           </View>
 
@@ -45,7 +76,7 @@ export default function Profile() {
           </View>
 
           <View style={styles.active}></View>
-
+          <TouchableOpacity onPress={uploadPhoto}>
           <View style={styles.add}>
             <Ionicons
               name="ios-add"
@@ -54,14 +85,15 @@ export default function Profile() {
               style={{ marginTop: 6, marginLeft: 2 }}
             ></Ionicons>
           </View>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.infoContainer}>
           <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>
-            Richard Mac
+          {firstname}
           </Text>
           <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>
-            Developer
+            {email}
           </Text>
         </View>
 
@@ -80,30 +112,30 @@ export default function Profile() {
               },
             ]}
           >
-            <Text style={[styles.text, { fontSize: 24 }]}>45,844</Text>
-            <Text style={[styles.text, styles.subText]}>Followers</Text>
+            <Text style={[styles.text, { fontSize: 24 }]}>24</Text>
+            <Text style={[styles.text, styles.subText]}>Friends</Text>
           </View>
           <View style={styles.statsBox}>
-            <Text style={[styles.text, { fontSize: 24 }]}>302</Text>
-            <Text style={[styles.text, styles.subText]}>Following</Text>
+            <Text style={[styles.text, { fontSize: 24 }]}>5</Text>
+            <Text style={[styles.text, styles.subText]}>Meetings</Text>
           </View>
         </View>
 
         <View style={styles.interestContainer}>
           <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>
-            Primary Interests
+            Primary Interest
           </Text>
           <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>
-            Gaming
+            {primary}
           </Text>
         </View>
 
         <View style={styles.interestContainer}>
           <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>
-            Secondary Interests
+            Secondary Interest
           </Text>
           <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>
-            Coding
+            {secondary}
           </Text>
         </View>
 
@@ -148,9 +180,8 @@ const styles = StyleSheet.create({
     color: "#52575D",
   },
   Image: {
-    flex: 1,
-    width: undefined,
-    height: undefined,
+    width: 200,
+    height: 200
   },
   titleBar: {
     flexDirection: "row",
