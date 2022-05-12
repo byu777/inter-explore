@@ -29,11 +29,11 @@ const MakeEventPage = () => {
                 flex: 2,
               }}
             >
-              <TextInput
+              {/* <TextInput
                 style={{
                   flex: 2,
                 }}
-              ></TextInput>
+              ></TextInput> */}
             </View>
           </View>
   
@@ -53,11 +53,11 @@ const MakeEventPage = () => {
                 flex: 2,
               }}
             >
-              <TextInput
+              {/* <TextInput
                 style={{
                   flex: 2,
                 }}
-              ></TextInput>
+              ></TextInput> */}
             </View>
           </View>
   
@@ -77,11 +77,11 @@ const MakeEventPage = () => {
                 flex: 2,
               }}
             >
-              <TextInput
+              {/* <TextInput
                 style={{
                   flex: 2,
                 }}
-              ></TextInput>
+              ></TextInput> */}
             </View>
           </View>
   
@@ -101,11 +101,11 @@ const MakeEventPage = () => {
                 flex: 9,
               }}
             >
-              <TextInput
+              {/* <TextInput
                 style={{
                   flex: 2,
                 }}
-              ></TextInput>
+              ></TextInput> */}
             </View>
           </View>
   

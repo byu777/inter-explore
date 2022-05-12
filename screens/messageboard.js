@@ -6,90 +6,18 @@ import {
   Button,
   TextInput,
   Image,
+  SafeAreaView,
+  FlatList,
+  TouchableOpacity,
 } from "react-native";
 
-// import { NavigationContainer } from "@react-navigation/native";
-// import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
-// const Stack = createNativeStackNavigator();
-
-// const MessageBoardPage = () => {
-//   return (
-//     <NavigationContainer>
-//       <Stack.Navigator>
-//         {/* make as many screens as you want; order doesnt matter */}
-//         <Stack.Screen
-//           name="MessageBoard"
-//           component={MessageBoardLayout}
-//           options={{ title: "Inbox" }}
-//         />
-
-//         {/* headerTitleAlign -> center the title */}
-//         <Stack.Screen
-//           style={mb_styles.text_center}
-//           name="Chatrooms"
-//           component={ChatroomScreen}
-//           // ********* is it better to create event from the Stack using alert or is there a dialog box equivalent?   **************
-//           // **********************************************************************
-//           options={{
-//             title: "Basketball", //rename this to a group-name or name of person if 1:1 chat
-//             headerTitleAlign: "center",
-//           }}
-//         />
-
-//         <Stack.Screen
-//           name="EventBoard"
-//           component={EventBoard}
-//           options={{ title: "Your Events" }}
-//         />
-
-//         <Stack.Screen
-//           name="MakeEvent"
-//           component={MakeEventPage}
-//           options={{ 
-//             title: "Create an Event",
-//             headerTitleAlign: "center",
-//           }}
-//         />
-//       </Stack.Navigator>
-//     </NavigationContainer>
-//   );
-// };
-
-// ---------------------------Message Board page ------------------------------
-// const MessageBoardScreen = ({ navigation }) => {
-//   const [text, onChangeText] = React.useState("");
-//   return (
-    // <View style={mb_styles.container}>
-    //   <View style={mb_styles.textinput_cont}>
-    //     <TextInput
-    //       style={mb_styles.textinput_search}
-    //       onChangeText={onChangeText}
-    //       placeholder="search.."
-    //       value={text} //allows alphanumeric input into TextInput
-    //     />
-    //   </View>
-
-    //   <View style={mb_styles.button_chat}>
-    //     <Button
-    //       title="Go"
-    //       onPress={() => navigation.navigate("Chatrooms", { name: "Jane" })}
-    //     />
-    //   </View>
-
-//       {/* Created a custom component, and nest it inside the 'MAIN' View */}
-//       <MessageBoardLayout></MessageBoardLayout>
-//     </View>
-//   );
-// };
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 
 // --------------------------- Message Board page -----------------------------
-const MessageBoardPage = () => {
-  const [text, onChangeText] = React.useState("");
-  return (
-    
-    <View>
 
+export default function MessageBoardPage({ navigation }) {
+  return (
+    <SafeAreaView style={{ backgroundColor: "#ece6dd", marginBottom: 25 }}>
       <View style={mb_styles.textinput_cont}>
         {/* <TextInput
           style={mb_styles.textinput_search}
@@ -101,96 +29,81 @@ const MessageBoardPage = () => {
 
       {/* inbox container */}
       <View style={mb_styles.mb_chat_container}>
+        {/* can pull chat groups from database later and put in flatlist */}
+        {/* <FlatList/>   */}
+
         <View style={mb_styles.list_item_inbox}>
-          <View style={mb_styles.mb_image_container}>
-            <Image
-              style={mb_styles.mb_image_container}
-              source={require("../assets/favicon/favicon.png")}
-            ></Image>
-            <Button
-              title="Go"
-              onPress={() => navigation.navigate("Chatrooms", { name: "Jane" })}
-            />
-          </View>
+          <Ionicons
+            name="basketball"
+            size={70}
+            color="#52575D"
+            style={mb_styles.left_icon}
+          ></Ionicons>
+
           <View style={mb_styles.list_item_description}>
-            <Text style={{ flexShrink: 1 }}>
-              lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            </Text>
-            <Text style={{ flexShrink: 1 }}>
-              lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            </Text>
+            <Text style={{ fontSize: 25 }}>BASKETBALL</Text>
+            <Text>For all you basketball lovers!</Text>
           </View>
+
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Chatroom")}
+            style={mb_styles.touchables_arrow}
+          >
+            <Ionicons name="arrow-forward" size={25} color="#0c000e"></Ionicons>
+          </TouchableOpacity>
         </View>
 
         <View style={mb_styles.list_item_inbox}>
-          <View style={mb_styles.mb_image_container}>
-            <Image
-              style={mb_styles.mb_image_container}
-              source={require("../assets/favicon/favicon.png")}
-              onPress={() => navigation.navigate("Chatrooms", { name: "Jane" })}
-            ></Image>
-            <Button
-              title="Go"
-              onPress={() => navigation.navigate("Chatrooms", { name: "Jane" })}
-            />
-          </View>
+          <Ionicons name="baseball" size={70} color="#52575D" style={mb_styles.left_icon}></Ionicons>
+
           <View style={mb_styles.list_item_description}>
-            <Text style={{ flexShrink: 1 }}>
-              lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            </Text>
-            <Text style={{ flexShrink: 1 }}>
-              lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            </Text>
+            <Text style={{ fontSize: 25 }}>BASEBALL</Text>
+            <Text>For all you baseball lovers!</Text>
           </View>
+
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Chatroom")}
+            style={mb_styles.touchables_arrow}
+          >
+            <Ionicons name="arrow-forward" size={25} color="#0c000e"></Ionicons>
+          </TouchableOpacity>
         </View>
 
         <View style={mb_styles.list_item_inbox}>
-          <View style={mb_styles.mb_image_container}>
-            <Image
-              style={mb_styles.mb_image_container}
-              source={require("../assets/favicon/favicon.png")}
-              onPress={() => navigation.navigate("Chatrooms", { name: "Jane" })}
-            ></Image>
-            <Button
-              title="Go"
-              onPress={() => navigation.navigate("Chatrooms", { name: "Jane" })}
-            />
-          </View>
+          <Ionicons name="bicycle" size={70} color="#52575D" style={mb_styles.left_icon}></Ionicons>
+
           <View style={mb_styles.list_item_description}>
-            <Text style={{ flexShrink: 1 }}>
-              lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            </Text>
-            <Text style={{ flexShrink: 1 }}>
-              lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            </Text>
+            <Text style={{ fontSize: 25 }}>BIKING</Text>
+            <Text>For all you bikers!</Text>
           </View>
+
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Chatroom")}
+            style={mb_styles.touchables_arrow}
+          >
+            <Ionicons name="arrow-forward" size={25} color="#0c000e"></Ionicons>
+          </TouchableOpacity>
         </View>
 
         <View style={mb_styles.list_item_inbox}>
-          <View style={mb_styles.mb_image_container}>
-            <Image
-              style={mb_styles.mb_image_container}
-              source={require("../assets/favicon/favicon.png")}
-            ></Image>
-            <Button
-              title="Go"
-              onPress={() => navigation.navigate("Chatrooms", { name: "Jane" })}
-            />
-          </View>
+          <Ionicons name="golf" size={70} color="#52575D" style={mb_styles.left_icon}></Ionicons>
+
           <View style={mb_styles.list_item_description}>
-            <Text style={{ flexShrink: 1 }}>
-              lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            </Text>
-            <Text style={{ flexShrink: 1 }}>
-              lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            </Text>
+            <Text style={{ fontSize: 25 }}>GOLF</Text>
+            <Text>For all you golf lovers!</Text>
           </View>
+
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Chatroom")}
+            style={mb_styles.touchables_arrow}
+          >
+            <Ionicons name="arrow-forward" size={25} color="#0c000e"></Ionicons>
+          </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
-};
-
+}
 
 // ***------------------------------- STYLING ---------------------------------*********************
 
@@ -226,10 +139,9 @@ const mb_styles = StyleSheet.create({
   },
   mb_chat_container: {
     flexDirection: "column",
-    justifyContent: "flex-end", 
+    justifyContent: "flex-end",
     height: 600,
-    padding: 10,
-    marginRight: 20,
+    margin: 10,
   },
   mb_image_container: {
     flexDirection: "column",
@@ -238,15 +150,19 @@ const mb_styles = StyleSheet.create({
     margin: 5,
   },
   list_item_description: {
-    flexDirection: "column",
     flexWrap: "wrap",
     justifyContent: "center",
-    flex: 1,
+    flexShrink: 1,
+    flex: 4,
   },
   list_item_inbox: {
     flexDirection: "row",
     flex: 1,
     margin: 10,
+    backgroundColor: "#e6b700",
+    alignItems: "center",
+    justifyContent: "space-around",
+    borderRadius: 10,
   },
   button_chat: {
     flexDirection: "column",
@@ -255,7 +171,20 @@ const mb_styles = StyleSheet.create({
     width: 75,
     marginTop: 30,
   },
+  left_icon: {
+    flex: 1.5,
+    marginLeft: 5,
+  },
+  touchables_arrow: {
+    backgroundColor: "#db5f4d",
+    padding: 10,
+    width: 50,
+    borderRadius: 10,
+    position: "relative",
+    justifyContent: "flex-end",
+    marginRight: 10,
+    flex: 0.5,
+  },
 });
 
-
-export default MessageBoardPage;
+// export default MessageBoardPage;
