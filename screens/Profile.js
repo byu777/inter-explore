@@ -30,7 +30,7 @@ export default function Profile() {
     if(Platform.OS !== 'web'){
       const {status} = await ImagePicker.requestMediaLibraryPermissionsAsync
       if(status !== 'granted'){
-        alert("Permission Denied")
+        //alert("Permission Denied")
       }
     }
   }, [])

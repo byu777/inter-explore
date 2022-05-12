@@ -70,7 +70,7 @@ const Tabs = () => {
       >
         <Tab.Screen
           name="Home"
-          component={LandingPage}
+          component={MessageBoardPage}
           options={{
             tabBarIcon: ({ focused, color, size }) => (
               <Ionicons name="home-outline" color={color} size={size} />
@@ -86,7 +86,7 @@ const Tabs = () => {
             ), 
           }}
         />
-        <Tab.Screen
+        {/* <Tab.Screen
           name="Groups"
           component={MessageBoardPage}
           options={{
@@ -94,9 +94,9 @@ const Tabs = () => {
               <MaterialCommunityIcons name="account-group" color={color} size={size} />
             ), 
           }}
-        />
+        /> */}
 
-        <Tab.Screen
+        {/* <Tab.Screen
           name="Chats"
           component={Chatroom}
           options={{
@@ -105,7 +105,7 @@ const Tabs = () => {
               <Ionicons name="md-chatbox-outline" color={color} size={size} />
             ), 
           }}
-        />
+        /> */}
 
         <Tab.Screen
           name="Event"

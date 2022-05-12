@@ -11,6 +11,7 @@ import Tab from './../tabs/tab'
 import Chatroom from './chatroom';
 import MessageBoardPage from './messageboard';
 import EventList from './event_list';
+import MakeEventPage from "./../screens/create_event";
 
 // Context
 import { Provider as AuthProvider} from './../context/AuthContext';
@@ -40,6 +41,8 @@ const RootStack = () => {
                 options={{headerShown: true}} />
                 <Stack.Screen name="MessageBoardPage" component={MessageBoardPage} />
                 <Stack.Screen name="EventList" component={EventList} />
+                <Stack.Screen name="CreateEvent" component={MakeEventPage}
+                options={{headerShown: true}} />
             </Stack.Navigator>
         </NavigationContainer>
     )
