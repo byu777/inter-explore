@@ -29,7 +29,6 @@ import KeyboardAvoidingWrapper from "./../components/KeyboardAvoidingWrapper";
 import { Context as AuthContext } from './../context/AuthContext';
 import SelectDropdown from 'react-native-select-dropdown';
 import { StyleSheet } from "react-native";
-import tracker from "../api/tracker";
 
 // Colors
 const { darkLight } = Colors;

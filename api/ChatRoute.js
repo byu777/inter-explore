@@ -29,7 +29,7 @@ const createGroupChat = asyncHandler(async (req, res) => {
     try {
       const groupChat = await interests.create({
         InterestName: req.body.InterestName,
-        users: users,
+        user: []
       });
   
     //   const fullGroupChat = await interests.findOne({ _id: groupChat._id })

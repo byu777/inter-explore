@@ -14,7 +14,6 @@ export default function Profile() {
 
   const {state} = useContext(AuthContext);
 
-  console.log(state.user);
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
