@@ -3142,7 +3142,7 @@
     "compare-versions" "^3.4.0"
     "invariant" "^2.2.4"
 
-"expo-status-bar@~1.2.0":
+"expo-status-bar@^1.2.0":
   "integrity" "sha512-pVZZ/kDCXFK79E4dCtRecs3XLC8aiwlciutSd/fFmUPJSQZ1Txia6hlKajPt0GAYft8/YnT0V3URXzWZOBniYQ=="
   "resolved" "https://registry.npmjs.org/expo-status-bar/-/expo-status-bar-1.2.0.tgz"
   "version" "1.2.0"
