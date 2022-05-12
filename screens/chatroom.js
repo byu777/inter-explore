@@ -105,9 +105,10 @@ const Chatroom = ({ navigation }) => {
 
         <View style={chatroom_styles.make_event}>
           <Button
-            onPress={() => navigation.navigate({MakeEventPage})} //add dialog box to input details
+            onPress={() => navigation.navigate("CreateEvent")} //add dialog box to input details
             title="Make Event"
             color="orange"
+            style={chatroom_styles.touchables_arrow}
           />
         </View>
     </SafeAreaView>
@@ -161,6 +162,13 @@ const chatroom_styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
   },
+  touchables_arrow: {
+    backgroundColor: "#db5f4d",
+    width: 100,
+    borderRadius: 5,
+    flex: 1,
+  },
 });
+
 
 export default Chatroom;
