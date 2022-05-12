@@ -65,8 +65,22 @@ const createGroupChat = asyncHandler(async (req, res) => {
     }
   });
 
+  const getInterests = asyncHandler(async (req, res) => {
+    try {
+      const names = await interests.find();
+      const allInterests = []
+      for(let i = 0; i < names.length; i++){
+        allInterests[i] = names[i].InterestName;
+      }
+      res.send(allInterests);
+    } catch (error) {
+      console.log(error)
+    }
+  })
+
   module.exports = {
     fetchChats,
     createGroupChat,
-    addToGroup
+    addToGroup,
+    getInterests
   };

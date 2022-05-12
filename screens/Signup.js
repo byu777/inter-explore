@@ -26,9 +26,10 @@ import {
   ErrorText
 } from "./../components/LoginStyles";
 import KeyboardAvoidingWrapper from "./../components/KeyboardAvoidingWrapper";
-import { Context as AuthContext } from './../context/AuthContext'; 
+import { Context as AuthContext } from './../context/AuthContext';
 import SelectDropdown from 'react-native-select-dropdown';
 import { StyleSheet } from "react-native";
+import tracker from "../api/tracker";
 
 // Colors
 const { darkLight } = Colors;
@@ -38,24 +39,10 @@ const Signup = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
   
   // States for user sign up
-  const {state, signup} = useContext(AuthContext);
+  const {state, signup, getInterests} = useContext(AuthContext);
 
+  getInterests();
   {state.token ? navigation.navigate("Tab") : null}
-
-  const interests = [
-    'Basketball',
-    'Church',
-    'Hockey',
-    'Sushi',
-    'Fighting',
-    'Pokemon Go',
-    'Cars',
-    'Food',
-    'Reading',
-    'One Piece',
-    'Marvel',
-    'Music',
-  ];
 
   return (
     <KeyboardAvoidingWrapper>
@@ -127,7 +114,7 @@ const Signup = ({ navigation }) => {
                   setHidePassword={setHidePassword}
                 />
                 <SelectDropdown
-                  data={interests}
+                  data={state.interests}
                   onSelect={(selectedItem) => {
                     values.primaryInterest = selectedItem;
                   }}
@@ -149,7 +136,7 @@ const Signup = ({ navigation }) => {
                   rowTextStyle={styles.dropdown1RowTxtStyle}
                 />
                 <SelectDropdown
-                  data={interests}
+                  data={state.interests}
                   onSelect={(selectedItem) => {
                     values.secondaryInterest = selectedItem;
                   }}

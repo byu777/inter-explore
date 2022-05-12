@@ -14,6 +14,8 @@ const authReducer = (state, action) => {
       return {token: null, errorMessage: '', user: null};
     case 'clear_error_message':
       return {...state, errorMessage: ''};
+    case 'interests':
+      return {...state, interests: action.payload};
     default:
       return state;
   }
@@ -82,8 +84,18 @@ const signout = (dispatch) => async () => {
     //console.log("Signed Out");
   };
 
+
+const getInterests = (dispatch) => async () => {
+      try {
+        const response = await trackerApi.get("/api/interests/getInterests");
+        await dispatch({type: 'interests', payload: response.data})
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
 export const { Provider, Context } = createDataContext(
   authReducer,
-  { signin, signout, signup, clearErrorMessage },
-  { token: null, errorMessage: '', user: null}
+  { signin, signout, signup, clearErrorMessage, getInterests },
+  { token: null, errorMessage: '', user: null, interests: null}
 );
