@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {Component, useState} from "react";
 import {
   StyleSheet,
   Text,
@@ -8,90 +8,100 @@ import {
   Alert,
   SafeAreaView,
 } from "react-native";
-import DatePicker from 'react-native-date-picker';
+import CustomDatePicker from "../components/datepicker";
 
-const MakeEventPage = () => {
+export default class MakeEventPage extends Component {
 
-  const [date, setDate] = useState(new Date());
-  return (
-    <SafeAreaView style={create_event.event_container}>
-      <Text style={create_event.event_title}>Create an Event!</Text>
+  constructor(props) {
+    super(props)
+    this.event_state = {date: "2022-05-11"};
+  }
 
-      <View style={create_event.title}>
-        <Text style={create_event.title_text_style}>Title</Text>
-        <View style={create_event.border_styles}>
-          <TextInput
-                style={{
-                  flex: 2,
-                }}
-              ></TextInput>
+  render() {
+    return (
+
+      <SafeAreaView style={create_event.event_container}>
+        <Text style={create_event.event_title}>Create an Event!</Text>
+  
+        <View style={create_event.title}>
+          <Text style={create_event.title_text_style}>Title</Text>
+          <View style={create_event.border_styles}>
+            <TextInput
+                  style={{
+                    flex: 2,
+                  }}
+                ></TextInput>
+          </View>
         </View>
-      </View>
-
-      <View style={create_event.location}>
-        <Text style={create_event.title_text_style}>Location</Text>
-        <View style={create_event.border_styles}>
-          <TextInput
-                style={{
-                  flex: 2,
-                }}
-              ></TextInput>
+  
+        <View style={create_event.location}>
+          <Text style={create_event.title_text_style}>Location</Text>
+          <View style={create_event.border_styles}>
+            <TextInput
+                  style={{
+                    flex: 2,
+                  }}
+                ></TextInput>
+          </View>
         </View>
-      </View>
-
-      <View style={create_event.date}>
-        <Text style={create_event.title_text_style}>Date</Text>
-        {/* <DatePicker date={date} onDateChange={setDate}/> */}
-        {/* <View style={create_event.border_styles}>
-          <TextInput
-                style={{
-                  flex: 2,
-                }}
-              ></TextInput>
-        </View> */}
-      </View>
-
-      <View style={create_event.description}>
-        <Text style={create_event.title_text_style}>Description</Text>
-        <View style={create_event.border_styles}>
-          <TextInput
-                style={{
-                  flex: 2,
-                }}
-              ></TextInput>
+  
+        {/* ---------------------  DATE PICKER ---------------------------- */}
+        <View style={create_event.date}>
+          <Text style={create_event.title_text_style}>Date</Text>
+          <CustomDatePicker/>
+          {/* <View style={create_event.border_styles}>
+            <TextInput
+                  style={{
+                    flex: 2,
+                  }}
+                ></TextInput>
+          </View> */}
         </View>
-      </View>
-
-      <View style={create_event.buttons}>
-        <Button
-          title="Cancel"
-          style={create_event.btn_cancel}
-          onPress={() =>
-            Alert.alert("Members", "Members of Basketball", [
-              {
-                text: "Cancel",
-                onPress: () => console.log("Cancel pressed"),
-                style: "cancel",
-              },
-            ])
-          }
-        />
-        <Button
-          title="Schedule"
-          style={create_event.btn_schedule}
-          onPress={() =>
-            Alert.alert("Success", "Event was successfully created.", [
-              {
-                text: "OK",
-                onPress: () => console.log("OK pressed"),
-                style: "ok",
-              },
-            ])
-          }
-        />
-      </View>
-    </SafeAreaView>
-  );
+  
+        <View style={create_event.description}>
+          <Text style={create_event.title_text_style}>Description</Text>
+          <View style={create_event.border_styles}>
+            <TextInput
+                  style={{
+                    flex: 2,
+                  }}
+                ></TextInput>
+          </View>
+        </View>
+  
+        <View style={create_event.buttons}>
+          <Button
+            title="Cancel"
+            style={create_event.btn_cancel}
+            onPress={() =>
+              Alert.alert("Members", "Members of Basketball", [
+                {
+                  text: "Cancel",
+                  onPress: () => console.log("Cancel pressed"),
+                  style: "cancel",
+                },
+              ])
+            }
+          />
+          <Button
+            title="Schedule"
+            style={create_event.btn_schedule}
+            onPress={() =>
+              Alert.alert("Success", "Event was successfully created.", [
+                {
+                  text: "OK",
+                  onPress: () => console.log("OK pressed"),
+                  style: "ok",
+                },
+              ])
+            }
+          />
+        </View>
+      </SafeAreaView>
+    );
+  }
+  // const [date, setDate] = useState(new Date());
+  
 };
 
 const create_event = StyleSheet.create({
@@ -100,7 +110,7 @@ const create_event = StyleSheet.create({
     flex: 1,
     marginTop: 25,
     padding: 15,
-    backgroundColor: "#e6b700",
+    backgroundColor: "#ece6dd",
   },
   title: {
     flex: 3,
@@ -112,10 +122,10 @@ const create_event = StyleSheet.create({
     flex: 3,
   },
   date: {
-    flex: 3,
+    flex: 5,
   },
   description: {
-    flex: 10,
+    flex: 8,
   },
   buttons: {
     flexDirection: "row",
@@ -124,8 +134,9 @@ const create_event = StyleSheet.create({
   },
   event_title: {
     textAlign: "center",
-    marginTop: 40,
-    fontSize: 35,
+    marginTop: 25,
+    fontSize: 30,
+    color: "#530127",
   },
   border_styles: {
     borderWidth: 3,
@@ -143,4 +154,4 @@ const create_event = StyleSheet.create({
   },
 });
 
-export default MakeEventPage;
+// export default MakeEventPage;
