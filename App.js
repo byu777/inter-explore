@@ -4,7 +4,7 @@ import MakeEventPage from "./screens/create_event";
 
 export default function App() {
   return (
-    // <RootStack/>
-    <MakeEventPage/>
+    <RootStack/>
+    //<MakeEventPage/>
   );
 }
