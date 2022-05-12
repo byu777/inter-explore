@@ -2,20 +2,29 @@ import {
   StyleSheet,
   Text,
   View,
-  TextInput,
   Image,
   ScrollView,
   Pressable,
   Alert,
   SafeAreaView,
+  TouchableOpacity
 } from "react-native";
+import React, { useContext } from "react";
 import { StatusBar } from "expo-status-bar";
+
+// Context
+import { Context as AuthContext } from './../context/AuthContext';
 
 const menuOptions = () => {
   Alert.alert("Test", "This is a test");
 };
 
-const LandingPage = () => {
+const LandingPage = ({ navigation }) => {
+
+  const {state, signout} = useContext(AuthContext);
+
+  {state.token ? null : navigation.navigate("Login")}
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={{ marginHorizontal: 0 }}>
@@ -127,6 +136,12 @@ const LandingPage = () => {
               <Text style={{ fontSize: 40 }}>...</Text>
             </Pressable>
           </View>
+          {/* Temp code just to have some temp logout ability */}
+        <TouchableOpacity style={styles.container}
+        onPress={() => signout()}>
+          <Text>Sign Out</Text>
+        </TouchableOpacity>
+          {/* Temp code just to have some temp logout ability */} 
         </View>
       </ScrollView>
     </SafeAreaView>
