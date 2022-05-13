@@ -34,7 +34,7 @@ const createGroupChat = asyncHandler(async (req, res) => {
     try {
       const groupChat = await interests.create({
         InterestName: req.body.InterestName,
-        user: [],
+        user: []
       });
   
     //   const fullGroupChat = await interests.findOne({ _id: groupChat._id })
@@ -54,13 +54,13 @@ const createGroupChat = asyncHandler(async (req, res) => {
     const added = await interests.findByIdAndUpdate(
       chatId,
       {
-        $push: { users: userId },
+        $push: { user: userId },
       },
       {
         new: true,
       }
     )
-      .populate("Users", "-password")
+      .populate("user", "-password")
   
     if (!added) {
       res.status(404);
@@ -92,8 +92,8 @@ const createGroupChat = asyncHandler(async (req, res) => {
   }
 });
 
-
-  const getInterests = asyncHandler(async (req, res) => {
+  // Grabs each interest name and returns a list of just the names
+  const getInterestNames = asyncHandler(async (req, res) => {
     try {
       const names = await interests.find();
       const allInterests = []
@@ -106,10 +106,21 @@ const createGroupChat = asyncHandler(async (req, res) => {
     }
   })
 
+  // Grabs all interests from database and returns them as the whole object array
+  const getAllInterests = asyncHandler(async (req, res,) =>  {
+    try {
+      const allInterests = await interests.find();
+      res.send(allInterests);
+    } catch (error) {
+      console.log(error);
+    }
+  })
+
   module.exports = {
     fetchChats,
     createGroupChat,
     addToGroup,
     removeFromGroup,
-    getInterests
+    getInterestNames,
+    getAllInterests
   };
