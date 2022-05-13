@@ -2,6 +2,11 @@ const asyncHandler = require("express-async-handler");
 const interests = require("../router/models/interestGroup");
 const User = require("../router/models/Users");
 
+//Run each function and update the collection
+
+
+//In each interest group, find all the users that have this interest and add
+//to list of users.
   const fetchChats = asyncHandler(async (req, res) => {
     try {
         interests.find({ users: { $elemMatch: { $eq: req.user._id } } })
@@ -29,7 +34,7 @@ const createGroupChat = asyncHandler(async (req, res) => {
     try {
       const groupChat = await interests.create({
         InterestName: req.body.InterestName,
-        users: users,
+        user: [],
       });
   
     //   const fullGroupChat = await interests.findOne({ _id: groupChat._id })

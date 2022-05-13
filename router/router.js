@@ -1,30 +1,33 @@
+//This file is the starting point. Runs 'router.js' and goes line by line, top to bottom.
 require('./models/Users');
 require('./models/Message');
 require('./models/interestGroup');
+require("./models/Events");
+
 const express = require('express');
-
 const mongoose = require('mongoose');
-
 const bodyParser = require('body-parser');
-
 const authentication = require('./authentication');
 
-// add this
+//create variables for each collection
 const message = require('./messages/messages');
 const Messages = require('./Messagerouters');
 const interests = require('./ChatRouters');
+const events = require('./EventRouters');
 
 
 const app = express();
 
+//Application will connect to each collection on MongoDB
 const cors = require('cors')
 app.use(cors())
-
 app.use(bodyParser.json());
-
 app.use(authentication);
+
+//goes to each "Route" in the api folder, and runs all the functions/lines in each ...Route file
 app.use('/api/Messages',Messages);
 app.use('/api/interests',interests);
+app.use('/api/events', events);
 
 const mongoUri = 'mongodb+srv://user:123@cluster0.1ozdh.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 

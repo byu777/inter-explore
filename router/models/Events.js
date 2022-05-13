@@ -1,11 +1,15 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
 
 const eventSchema = new mongoose.Schema ({
 
-    desc: {
+    title: {
         type: String,
         unique: true,
+        require: true
+    },
+
+    desc: {
+        type: String,
         require: true
     },
 
@@ -13,17 +17,7 @@ const eventSchema = new mongoose.Schema ({
         type: String,
         require: true
     },
-    // add firstName and lastName
-    day:{
-        type: String,
-        require: true
-    },
-    month:{
-        type: String,
-        require: true
-    },
-
-    year:{
+    date:{
         type: String,
         require: true
     },
@@ -33,24 +27,13 @@ const eventSchema = new mongoose.Schema ({
         require: true
     },
 
-    key: {
-        type: int,
-        require: true,
-        unique: true,
+    user: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Users"
+        }],
+    interest_group: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "interests"
     },
-
-    users: [
-
-    ],
-    // move this here
 });
-
-    //add this 
-
-    eventSchema.pre('save',function(next){
-        var event = this;
-        
-    });
-    
-
     module.exports = mongoose.model('Events', eventSchema);
