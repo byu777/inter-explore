@@ -11,7 +11,7 @@ const InterestSchema = new mongoose.Schema ({
         type: mongoose.Schema.Types.ObjectId, 
         ref: "Users" 
     }],
-    latestMessage: {
+latestMessage : {
         type: mongoose.Schema.Types.ObjectId, 
         ref: "Message"
     },
