@@ -29,7 +29,6 @@ import KeyboardAvoidingWrapper from "./../components/KeyboardAvoidingWrapper";
 import { Context as AuthContext } from './../context/AuthContext';
 import SelectDropdown from 'react-native-select-dropdown';
 import { StyleSheet } from "react-native";
-import tracker from "../api/tracker";
 
 // Colors
 const { darkLight } = Colors;
@@ -39,7 +38,7 @@ const Signup = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
   
   // States for user sign up
-  const {state, signup, getInterests} = useContext(AuthContext);
+  const {state, signup, getInterests, addToInterests} = useContext(AuthContext);
 
   getInterests();
   {state.token ? navigation.navigate("Tab") : null}
@@ -61,11 +60,11 @@ const Signup = ({ navigation }) => {
               secondaryInterest: "",
             }}
             onSubmit={(values) => {
-              console.log(values)
+              //console.log(values)
               if (values.email != '' && values.password != '' && values.firstName != '' &&
                values.userName != '' && values.primaryInterest != '' && values.secondaryInterest != '') {
                  if (values.email.includes("@")){
-                  signup(values)
+                  signup(values);
                  } else {
                    state.errorMessage = "You must enter a valid email address"
                  }
