@@ -70,6 +70,29 @@ const createGroupChat = asyncHandler(async (req, res) => {
     }
   });
 
+  const removeFromGroup = asyncHandler(async (req, res) => {
+  const { chatId, userId } = req.body;
+  const removed = await interests.findByIdAndUpdate(
+    chatId,
+    {
+      $pull: { users: userId },
+    },
+    {
+      new: true,
+    }
+  )
+    .populate("users", "-password")
+    .populate("groupAdmin", "-password");
+
+  if (!removed) {
+    res.status(404);
+    throw new Error("Chat Not Found");
+  } else {
+    res.json(removed);
+  }
+});
+
+
   const getInterests = asyncHandler(async (req, res) => {
     try {
       const names = await interests.find();
@@ -87,5 +110,6 @@ const createGroupChat = asyncHandler(async (req, res) => {
     fetchChats,
     createGroupChat,
     addToGroup,
+    removeFromGroup,
     getInterests
   };
