@@ -96,6 +96,6 @@ const getInterests = (dispatch) => async () => {
 
 export const { Provider, Context } = createDataContext(
   authReducer,
-  { signin, signout, signup, clearErrorMessage, getInterests },
+  { signin, signout, signup, clearErrorMessage, getInterests},
   { token: null, errorMessage: '', user: null, interests: null}
 );

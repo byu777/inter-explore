@@ -1,5 +1,7 @@
-const mongoose = require('mongoose');
+// Schema and Model export
 
+const mongoose = require('mongoose');
+ 
 const eventSchema = new mongoose.Schema ({
 
     title: {
@@ -27,13 +29,15 @@ const eventSchema = new mongoose.Schema ({
         require: true
     },
 
-    user: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Users"
-        }],
-    interest_group: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "interests"
-    },
+    // user: [{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "Users"
+    //     }],
+    // interest_group: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "interests"
+    // },
 });
-    module.exports = mongoose.model('Events', eventSchema);
+
+const EventModel = mongoose.model('EventModel', eventSchema);
+module.exports = EventModel;
