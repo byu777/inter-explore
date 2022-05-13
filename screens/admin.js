@@ -5,14 +5,14 @@ import { StyleSheet, Text, View, FlatList, Alert, Pressable, SafeAreaView} from 
 export default function Admin() {
 
   const [TEMP_DATA, setTEMP_DATA]= useState([
-    {interest: 'naruto', id: '1'},
-    {interest: 'naruto shippuden', id: '2'},
-    {interest: 'one piece', id: '3'},
-    {interest: 'one piece', id: '4'},
-    {interest: 'one piece', id: '5'},
-    {interest: 'one piece', id: '6'},
-    {interest: 'one piece', id: '7'},
-    {interest: 'one piece', id: '8'},
+    {interest: 'Naruto', id: '1'},
+    {interest: 'Hockey', id: '2'},
+    {interest: 'Lacrosse', id: '3'},
+    {interest: 'Soccer', id: '4'},
+    {interest: 'Football', id: '5'},
+    {interest: 'Pool', id: '6'},
+    {interest: 'Running', id: '7'},
+    {interest: 'WEight lifting', id: '8'},
   ]);
   
   const handleDeleteCard = (id, interest) => {
