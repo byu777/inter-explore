@@ -5,7 +5,7 @@ import Profile from "../screens/Profile";
 import MessageBoardPage from "../screens/messageboard";
 import Chatroom from "../screens/chatroom";
 import LandingPage from "../screens/landing_page";
-import Admin from "../screens/admin";
+// import Admin from "../screens/admin";
 
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 
@@ -137,7 +137,7 @@ const Tabs = () => {
           }}
         />
 
-        <Tab.Screen
+        {/* <Tab.Screen
           name="Chatrooms"
           component={Chatroom}
           options={{
@@ -167,7 +167,7 @@ const Tabs = () => {
             //   <CustomTabBarButtons {...props} />
             // )
           }}
-        />
+        /> */}
 
         <Tab.Screen
           name="Event"
