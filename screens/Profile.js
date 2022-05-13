@@ -20,7 +20,6 @@ export default function Profile() {
 
   const [image, setImage] = useState(null);
 
-  console.log(state.user);
   const firstname = state.user.firstName;
   const primary = state.user.primaryInterest;
   const secondary = state.user.secondaryInterest;
