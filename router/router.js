@@ -38,11 +38,11 @@ mongoose.connection.on('error', (err) => {
     console.log('Errors connecting to mongoDB :(',err)
 });
 
-// //Application will connect to each collection on MongoDB
-// const cors = require('cors')
-// app.use(cors())
-// app.use(bodyParser.json());
-// app.use(authentication);
+//Application will connect to each collection on MongoDB
+const cors = require('cors')
+app.use(cors())
+app.use(bodyParser.json());
+app.use(authentication);
 
 //goes to each "Route" in the api folder, and runs all the functions/lines in each .~Route file
 app.use('/api/Messages',Messages);
@@ -54,16 +54,16 @@ app.use('/api/interests',interests);
 app.use('/api', event_routes);  //note: all event routes start at '/api', so define that here as the BASE
 
 
-// // add message and change send 
-// app.get('/', message,(req,res) => {
-// res.send('your email: $ { req.user.email}');
-// });
+// add message and change send 
+app.get('/', message,(req,res) => {
+res.send('your email: $ { req.user.email}');
+});
 
 
-// app.post("/response", (req, res) => {
-//     eventData(req.body);
-//     res.render("success", {title: req.body.title});
-// });
+app.post("/response", (req, res) => {
+    eventData(req.body);
+    res.render("success", {title: req.body.title});
+});
 
 const server = app.listen(3000,()=>{
     console.log('Listening on port 3000');

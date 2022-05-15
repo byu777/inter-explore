@@ -31,7 +31,7 @@ import SelectDropdown from 'react-native-select-dropdown';
 import { StyleSheet } from "react-native";
 
 // Colors
-const { darkLight } = Colors;
+const { darkLight } = Colors; 
 
 const Signup = ({ navigation }) => {
   // State to hide and show password

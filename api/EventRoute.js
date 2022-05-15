@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const EventModel = require("../router/models/Events");
 
+ 
 // --------------- THIS IS WHERE YOU TELL 'ROUTER' TO DO ALL THE THINGS IT NEEDS TO DO --------------
 // --------------------------------------------------------------------------------------------------
 
@@ -41,8 +42,8 @@ router.get("/title", (req, res) => {
   res.json(data);
 });
 
-// //Creates an event JSON object, taking info from the front-end to populate attributes based
-// // on the event schema 'router/models/Events.js'
+//Creates an event JSON object, taking info from the front-end to populate attributes based
+// on the event schema 'router/models/Events.js'
 // const createEvent = asyncHandler(async (req, res) => {
 //   try {
 //     const makeEvent = await events.create({
@@ -60,6 +61,26 @@ router.get("/title", (req, res) => {
 //     throw new Error(error.message);
 //   }
 // });
+
+router.post('/createEvent', async (req, res) => {
+  var var1 = req.body.title;
+  var var2 = req.body.location;
+  var var3 = req.body.date;
+  var var4 = req.body.time;
+  var var5 = req.body.desc;
+
+  const newEvent = new EventModel({
+    title: var1,
+    location: var2,
+    date: var3,
+    time: var4,
+    desc: var5,
+  });
+
+  // how do i send this Event object to MongoDB?????????????????????????
+
+  console.log(newEvent);
+});
 
 //'module.exports' is the instruction that tells Node.js to export functions/objects
 // so other files can use this exported code
