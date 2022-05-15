@@ -29,7 +29,27 @@ const eventSchema = new mongoose.Schema ({
         require: true
     },
 
+    key: {
+        type: int,
+        require: true,
+        unique: true,
+    },
+    user: [{
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: "Users" 
+    }],
+    CurrentGroup:
     {
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: "interests"
+    }
+},
+    {
+        timestamps : true
+
+    }
+
+);
 
 const EventModel = mongoose.model('EventModel', eventSchema);
 module.exports = EventModel;
