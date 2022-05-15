@@ -29,15 +29,7 @@ const eventSchema = new mongoose.Schema ({
         require: true
     },
 
-    // user: [{
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: "Users"
-    //     }],
-    // interest_group: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: "interests"
-    // },
-});
+    {
 
 const EventModel = mongoose.model('EventModel', eventSchema);
 module.exports = EventModel;
