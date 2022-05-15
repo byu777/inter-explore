@@ -1,93 +1,68 @@
 const express = require("express");
 const router = express.Router();
 const EventModel = require("../router/models/Events");
+const interests = require("../router/models/interestGroup");
 
  
-// --------------- THIS IS WHERE YOU TELL 'ROUTER' TO DO ALL THE THINGS IT NEEDS TO DO --------------
-// --------------------------------------------------------------------------------------------------
-
-//a route to send data to; can open on the localhost:3000/place url
-router.get("/", (req, res) => {
-  // const data = {
-  //     title: 'LoL',
-  //     desc: 'MSI watch party',
-  //     location: 'London',
-  //     date: 'May 25, 2022',
-  //     time: '11:11',
-  //     user: ['Johnny', 'David'],
-  //     interest_group: 'gaming',
-  // };
-
-  EventModel.find({})
-    .then((data) => {
-      console.log("Data ", data);
-      res.json(data);
-    })
-    .catch((err) => {
-      console.log("error: Cant read from the database rip");
-      console.log("error: ", err);
-    });
-});
-
-router.get("/title", (req, res) => {
-  const data = {
-    title: "LoL asaasasdasdasdsadasdasd",
-    desc: "MSI watch party",
-    location: "London",
-    date: "May 25, 2022",
-    time: "11:11",
-    user: ["Johnny", "David"],
-    interest_group: "gaming",
-  };
-  res.json(data);
-});
 
 //Creates an event JSON object, taking info from the front-end to populate attributes based
 // on the event schema 'router/models/Events.js'
-// const createEvent = asyncHandler(async (req, res) => {
-//   try {
-//     const makeEvent = await events.create({
-//         title: req.body.title,
-//         desc: req.body.desc,
-//         location: req.body.location,
-//         date:req.body.date,
-//         time:req.body.time,
-//         // user: [],
-//         // interest_group: interest_group.InterestName,
-//     });
+const createEvent = asyncHandler(async (req, res) => {
+  try {
+    const makeEvent = await events.create({
+        title: req.body.title,
+        desc: req.body.desc,
+        location: req.body.location,
+        date:req.body.date,
+        time:req.body.time,
+        user: [],
+        CurrentGroup: interests._id
+    });
 
-//   } catch (error) {
-//     res.status(400);
-//     throw new Error(error.message);
-//   }
-// });
-
-router.post('/createEvent', async (req, res) => {
-  var var1 = req.body.title;
-  var var2 = req.body.location;
-  var var3 = req.body.date;
-  var var4 = req.body.time;
-  var var5 = req.body.desc;
-
-  const newEvent = new EventModel({
-    title: var1,
-    location: var2,
-    date: var3,
-    time: var4,
-    desc: var5,
-  });
-
-  // how do i send this Event object to MongoDB?????????????????????????
-
-  console.log(newEvent);
+  } catch (error) {
+    res.status(400);
+    throw new Error(error.message);
+  }
 });
+
+
+const addToEvent = asyncHandler(async (req, res) => {
+  const { eventID, userId } = req.body;
+
+  // check if the requester is admin
+
+  const added = await events
+    .findByIdAndUpdate(
+      eventID,
+      {
+        $push: { users: userId },
+      },
+      {
+        new: true,
+      }
+    )
+    .populate("Users", "-password");
+
+  if (!added) {
+    res.status(404);
+    throw new Error("Chat Not Found");
+  } else {
+    res.json(added);
+  }
+});
+
+export const { Provider, Context } = createDataContext(
+  authReducer,
+  { getUsersForEvent },
+  { token: null, errorMessage: "", user: null, interests: null }
+);
+
 
 //'module.exports' is the instruction that tells Node.js to export functions/objects
 // so other files can use this exported code
 // Basically, when another file runs 'EventRoute.js', it will export and be able to use this
 // function, 'createEvent'
-// module.exports = {
-//     createEvent
-// };
-
-module.exports = router;
+module.exports = {
+  createEvent,
+  addToEvent
+};
