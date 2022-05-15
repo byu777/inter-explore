@@ -6,12 +6,15 @@ const InterestSchema = new mongoose.Schema ({
         type: String,
         require: true
     },
-
+    currentEvents: [{
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: "Events" 
+    }],
     user: [{
         type: mongoose.Schema.Types.ObjectId, 
         ref: "Users" 
     }],
-    latestMessage: {
+latestMessage : {
         type: mongoose.Schema.Types.ObjectId, 
         ref: "Message"
     },
@@ -24,3 +27,4 @@ const InterestSchema = new mongoose.Schema ({
 
 );
 module.exports = mongoose.model('interests', InterestSchema);
+git 

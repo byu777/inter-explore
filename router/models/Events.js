@@ -38,12 +38,22 @@ const eventSchema = new mongoose.Schema ({
         require: true,
         unique: true,
     },
+    user: [{
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: "Users" 
+    }],
+    CurrentGroup:
+    {
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: "interests"
+    }
+},
+    {
+        timestamps : true
 
-    users: [
+    }
 
-    ],
-    // move this here
-});
+);
 
     //add this 
 
