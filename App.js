@@ -8,6 +8,6 @@ export default function App() {
   return (
     // <RootStack/>
     // <AdminSuggestions/>
-    <AdminMain/>
+    <AdminSuggestions/>
   );
 }

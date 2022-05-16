@@ -8,6 +8,9 @@ import {
   Alert,
   Pressable,
   SafeAreaView,
+  TouchableOpacity,
+  Modal,
+  Button
 } from "react-native";
 
 /**
@@ -15,6 +18,8 @@ import {
  * @returns Admin page components
  */
 export default function AdminSuggestions() {
+  const [isVisible, setIsVisible] = useState(false);
+
   /**
    * Constant of hard coded data to test suggestion rendering.
    */
@@ -36,23 +41,12 @@ export default function AdminSuggestions() {
    * @param {string} id unique id of the interest
    * @param {string} interest name of the interest
    */
-  const handleDeleteCard = (id, interest) => {
+  const handleDeleteSuggestion = (id, interest) => {
     Alert.alert(
-      "Interest suggestion",
-      "Would you like to add or remove " + interest + "?",
+      "Remove suggestion",
+      "Are you sure you want to delete " + interest + "?",
       [
         { text: "Cancel", onPress: () => {} },
-        {
-          text: "Add",
-          onPress: () => {
-            const filterData = TEMP_DATA.filter((item) => item.id !== id);
-            setTEMP_DATA(filterData);
-            Alert.alert(
-              "Confirmation",
-              interest + " has been added to the interest list."
-            );
-          },
-        },
         {
           text: "Remove",
           onPress: () => {
@@ -66,17 +60,86 @@ export default function AdminSuggestions() {
   };
 
   /**
+   * Add the suggestion to the interests collection and 
+   * removes it from the suggestion collection.
+   * @param {*} id unique id of interest
+   * @param {*} interest name of interest
+   */
+  const handleAddSuggestion = (id, interest) => {
+    Alert.alert(
+      "Add suggestion",
+      "Are you sure you want to add " + interest + " to interests?",
+      [
+        { text: "Cancel", onPress: () => {} },
+        {
+          text: "Add",
+          onPress: () => {
+            // const filterData = TEMP_DATA.filter((item) => item.id !== id);
+            // setTEMP_DATA(filterData);
+            // Alert.alert("Confirmation", interest + " has been added to the list of interests.");
+            addToGroup();
+          },
+        },
+      ]
+    );
+  };
+
+  const addToGroup = asyncHandler(async (req, res) => {
+    const { chatId, userId } = req.body;
+  
+    // check if the requester is admin
+  
+    const added = await interests.findByIdAndUpdate(
+      chatId,
+      {
+        $push: { user: userId },
+      },
+      {
+        new: true,
+      }
+    )
+      .populate("user", "-password")
+  
+    if (!added) {
+      res.status(404);
+      throw new Error("Chat Not Found");
+    } else {
+      res.json(added);
+    }
+  });
+
+  const modalAppear = (id, interest) => {
+    setIsVisible(true);
+    return(
+      <View>
+      <Modal onRequestClose={() => setIsVisible(false)} visible={isVisible}>
+        <View>
+          <Text>Modal open with {interest} with ID {id}</Text>
+          <Button onPress={() => setIsVisible(false)} title={'Close'} />
+        </View>
+      </Modal>
+      </View>
+    )
+  }
+
+  /**
    * Renders an individual suggestion with ID number and interest name.
    * @param {*} interestObject object of interest id and interest name
    * @returns formatted list item of interest
    */
   const OneInterest = ({ id, interest }) => (
     <View style={adminStyles.suggestionField}>
-      <Pressable onPress={() => handleDeleteCard(id, interest)}>
+      <Pressable onPress={() => handleDeleteSuggestion(id, interest)}>
         <Text style={adminStyles.suggestionName}>
           {id} = {interest}
         </Text>
       </Pressable>
+      <TouchableOpacity onPress={() => handleAddSuggestion(id, interest)} style={adminStyles.interestButton}>
+        <Text>Add</Text>
+        </TouchableOpacity>
+      <TouchableOpacity onPress={() => handleDeleteSuggestion(id, interest)} style={adminStyles.interestButton}>
+        <Text>Remove</Text>
+      </TouchableOpacity>
     </View>
   );
 
@@ -116,7 +179,6 @@ const adminStyles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     flexWrap: "wrap",
-    padding: 5,
     justifyContent: "space-evenly",
     borderWidth: 3,
     borderColor: "black",
@@ -130,4 +192,9 @@ const adminStyles = StyleSheet.create({
     margin: 15,
     padding: 5,
   },
+  interestButton: {
+    backgroundColor: "#FFB703",
+    alignItems: "center",
+    padding: 17
+  }
 });
