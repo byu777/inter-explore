@@ -1,6 +1,6 @@
 import React, { useState, useContext} from "react";
 import { StatusBar } from "expo-status-bar";
-import { View} from "react-native";
+import { View, Text} from "react-native";
 //icons
 import { Ionicons } from "@expo/vector-icons";
 //formik
@@ -26,7 +26,9 @@ import {
   ErrorText
 } from "./../components/LoginStyles";
 import KeyboardAvoidingWrapper from "./../components/KeyboardAvoidingWrapper";
-import { Context as AuthContext } from './../context/AuthContext'; 
+import { Context as AuthContext } from './../context/AuthContext';
+import SelectDropdown from 'react-native-select-dropdown';
+import { StyleSheet } from "react-native";
 
 // Colors
 const { darkLight } = Colors;
@@ -36,8 +38,9 @@ const Signup = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
   
   // States for user sign up
-  const {state, signup} = useContext(AuthContext);
+  const {state, signup, getInterests, addToInterests} = useContext(AuthContext);
 
+  getInterests();
   {state.token ? navigation.navigate("Tab") : null}
 
   return (
@@ -57,8 +60,17 @@ const Signup = ({ navigation }) => {
               secondaryInterest: "",
             }}
             onSubmit={(values) => {
-              //console.log(values);
-              signup(values)
+              //console.log(values)
+              if (values.email != '' && values.password != '' && values.firstName != '' &&
+               values.userName != '' && values.primaryInterest != '' && values.secondaryInterest != '') {
+                 if (values.email.includes("@")){
+                  signup(values);
+                 } else {
+                   state.errorMessage = "You must enter a valid email address"
+                 }
+               } else {
+                 state.errorMessage = "You must enter valid inputs";
+               }
             }}
           >
             {({ handleChange, handleBlur, handleSubmit, values }) => (
@@ -100,22 +112,49 @@ const Signup = ({ navigation }) => {
                   hidePassword={hidePassword}
                   setHidePassword={setHidePassword}
                 />
-                <MyTextInput
-                  label="Primary Interest"
-                  placeholder=""
-                  placeholderTextColor={darkLight}
-                  onChangeText={handleChange("primaryInterest")}
-                  onBlur={handleBlur("primaryInterest")}
-                  isPassword={false}
-                  values={values.primaryInterest}
+                <SelectDropdown
+                  data={state.interests}
+                  onSelect={(selectedItem) => {
+                    values.primaryInterest = selectedItem;
+                  }}
+                  defaultButtonText={'Select Primary Interest'}
+                  buttonTextAfterSelection={(selectedItem) => {
+                    return selectedItem;
+                  }}
+                  rowTextForSelection={(item) => {
+                    return item;
+                  }}
+                  buttonStyle={styles.dropdown1BtnStyle}
+                  buttonTextStyle={styles.dropdown1BtnTxtStyle}
+                  renderDropdownIcon={isOpened => {
+                    return <Text name={isOpened ? 'chevron-up' : 'chevron-down'} color={'#444'} size={18} />;
+                  }}
+                  dropdownIconPosition={'right'}
+                  dropdownStyle={styles.dropdown1DropdownStyle}
+                  rowStyle={styles.dropdown1RowStyle}
+                  rowTextStyle={styles.dropdown1RowTxtStyle}
                 />
-                <MyTextInput
-                  label="Secondary Interest"
-                  placeholder=""
-                  placeholderTextColor={darkLight}
-                  onChangeText={handleChange("secondaryInterest")}
-                  onBlur={handleBlur("secondaryInterest")}
-                  values={values.secondaryInterest}
+                <SelectDropdown
+                  data={state.interests}
+                  onSelect={(selectedItem) => {
+                    values.secondaryInterest = selectedItem;
+                  }}
+                  defaultButtonText={'Select Secondary Interest'}
+                  buttonTextAfterSelection={(selectedItem) => {
+                    return selectedItem;
+                  }}
+                  rowTextForSelection={(item) => {
+                    return item;
+                  }}
+                  buttonStyle={styles.dropdown1BtnStyle}
+                  buttonTextStyle={styles.dropdown1BtnTxtStyle}
+                  renderDropdownIcon={isOpened => {
+                    return <Text name={isOpened ? 'chevron-up' : 'chevron-down'} color={'#444'} size={18} />;
+                  }}
+                  dropdownIconPosition={'right'}
+                  dropdownStyle={styles.dropdown1DropdownStyle}
+                  rowStyle={styles.dropdown1RowStyle}
+                  rowTextStyle={styles.dropdown1RowTxtStyle}
                 />
                 {state.errorMessage ? <ErrorText>{state.errorMessage}</ErrorText> : null}
                 <StyledButton onPress={handleSubmit}>
@@ -160,5 +199,23 @@ const MyTextInput = ({
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+
+  dropdown1BtnStyle: {
+    width: '100%',
+    height: 50,
+    backgroundColor: '#FFF',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#444',
+    marginBottom: 10,
+    marginTop: 10
+  },
+  dropdown1BtnTxtStyle: {color: '#444', textAlign: 'center'},
+  dropdown1DropdownStyle: {backgroundColor: '#EFEFEF'},
+  dropdown1RowStyle: {backgroundColor: '#EFEFEF', borderBottomColor: '#C5C5C5'},
+  dropdown1RowTxtStyle: {color: '#444', textAlign: 'center'},
+});
 
 export default Signup;
