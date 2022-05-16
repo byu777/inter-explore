@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import CustomDatePicker from "../components/datepicker";
 import KeyboardAvoidingWrapper from "../components/KeyboardAvoidingWrapper";
+import trackerApi from "../api/tracker";
 
 export default function MakeEventPage({ navigation }) {
   const [title, setTitle] = useState(null);
@@ -39,7 +40,8 @@ export default function MakeEventPage({ navigation }) {
 
   //checks if title, location, desc fields are empty
   const isAllFieldsValid = (title, location, desc) => {
-    console.log({ title, location, desc });
+    // console.log(Object.values(desc).every((value) => value.trim()))
+    // console.log(title, location, desc);
     return Object.values(title, location, desc).every((value) => value.trim());
   };
 
@@ -47,9 +49,15 @@ export default function MakeEventPage({ navigation }) {
     if (isAllFieldsValid(title, location, desc)) return true;
   };
 
-  const onSubmitFormHandler = async (event) => {
+  const onSubmitFormHandler = async () => {
+    console.log("press the button");
     if (isValidForm()) {
-      console.log({});
+      const response = await trackerApi.post("/api/events/createEvent",{
+        title,
+        location,
+        desc,
+      });
+      //console.log(response);
     }
   };
   return (
@@ -95,7 +103,7 @@ export default function MakeEventPage({ navigation }) {
           {/* this is a custom Datepicker that I made; how do i grab the date/time state from it and put it on this MakeEventPage's state? */}
           <CustomDatePicker
           value={CustomDatePicker.date}
-          onChangeText={console.log(CustomDatePicker.data)}
+          //onChangeText={console.log(CustomDatePicker.data)}
           />
         </View>
 
