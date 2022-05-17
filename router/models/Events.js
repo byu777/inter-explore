@@ -26,25 +26,24 @@ const eventSchema = new mongoose.Schema(
       type: String,
       require: true,
     },
-    key: {
-      type: Number,
-      require: true,
-      unique: true,
-    },
-    user: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Users",
-      },
-    ],
-    CurrentGroup: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "interests",
-    },
-  },
-  {
-    timestamps: true,
-  }
+    // key: {
+    //   type: Number,
+    //   require: true,
+    //   unique: true,
+    // },
+    user: [{
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: "Users" 
+    }],
+    CurrentGroup:
+    {
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: "interests"
+    }
+},
+    {
+        timestamps : true
+    }
 );
 
 const events = mongoose.model("events", eventSchema);

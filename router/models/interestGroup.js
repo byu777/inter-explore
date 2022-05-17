@@ -27,4 +27,4 @@ const InterestSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-module.exports = mongoose.model("interests", InterestSchema);
+module.exports = mongoose.model('interests', InterestSchema);
