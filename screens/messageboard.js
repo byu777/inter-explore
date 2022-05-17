@@ -1,38 +1,67 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import {
   StyleSheet,
   Text,
   View,
-  Button,
-  TextInput,
-  Image,
   SafeAreaView,
-  FlatList,
   TouchableOpacity,
+  FlatList,
+  TextInput,
 } from "react-native";
 
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Context as AuthContext } from "./../context/AuthContext";
+
+import { Ionicons } from "@expo/vector-icons";
 
 // --------------------------- Message Board page -----------------------------
 
 export default function MessageBoardPage({ navigation }) {
+  const { state } = useContext(AuthContext);
+  console.log(state.chatGroups);
+
   return (
-    <SafeAreaView style={{ backgroundColor: "#ece6dd", marginBottom: 25 }}>
+    <SafeAreaView style={mb_styles.background}>
       <View style={mb_styles.textinput_cont}>
-        {/* <TextInput
+        <TextInput
           style={mb_styles.textinput_search}
-          onChangeText={onChangeText}
-          placeholder="search.."
-          value={text} //allows alphanumeric input into TextInput
-        /> */}
+          //onChangeText={}
+          placeholder="Search..."
+        />
       </View>
 
-      {/* inbox container */}
-      <View style={mb_styles.mb_chat_container}>
-        {/* can pull chat groups from database later and put in flatlist */}
-        {/* <FlatList/>   */}
+      <FlatList
+        data={state.chatGroups}
+        renderItem={({ item }) => (
+          <View style={mb_styles.mb_chat_container}>
+            <View style={mb_styles.list_item_inbox}>
+              <Ionicons
+                name="chatbox-ellipses-outline"
+                size={70}
+                color="#52575D"
+                style={mb_styles.left_icon}
+              ></Ionicons>
 
-        <View style={mb_styles.list_item_inbox}>
+              <View style={mb_styles.list_item_description}>
+                <Text style={{ fontSize: 25 }}>{item.InterestName}</Text>
+                {/* <Text>For all you basketball lovers!</Text> */}
+              </View>
+
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Chatroom")}
+                style={mb_styles.touchables_arrow}
+              >
+                <Ionicons
+                  name="arrow-forward"
+                  size={25}
+                  color="#0c000e"
+                ></Ionicons>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+      />
+
+      {/* <View style={mb_styles.list_item_inbox}>
           <Ionicons
             name="basketball"
             size={70}
@@ -99,15 +128,17 @@ export default function MessageBoardPage({ navigation }) {
           >
             <Ionicons name="arrow-forward" size={25} color="#0c000e"></Ionicons>
           </TouchableOpacity>
-        </View>
-      </View>
+        </View> */}
     </SafeAreaView>
   );
 }
 
-// ***------------------------------- STYLING ---------------------------------*********************
-
+// CSS Stylesheet
 const mb_styles = StyleSheet.create({
+  background: {
+     backgroundColor: "#ece6dd",
+      flex: 1
+  },
   container: {
     flex: 1,
     marginTop: 8,
@@ -140,7 +171,7 @@ const mb_styles = StyleSheet.create({
   mb_chat_container: {
     flexDirection: "column",
     justifyContent: "flex-end",
-    height: 600,
+    height: 120,
     margin: 10,
   },
   mb_image_container: {

@@ -16,6 +16,8 @@ const authReducer = (state, action) => {
       return {...state, errorMessage: ''};
     case 'interests':
       return {...state, interests: action.payload};
+    case 'userInterests':
+      return {...state, chatGroups: action.payload};
     default:
       return state;
   }
@@ -68,13 +70,18 @@ const signin = (dispatch) => {
           email,
           password
         });
-        //console.log(response.data.isMatch)
-        //console.log(response.data.token)
+
         if (response.data.isMatch == true){
           await AsyncStorage.setItem('token', response.data.token);
           await dispatch({type: 'login', payload: response.data.token})
           await dispatch({type: 'setUser', payload: response.data.user})
-          //console.log(response.data.user.email + " In Auth Context")
+          
+          // Set user interests chat groups to state
+          // console.log(response.data.user);
+          const chatGroups = await userInterests(response.data.user);
+          //console.log(chatGroups);
+          await dispatch({type: 'userInterests', payload: chatGroups});
+
         } else if (response.data.isMatch == false) {
           await dispatch({type: 'add_error', payload: 'Password is incorrect'})
         }
@@ -133,11 +140,33 @@ async function addToInterests(user) {
       const res = await trackerApi.put("/api/interests/groupadd", {"chatId": interestID, "userId": userID});
     }
   }
-
 }
+
+async function userInterests(user) {
+
+    // Variables
+    let primary = user.primaryInterest;
+    let secondary = user.secondaryInterest;
+    const userInterests = [];
+
+    // api call to get interests
+    const response = await trackerApi.get("/api/interests/getAllInterests")
+    const listOfInterests = response.data;
+
+    for(let i = 0; i < listOfInterests.length; i++) {
+      
+      if (listOfInterests[i].InterestName == primary || listOfInterests[i].InterestName == secondary) {
+        // api call to add user to group chat based on interest id and user id
+        userInterests.push(listOfInterests[i]);
+        console.log(listOfInterests[i]);
+      }
+    }
+    return userInterests;
+}
+
 
 export const { Provider, Context } = createDataContext(
   authReducer,
   { signin, signout, signup, clearErrorMessage, getInterests },
-  { token: null, errorMessage: '', user: null, interests: null}
+  { token: null, errorMessage: '', user: null, interests: null, chatGroups: null}
 );
