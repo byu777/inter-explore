@@ -22,6 +22,10 @@ const events = require('./EventRouters');
 const app = express();
 
 const cors = require('cors')
+// lines 24-28 should go in this order
+app.use(cors())
+app.use(bodyParser.json());
+app.use(authentication);
 
 app.use('/api/Messages',Messages);
 app.use('/api/interests',interests); // 'interests' is the path from ChatRouters.js
@@ -47,10 +51,7 @@ mongoose.connection.on('error', (err) => {
     console.log('Errors connecting to mongoDB :(',err)
 });
 
-//Application will connect to each collection on MongoDB
-app.use(cors())
-app.use(bodyParser.json());
-app.use(authentication);
+
 
 //goes to each "Route" in the api folder, and runs all the functions/lines in each .~Route file
 // app.use('/api/Messages',Messages);
