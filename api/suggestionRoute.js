@@ -22,4 +22,15 @@ const getAllSuggestions = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { createSuggestion, getAllSuggestions };
+const deleteSuggestion = asyncHandler(async (req, res) => {
+  try {
+    const suggestionItem = await suggestion.remove({
+      suggestionName: req.body.suggestionName,
+    });
+    res.send(suggestionItem);
+  } catch (error) {
+    console.log(error);
+  }
+})
+
+module.exports = { createSuggestion, getAllSuggestions, deleteSuggestion };

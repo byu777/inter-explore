@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import trackerApi from "../api/tracker";
 import {
   StyleSheet,
@@ -10,12 +10,9 @@ import {
   Pressable,
   SafeAreaView,
   TouchableOpacity,
-  Modal,
   TextInput,
 } from "react-native";
-
-const suggestion = require("../router/models/Suggestion");
-const asyncHandler = require("express-async-handler");
+// const asyncHandler = require("express-async-handler");
 
 /**
  * Entry into admin page front and back end.
@@ -25,20 +22,13 @@ export default function AdminSuggestions() {
   /**
    * Constant of hard coded data to test suggestion rendering.
    */
-  let suggestionReceive = getAllSuggestions();
-  let flatListArray = [];
-  for (let i = 0; i < suggestionReceive.length; i++) {
-    flatListArray.push({
-      id: i,
-      suggestion: suggestionReceive[i].suggestionName,
-    });
-  }
-  console.log(flatListArray);
-  const [TEMP_DATA, setTEMP_DATA] = useState(flatListArray);
-
-  // for (let i =0; i <suggestionReceive.length;  i++ ) {
-  //   setTEMP_DATA(suggestionReceive[i].suggestionName);
-  // }
+  const [suggestionData, setSuggestionData] = useState([
+    ""
+  ]);
+  useEffect(() => {
+    getAllSuggestions();
+  }, []);
+  console.log("After getting data");
 
   const [suggestion, setSuggestion] = useState(null);
 
@@ -63,7 +53,7 @@ export default function AdminSuggestions() {
           onPress: () => {
             // const filterData = TEMP_DATA.filter((item) => item.id !== id);
             // setTEMP_DATA(filterData);
-            removeFromGroup(interest);
+            removeFromGroup(id);
             Alert.alert("Confirmation", interest + " has been deleted.");
           },
         },
@@ -96,21 +86,15 @@ export default function AdminSuggestions() {
     );
   };
 
-  const removeFromGroup = asyncHandler(async (req, res) => {
-    const { suggestionName } = req.body;
-
-    const added = await suggestion.findByIdAndRemove(
-      suggestionId,
-      function (err, docs) {
-        if (!added) {
-          res.status(404);
-          throw new Error("Chat Not Found");
-        } else {
-          res.json(added);
-        }
-      }
-    );
-  });
+  async function removeFromGroup(suggestionId, suggestionName) {
+    console.log({suggestionName});
+    console.log({suggestionId});
+    const response = await trackerApi.delete(
+      "/api/suggestions/deleteSuggestion",
+      {suggestionId, suggestionName}
+    );  
+    console.log(response.data);
+  }
 
   // const addToSuggestions = asyncHandler(
   async function addToSuggestions(suggestionName) {
@@ -124,9 +108,12 @@ export default function AdminSuggestions() {
   }
 
   async function getAllSuggestions() {
-    const response = await trackerApi.get("/api/suggestions/getAllSuggestions");
-    console.log(response.data);
-    return response.data;
+      const response = await trackerApi.get("/api/suggestions/getAllSuggestions");
+      console.log(response.data);
+      setSuggestionData(response.data);
+      console.log("test");
+      return response.data;
+    
   }
 
   /**
@@ -179,12 +166,11 @@ export default function AdminSuggestions() {
         <Text style={{ textAlign: "center" }}>Add to Database</Text>
       </TouchableOpacity>
       <FlatList
-        keyExtractor={(item) => item.id}
-        data={TEMP_DATA}
+        data={suggestionData}
         renderItem={({ item }) => (
           <InterestSuggestionItem
-            id={item.id}
-            interest={item.suggestion}
+            id={item._id}
+            interest={item.suggestionName}
           ></InterestSuggestionItem>
         )}
       />
