@@ -1,12 +1,10 @@
-const express = require("express");
-const router = express.Router();
-const EventModel = require("../router/models/Events");
+const asyncHandler = require("express-async-handler");
+const events = require("../router/models/Events");
 const interests = require("../router/models/interestGroup");
-
- 
 
 //Creates an event JSON object, taking info from the front-end to populate attributes based
 // on the event schema 'router/models/Events.js'
+
 const createEvent = asyncHandler(async (req, res) => {
   try {
     const makeEvent = await events.create({
@@ -18,7 +16,8 @@ const createEvent = asyncHandler(async (req, res) => {
         user: [],
         CurrentGroup: interests._id
     });
-
+    console.log(makeEvent);
+    res.send(makeEvent);
   } catch (error) {
     res.status(400);
     throw new Error(error.message);
@@ -35,7 +34,7 @@ const addToEvent = asyncHandler(async (req, res) => {
     .findByIdAndUpdate(
       eventID,
       {
-        $push: { users: userId },
+        $push: { user: userId },
       },
       {
         new: true,
@@ -50,13 +49,6 @@ const addToEvent = asyncHandler(async (req, res) => {
     res.json(added);
   }
 });
-
-export const { Provider, Context } = createDataContext(
-  authReducer,
-  { getUsersForEvent },
-  { token: null, errorMessage: "", user: null, interests: null }
-);
-
 
 //'module.exports' is the instruction that tells Node.js to export functions/objects
 // so other files can use this exported code

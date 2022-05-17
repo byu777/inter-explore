@@ -1,36 +1,30 @@
-import React, { Component, useState, useContext } from "react";
+import React, { useState, useContext } from "react";
 import {
   StyleSheet,
   Text,
   View,
   Button,
   TextInput,
-  Alert,
   SafeAreaView,
 } from "react-native";
 import CustomDatePicker from "../components/datepicker";
-//import { Context as EventContext } from "./../context/EventContext";
-import { Context as AuthContext } from './../context/AuthContext';
-import trackerApi from '../api/tracker';
-
+import KeyboardAvoidingWrapper from "../components/KeyboardAvoidingWrapper";
+import trackerApi from "../api/tracker";
 
 export default function MakeEventPage({ navigation }) {
-  //const { state, WriteEventToDB } = useContext(EventContext);
-  const {state} = useContext(AuthContext);
-
-  const [title, setTitle] = useState('');
-  const [location, setLocation] = useState('');
-  const [date, setDate] = useState('');
-  const [time, setTime] = useState('');
-  const [desc, setDesc] = useState('');
+  const [title, setTitle] = useState(null);
+  const [location, setLocation] = useState(null);
+  const [date, setDate] = useState(null);
+  const [time, setTime] = useState(null);
+  const [desc, setDesc] = useState(null);
 
   const onChangeTitleHandler = (title) => {
     setTitle(title);
-  }
+  };
 
   const onChangeLocationHandler = (location) => {
     setLocation(location);
-  }
+  };
 
   // const onChangeDateHandler = (date) => {
   //   setDate(date);
@@ -42,267 +36,112 @@ export default function MakeEventPage({ navigation }) {
 
   const onChangeDescriptionHandler = (desc) => {
     setDesc(desc);
-  }
+  };
 
   //checks if title, location, desc fields are empty
   const isAllFieldsValid = (title, location, desc) => {
-    return Object.values(title, location, desc).every(value => value.trim())
-  }
-
-  const isValidForm = () => {
-    if (isAllFieldsValid(title, location, desc)) return true
-  }
-
-  const onSubmitFormHandler = async (event) => {
-    if (!isValidForm()) {
-      alert("Please fill all fields!")
-      return;
-    }
-
-    // --------------------------------  THIS IS FOR A PUT REQUEST -----------------------------
-    // const configObject = {
-    //   url: `${baseUrl}/api/users`,
-    //   method: 'PUT',
-    //   data: {title, location, date, time, desc}
-
-    // }
-
-    // axios(configObject).then((response) => {
-    //   if (response.status === 200) {
-    //     alert(`You have updated: ${JSON.stringify(response.data)}`);
-    //     setTitle('');
-    //     setLocation('');
-    //     setDate('');
-    //     setTime('');
-    //     setDesc('');
-    //   } else {
-    //     throw new Error("An error has occurred");
-    //   }
-    // })
-    // .catch((error) => {
-    //   alert('An error has occurred');
-    // });
-
-    console.log(title, location, desc);
-
-    try {
-      // not sure what the URL should be here in line 81
-      const response = await trackerApi.post(`${trackerApi.baseUrl}/api/EventRoute/createEvent`, {
-        title,
-        location,
-        date,
-        time,
-        desc,
-      }
-      .then(response => console.log(response.data)));
-
-      if (response.status == 201) {
-        alert(` You have created: ${JSON.stringify(response.data)}`);
-        setTitle('');
-        setLocation('');
-        setDate('');
-        setTime('');
-        setDesc('');
-      } else {
-        throw new Error('An error has occurred');
-      }
-    } catch (error) {
-      alert("An error has occurred");
-    }
+    // console.log(Object.values(desc).every((value) => value.trim()))
+    // console.log(title, location, desc);
+    return Object.values(title, location, desc).every((value) => value.trim());
   };
 
+  const isValidForm = () => {
+    if (isAllFieldsValid(title, location, desc)) return true;
+  };
+
+  const onSubmitFormHandler = async () => {
+    console.log("press the button");
+    if (isValidForm()) {
+      const response = await trackerApi.post("/api/events/createEvent",{
+        title,
+        location,
+        desc,
+      });
+      //console.log(response);
+    }
+  };
   return (
-    <SafeAreaView style={create_event.event_container}>
-      <Text style={create_event.event_title}>Create an Event!</Text>
+    <KeyboardAvoidingWrapper>
+      <SafeAreaView style={styles.event_container}>
+        <Text style={styles.event_title}>Create an Event!</Text>
 
-      {/* TITLE */}
-      <View style={create_event.title}>
-        <Text style={create_event.title_text_style}>Title</Text>
-        <View style={create_event.border_styles}>
-          <TextInput
-            style={create_event.textInput_style}
-            value={title}
-            placeholder="Title..."
-            placeholderTextColor="#530127"
-            onChangeText={onChangeTitleHandler}  //whenever text changed in TextInput, it will update the state of that 'title' var
-            // onSubmitEditing={
-            //   (value) => setTitle(value).nativeEvent.text
-            // }
-          >{title}</TextInput>
+        {/* TITLE */}
+        <View style={styles.title}>
+          <Text style={styles.title_text_style}>Title</Text>
+          <View style={styles.border_styles}>
+            <TextInput
+              style={styles.textInput_style}
+              placeholder="Title..."
+              placeholderTextColor="#530127"
+              onChangeText={onChangeTitleHandler} //whenever text changed in TextInput, it will update the state of that 'title' var
+            >
+              {title}
+            </TextInput>
+          </View>
         </View>
-      </View>
 
-      {/* LOCATION */}
-      <View style={create_event.location}>
-        <Text style={create_event.title_text_style}>Location</Text>
-        <View style={create_event.border_styles}>
-          <TextInput
-            style={create_event.textInput_style}
-            value={location}
-            placeholder="Location..."
-            placeholderTextColor="#530127"
-            onChangeText={onChangeLocationHandler}
-            mode='outlined'
-          >{location}</TextInput>
+        {/* LOCATION */}
+        <View style={styles.location}>
+          <Text style={styles.title_text_style}>Location</Text>
+          <View style={styles.border_styles}>
+            <TextInput
+              style={styles.textInput_style}
+              placeholder="Location..."
+              placeholderTextColor="#530127"
+              onChangeText={onChangeLocationHandler}
+              mode="outlined"
+            >
+              {location}
+            </TextInput>
+          </View>
         </View>
-      </View>
 
-      {/* DATE */}
-      <View style={create_event.date}>
-        <Text style={create_event.title_text_style}>Date</Text>
+        {/* DATE */}
+        <View style={styles.date}>
+          <Text style={styles.title_text_style}>Date</Text>
 
-        {/* this is a custom Datepicker that I made; how do i grab the date/time state from it and put it on this MakeEventPage's state? */}
-        <CustomDatePicker 
-          //value={CustomDatePicker.date}
-        />
-      </View>
-
-      {/* DESCRIPTION */}
-      <View style={create_event.description}>
-        <Text style={create_event.title_text_style}>Description</Text>
-        <View style={create_event.border_styles}>
-          <TextInput
-            style={create_event.textInput_style}
-            value={desc}
-            placeholder="Description of event..."
-            placeholderTextColor="#530127"
-            onChangeText={onChangeDescriptionHandler} 
-            mode='outlined'
-            multiline={true}
-          >{desc}</TextInput>
+          {/* this is a custom Datepicker that I made; how do i grab the date/time state from it and put it on this MakeEventPage's state? */}
+          <CustomDatePicker
+          value={CustomDatePicker.date}
+          //onChangeText={console.log(CustomDatePicker.data)}
+          />
         </View>
-      </View>
 
-      <View style={create_event.buttons}>
-        <Button
-          title="Cancel"
-          style={create_event.btn_cancel}
-          onPress={() => navigation.navigate("Chatroom")}
+        {/* DESCRIPTION */}
+        <View style={styles.description}>
+          <Text style={styles.title_text_style}>Description</Text>
+          <View style={styles.border_styles}>
+            <TextInput
+              style={styles.textInput_style}
+              placeholder="Description of event..."
+              placeholderTextColor="#530127"
+              onChangeText={onChangeDescriptionHandler}
+              mode="outlined"
+              multiline={true}
+            >
+              {desc}
+            </TextInput>
+          </View>
+        </View>
 
-          // () =>
-          // Alert.alert("Members", "Members of Basketball", [
-          //   {
-          //     text: "Cancel",
-          //     onPress: () => console.log("Cancel pressed"),
-          //     style: "cancel",
-          //   },
-          // ])
-          //}
-        />
-        <Button
-          title="Schedule"
-          style={create_event.btn_schedule}
-          onPress={onSubmitFormHandler}
-        />
-      </View>
-    </SafeAreaView>
+        <View style={styles.buttons}>
+          <Button
+            title="Cancel"
+            style={styles.btn_cancel}
+            onPress={() => navigation.navigate("Chatroom")}
+          />
+          <Button
+            title="Schedule"
+            style={styles.btn_schedule}
+            onPress={onSubmitFormHandler}
+          />
+        </View>
+      </SafeAreaView>
+    </KeyboardAvoidingWrapper>
   );
 }
 
-//const { state, WriteEventToDB } = useContext(EventContext);
-
-//{state.token ? navigation.navigate("Tab") : null}
-
-// export default class MakeEventPage extends Component {
-//   constructor(props) {
-//     super(props);
-//     this.event_state = { date: "2022-05-11" };
-//     const { getInterests, WriteEventToDB } = useContext(EventContext);
-//   }
-
-//   render() {
-//     return (
-// <SafeAreaView style={create_event.event_container}>
-//   <Text style={create_event.event_title}>Create an Event!</Text>
-
-//         <Formik
-//           initialValues={{
-//             title: "",
-//             location: "",
-//             date: "",
-//             time: "",
-//             desc: "",
-//           }}
-//           onSubmit={(values) => {
-//             console.log(values);
-//             if (
-//               values.title != "" &&
-//               values.location != "" &&
-//               values.date != "" &&
-//               values.time != "" &&
-//               values.desc != ""
-//             ) {
-//               WriteEventToDB(values);
-//             } else {
-//               console.log("Make sure all the fields are filled in!");
-//             }
-//           }}
-//         >
-//           {({ handleChange, handleSubmit, values }) => (
-//             <StyledFormArea
-//             style={create_event.form_area}>
-//               <TextInput
-//                 label="Title of event"
-//                 placeholder="Title"
-//                 placeholderTextColor={darkLight}
-//                 onChangeText={handleChange("firstName")}
-//                 values={values.title}
-//               />
-//               <TextInput
-//                 label="Location"
-//                 placeholder="Location"
-//                 placeholderTextColor={darkLight}
-//                 onChangeText={handleChange("firstName")}
-//                 values={values.location}
-//                 keyboardType="email-address"
-//               />
-
-//               <View style={create_event.date}>
-//                 <Text
-//                   style={create_event.date}
-//                   label="Date"
-//                   placeholder="Date"
-//                   placeholderTextColor={darkLight}
-//                   onChangeText={handleChange("Date..")}
-//                   values={values.date}
-//                 />
-//                 <Text
-//                   style={create_event.date}
-//                   label="Time (24-hr)"
-//                   placeholder="Time"
-//                   placeholderTextColor={darkLight}
-//                   onChangeText={handleChange("Time..")}
-//                   values={values.time}
-//                 />
-//                 {/* <Text style={create_event.title_text_style}>Date</Text> */}
-//                 <CustomDatePicker />
-//               </View>
-
-//               <TextInput
-//                 label="Description"
-//                 placeholder="Description"
-//                 placeholderTextColor={darkLight}
-//                 onChangeText={handleChange("Description..")}
-//                 values={values.desc}
-//               />
-
-//               <StyledButton onPress={handleSubmit}>
-//                 <ButtonText>Create</ButtonText>
-//               </StyledButton>
-//               <Line />
-//               {/* go back to previous page */}
-//               <StyledButton onPress={handleSubmit}>
-//                 <ButtonText>Cancel</ButtonText>
-//               </StyledButton>
-//             </StyledFormArea>
-//           )}
-//         </Formik>
-//       </SafeAreaView>
-//     );
-//   }
-
-
-const create_event = StyleSheet.create({
+const styles = StyleSheet.create({
   event_container: {
     flexDirection: "column",
     flex: 1,
@@ -363,5 +202,3 @@ const create_event = StyleSheet.create({
     flexDirection: "column",
   },
 });
-
-// export default MakeEventPage;
