@@ -27,7 +27,7 @@ const eventSchema = new mongoose.Schema(
       require: true,
     },
     key: {
-      type: Integer,
+      type: Number,
       require: true,
       unique: true,
     },

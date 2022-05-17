@@ -2,6 +2,7 @@ require('./models/Users');
 require('./models/Message');
 require('./models/interestGroup');
 require('./models/Events');
+require('../router/models/Suggestion');
 const express = require('express');
 
 const mongoose = require('mongoose');
@@ -15,7 +16,7 @@ const message = require('./messages/messages');
 const Messages = require('./Messagerouters');
 const interests = require('./ChatRouters');
 const events = require('./EventRouters');
-
+const suggestion = require("./SuggestionRouters");
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use(authentication);
 app.use('/api/Messages',Messages);
 app.use('/api/interests',interests);
 app.use('/api/events', events)
+app.use('/api/suggestions', suggestion);
 
 const mongoUri = 'mongodb+srv://user:123@cluster0.1ozdh.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 
