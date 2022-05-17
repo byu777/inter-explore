@@ -1,5 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
+import trackerApi from "../api/tracker";
 import {
   StyleSheet,
   Text,
@@ -24,16 +25,26 @@ export default function AdminSuggestions() {
   /**
    * Constant of hard coded data to test suggestion rendering.
    */
-  const [TEMP_DATA, setTEMP_DATA] = useState([
-    { interest: "Naruto", id: "1" },
-    { interest: "Hockey", id: "2" },
-    { interest: "Lacrosse", id: "3" },
-    { interest: "Soccer", id: "4" },
-    { interest: "Football", id: "5" },
-    { interest: "Pool", id: "6" },
-    { interest: "Running", id: "7" },
-    { interest: "Weight lifting", id: "8" },
-  ]);
+  let suggestionReceive = getAllSuggestions();
+  let flatListArray = [];
+  for (let i = 0; i < suggestionReceive.length; i++) {
+    flatListArray.push({
+      id: i,
+      suggestion: suggestionReceive[i].suggestionName,
+    });
+  }
+  console.log(flatListArray);
+  const [TEMP_DATA, setTEMP_DATA] = useState(flatListArray);
+
+  // for (let i =0; i <suggestionReceive.length;  i++ ) {
+  //   setTEMP_DATA(suggestionReceive[i].suggestionName);
+  // }
+
+  const [suggestion, setSuggestion] = useState(null);
+
+  const onSuggestionChange = (suggestion) => {
+    setSuggestion(suggestion);
+  };
 
   /**
    * Prompts user if they want to delete suggestion or not.
@@ -101,6 +112,23 @@ export default function AdminSuggestions() {
     );
   });
 
+  // const addToSuggestions = asyncHandler(
+  async function addToSuggestions(suggestionName) {
+    // api call to get interests
+    console.log({ suggestionName });
+    const response = await trackerApi.post(
+      "/api/suggestions/createSuggestion",
+      { suggestionName }
+    );
+    console.log(response);
+  }
+
+  async function getAllSuggestions() {
+    const response = await trackerApi.get("/api/suggestions/getAllSuggestions");
+    console.log(response.data);
+    return response.data;
+  }
+
   /**
    * Renders an individual suggestion with ID number and interest name.
    * @param {*} interestObject object of interest id and interest name
@@ -142,8 +170,12 @@ export default function AdminSuggestions() {
           textAlign: "center",
           padding: 5,
         }}
+        onChangeText={onSuggestionChange}
       ></TextInput>
-      <TouchableOpacity style={adminStyles.interestButton}>
+      <TouchableOpacity
+        style={adminStyles.interestButton}
+        onPress={() => addToSuggestions(suggestion)}
+      >
         <Text style={{ textAlign: "center" }}>Add to Database</Text>
       </TouchableOpacity>
       <FlatList
@@ -152,7 +184,7 @@ export default function AdminSuggestions() {
         renderItem={({ item }) => (
           <InterestSuggestionItem
             id={item.id}
-            interest={item.interest}
+            interest={item.suggestion}
           ></InterestSuggestionItem>
         )}
       />

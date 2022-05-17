@@ -13,4 +13,13 @@ const createSuggestion = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { createSuggestion };
+const getAllSuggestions = asyncHandler(async (req, res) => {
+  try {
+    const allSuggestions = await suggestion.find();
+    res.send(allSuggestions);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+module.exports = { createSuggestion, getAllSuggestions };
