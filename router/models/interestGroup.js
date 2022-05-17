@@ -27,4 +27,3 @@ latestMessage : {
 
 );
 module.exports = mongoose.model('interests', InterestSchema);
-git 
