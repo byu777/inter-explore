@@ -42,23 +42,33 @@ export default function MakeEventPage({ navigation }) {
   const isAllFieldsValid = (title, location, desc) => {
     // console.log(Object.values(desc).every((value) => value.trim()))
     // console.log(title, location, desc);
-    //if (!title == '' & )
+    if (title != '' && location != '' && desc != '') {
+      return true
+    }
+    // (values.email != '' && values.password != '' && values.firstName != '' &&
+    //            values.userName != '' && values.primaryInterest != '' && values.secondaryInterest != '')
 
-    return Object.values(title, location, desc).every((value) => value.trim());
+    // return Object.values(title, location, desc).every((value) => value.trim());
   };
 
   const isValidForm = () => {
     if (isAllFieldsValid(title, location, desc)) return true;
   };
 
-  const onSubmitFormHandler = async () => {
+  const onSubmitFormHandler = async (event) => {
     console.log("press the button");
     if (isValidForm()) {
-      const response = await trackerApi.post("/api/events/createEvent",{
-        title,
-        location,
-        desc,
-      });
+      try {
+        const response = await trackerApi.post("/api/events/createEvent",{
+          title,
+          location,
+          desc,
+        });
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+      
       
       //console.log(response);
     }

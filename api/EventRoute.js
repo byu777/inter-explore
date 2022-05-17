@@ -24,7 +24,7 @@ const createEvent = asyncHandler(async (req, res) => {
       user: [],
       CurrentGroup: interests._id
     });
-    //console.log(makeEvent);
+    console.log(makeEvent);
     res.send(makeEvent); // the response is created AFTER request made; send the new Event JSON and console.log to show
   } catch (error) {
     res.status(400).send("Sorry, that didnt go through");
