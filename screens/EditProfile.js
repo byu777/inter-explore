@@ -3,139 +3,198 @@ import React, {useState, useContext} from 'react';
 import {
   View,
   Text,
-  TouchableOpacity,
-  ImageBackground,
-  TextInput,
   StyleSheet,
-  SafeAreaView
 } from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import { Formik } from "formik";
+import {
+  StyledContainer,
+  InnerContainer,
+  PageTitle,
+  StyledFormArea,
+  StyledInputLabel,
+  StyledTextInput,
+  StyledButton,
+  ButtonText,
+  Line,
+  ErrorText
+} from "./../components/LoginStyles";
 
-import {useTheme} from 'react-native-paper';
-
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Feather from 'react-native-vector-icons/Feather';
 import { Context as AuthContext } from './../context/AuthContext';
-
-
+import SelectDropdown from 'react-native-select-dropdown';
+import { useDispatch, useSelector } from "react-redux";
+import trackerApi from "../api/tracker";
 
 const EditProfileScreen = () => {
 
-  const {colors} = useTheme();
+  const {state, submit, getInterests, updateProfile} = useContext(AuthContext);
+  getInterests();
 
-  //const {state} = useContext(AuthContext);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  
+  //const dispatch = useDispatch();
+
+  // useEffect(() => {
+  //   if (!state.user) {
+  //     history.push("/");
+  //   } else {
+  //     setName(state.user.firstName);
+  //     setEmail(state.user.email);
+  //   }
+  // }, [history, state.user]);
+
+
+  const submitHandler = async(e) => {
+    e.preventDefault();
+  try{
+    
+    const newUser = state.user;
+    newUser.email = 'ah'
+    newUser.firstName = 'tom'
+
+    updateProfile(newUser)
+    // console.log(newUser)
+    // //console.log(state.user)
+    // const { data } = await trackerApi.post("/api/users/profile", newUser);
+    // console.log(data)
+  }catch(err){
+    console.log(err)
+  }
+    
+    
+  };
 
   return (
-    <SafeAreaView style={styles.container}>
-
-        <View style={styles.action}>
-          <FontAwesome name="user-o" color={colors.text} size={20} />
-          <TextInput
-            placeholder="name"
-            placeholderTextColor="#666666"
-            autoCorrect={false}
-            style={[
-              styles.textInput,
-              {
-                color: colors.text,
-              },
-            ]}
-          />
-        </View>
-        <View style={styles.action}>
-          <FontAwesome name="envelope-o" color={colors.text} size={20} />
-          <TextInput
-            placeholder="Email"
-            placeholderTextColor="#666666"
-            keyboardType="email-address"
-            autoCorrect={false}
-            style={[
-              styles.textInput,
-              {
-                color: colors.text,
-              },
-            ]}
-          />
-        </View>
-        <View style={styles.action}>
-          <FontAwesome name="globe" color={colors.text} size={20} />
-          <TextInput
-            placeholder="Primary Interest"
-            placeholderTextColor="#666666"
-            autoCorrect={false}
-            style={[
-              styles.textInput,
-              {
-                color: colors.text,
-              },
-            ]}
-          />
-        </View>
-        <View style={styles.action}>
-          <Icon name="map-marker-outline" color={colors.text} size={20} />
-          <TextInput
-            placeholder="Secondary Interest"
-            placeholderTextColor="#666666"
-            autoCorrect={false}
-            style={[
-              styles.textInput,
-              {
-                color: colors.text,
-              },
-            ]}
-          />
-        </View>
-        <TouchableOpacity style={styles.commandButton} onPress={() => {}}>
-          <Text style={styles.panelButtonTitle}>Submit</Text>
-        </TouchableOpacity>
-    </SafeAreaView>
+    <StyledContainer>
+        <StatusBar style="dark" />
+        <InnerContainer>
+          <PageTitle>Inter-Explore</PageTitle>
+          <Formik
+            initialValues={{
+              email: "",
+              firstName: "",
+              primaryInterest: "",
+              secondaryInterest: "",
+            }}
+            onSubmit={(values) => {
+              console.log(values)
+              if (values.email != '' && values.firstName != '' &&
+                  values.primaryInterest != '' && values.secondaryInterest != '') {
+                 if (values.email.includes("@")){
+                  submit(values)
+                 } else {
+                   state.errorMessage = "You must enter a valid email address"
+                 }
+               } else {
+                 state.errorMessage = "You must enter valid inputs";
+               }
+            }}
+          >
+            {({ handleChange, handleBlur, handleSubmit, values }) => (
+              <StyledFormArea>
+                <MyTextInput
+                  label="Name"
+                  placeholder={state.user.name}
+                  onChangeText={handleChange("firstName")}
+                  onBlur={handleBlur("firstName")}
+                  values={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+                <MyTextInput
+                  label="Email Address"
+                  placeholder={state.user.email}
+                  onChangeText={handleChange("email")}
+                  onBlur={handleBlur("email")}
+                  values={email}
+                  keyboardType="email-address"
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <SelectDropdown
+                  data={state.interests}
+                  onSelect={(selectedItem) => {
+                    values.primaryInterest = selectedItem;
+                  }}
+                  defaultButtonText={'Select Primary Interest'}
+                  buttonTextAfterSelection={(selectedItem) => {
+                    return selectedItem;
+                  }}
+                  rowTextForSelection={(item) => {
+                    return item;
+                  }}
+                  buttonStyle={styles.dropdown1BtnStyle}
+                  buttonTextStyle={styles.dropdown1BtnTxtStyle}
+                  renderDropdownIcon={isOpened => {
+                    return <Text name={isOpened ? 'chevron-up' : 'chevron-down'} color={'#444'} size={18} />;
+                  }}
+                  dropdownIconPosition={'right'}
+                  dropdownStyle={styles.dropdown1DropdownStyle}
+                  rowStyle={styles.dropdown1RowStyle}
+                  rowTextStyle={styles.dropdown1RowTxtStyle}
+                />
+                <SelectDropdown
+                  data={state.interests}
+                  onSelect={(selectedItem) => {
+                    values.secondaryInterest = selectedItem;
+                  }}
+                  defaultButtonText={'Select Secondary Interest'}
+                  buttonTextAfterSelection={(selectedItem) => {
+                    return selectedItem;
+                  }}
+                  rowTextForSelection={(item) => {
+                    return item;
+                  }}
+                  buttonStyle={styles.dropdown1BtnStyle}
+                  buttonTextStyle={styles.dropdown1BtnTxtStyle}
+                  renderDropdownIcon={isOpened => {
+                    return <Text name={isOpened ? 'chevron-up' : 'chevron-down'} color={'#444'} size={18} />;
+                  }}
+                  dropdownIconPosition={'right'}
+                  dropdownStyle={styles.dropdown1DropdownStyle}
+                  rowStyle={styles.dropdown1RowStyle}
+                  rowTextStyle={styles.dropdown1RowTxtStyle}
+                />
+                {state.errorMessage ? <ErrorText>{state.errorMessage}</ErrorText> : null}
+                <StyledButton onPress={submitHandler}>
+                  <ButtonText>Submit</ButtonText>
+                </StyledButton>
+                <Line />
+              </StyledFormArea>
+            )}
+          </Formik>
+        </InnerContainer>
+      </StyledContainer>
   );
 };
 
+
+const MyTextInput = ({
+  label,
+  ...props
+}) => {
+  return (
+    <View>
+      <StyledInputLabel>{label}</StyledInputLabel>
+      <StyledTextInput {...props} />
+    </View>
+  );
+};
 export default EditProfileScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent:'center',
-    alignItems: 'center'
-  },
-  commandButton: {
-    padding: 15,
-    borderRadius: 10,
-    backgroundColor: '#FF6347',
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  panel: {
-    padding: 20,
-    backgroundColor: '#FFFFFF',
-    paddingTop: 20,
-  },
-  panelButtonTitle: {
-    fontSize: 17,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-  action: {
-    flexDirection: 'row',
-    marginTop: 10,
+
+  dropdown1BtnStyle: {
+    width: '100%',
+    height: 50,
+    backgroundColor: '#FFF',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#444',
     marginBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f2f2f2',
-    paddingBottom: 5,
+    marginTop: 10
   },
-  actionError: {
-    flexDirection: 'row',
-    marginTop: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#FF0000',
-    paddingBottom: 5,
-  },
-  textInput: {
-    flex: 1,
-    marginTop: Platform.OS === 'ios' ? 0 : -12,
-    paddingLeft: 10,
-    color: '#05375a',
-  },
+  dropdown1BtnTxtStyle: {color: '#444', textAlign: 'center'},
+  dropdown1DropdownStyle: {backgroundColor: '#EFEFEF'},
+  dropdown1RowStyle: {backgroundColor: '#EFEFEF', borderBottomColor: '#C5C5C5'},
+  dropdown1RowTxtStyle: {color: '#444', textAlign: 'center'},
 });

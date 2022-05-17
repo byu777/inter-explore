@@ -21,6 +21,19 @@ const authReducer = (state, action) => {
   }
 };
 
+const userUpdateReducer = (state = {}, action) => {
+  switch (action.type) {
+    case 'user_update_request':
+      return { loading: true };
+    case 'user_update_success':
+      return { loading: false, user: action.payload, success: true };
+    case 'user_update_fail':
+      return { loading: false, error: action.payload, success: false };
+    default:
+      return state;
+  }
+};
+
 const clearErrorMessage = dispatch => () => {
   dispatch({ type: 'clear_error_message'})
 };
@@ -94,8 +107,43 @@ const getInterests = (dispatch) => async () => {
       }
     };
 
+const updateProfile = (user) => async (dispatch, getState) => {
+      try {
+        // dispatch({ type: 'user_update_request' });
+
+        // const updatedUser = state.user;
+        // updateUser.user.firstName
+        // const {
+        //   userLogin: { user },
+        // } = getState();
+    
+        // const config = {
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //     Authorization: `Bearer ${user.token}`,
+        //   },
+        // };
+        
+        const { data } = await trackerApi.post("/api/users/profile", user);
+    
+        dispatch({ type: 'setUser', payload: data });
+            // dispatch({ type: 'login', payload: data });
+
+    
+        AsyncStorage.setItem("userInfo", JSON.stringify(data));
+      } catch (error) {
+        dispatch({
+          type: 'user_update_fail',
+          payload:
+            error.response && error.response.data.message
+              ? error.response.data.message
+              : error.message,
+        });
+      }
+    };
+
 export const { Provider, Context } = createDataContext(
   authReducer,
-  { signin, signout, signup, clearErrorMessage, getInterests },
-  { token: null, errorMessage: '', user: null, interests: null}
+  { signin, signout, signup, clearErrorMessage, getInterests, updateProfile},
+  { token: null, errorMessage: '', user: null, interests: null} ,userUpdateReducer
 );
