@@ -5,31 +5,27 @@ require('./models/interestGroup');
 require('./models/Events');
 const express = require('express');
 
-const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const authentication = require('./authentication');
 
-//create variables for each collection
+//defines all the 'Routers' that execute all routes for each feature
+//ie. the Events feature will use an EventRouter that executes all the routes associated with events, EventRoute
 const message = require('./messages/messages');
 const Messages = require('./Messagerouters');
 const interests = require('./ChatRouters');
 const events = require('./EventRouters');
 
 // BRING IN EVENT ROUTES
-const event_routes = require('../api/EventRoute');
+//const event_routes = require('../api/EventRoute');
 
 const app = express();
 
 const cors = require('cors')
-app.use(cors())
 
-app.use(bodyParser.json());
-
-app.use(authentication);
 app.use('/api/Messages',Messages);
-app.use('/api/interests',interests);
-app.use('/api/events', events)
+app.use('/api/interests',interests); // 'interests' is the path from ChatRouters.js
+app.use('/api/events', events);
 
 const mongoUri = 'mongodb+srv://user:123@cluster0.1ozdh.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 
@@ -52,19 +48,18 @@ mongoose.connection.on('error', (err) => {
 });
 
 //Application will connect to each collection on MongoDB
-const cors = require('cors')
 app.use(cors())
 app.use(bodyParser.json());
 app.use(authentication);
 
 //goes to each "Route" in the api folder, and runs all the functions/lines in each .~Route file
-app.use('/api/Messages',Messages);
-app.use('/api/interests',interests);
-// app.use('/api/EventRoute', events); //'router' -> 'EventRouters.js' -> 'EventRoute.js'
+// app.use('/api/Messages',Messages);
+// app.use('/api/interests',interests);
+//app.use('/api/EventRoute', events); //'router' -> 'EventRouters.js' -> 'EventRoute.js'
 
 
 // ------------------------------------------------>>>>>>>>>>>>>>>>>> use Event routes
-app.use('/api', event_routes);  //note: all event routes start at '/api', so define that here as the BASE
+//app.use('/api', event_routes);  //note: all event routes start at '/api', so define that here as the BASE
 
 
 // add message and change send 

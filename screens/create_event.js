@@ -42,6 +42,8 @@ export default function MakeEventPage({ navigation }) {
   const isAllFieldsValid = (title, location, desc) => {
     // console.log(Object.values(desc).every((value) => value.trim()))
     // console.log(title, location, desc);
+    //if (!title == '' & )
+
     return Object.values(title, location, desc).every((value) => value.trim());
   };
 
@@ -57,6 +59,7 @@ export default function MakeEventPage({ navigation }) {
         location,
         desc,
       });
+      
       //console.log(response);
     }
   };

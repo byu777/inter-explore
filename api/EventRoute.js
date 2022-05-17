@@ -1,29 +1,36 @@
+// ************************************************** BOOKKEEPING **************************************************************
+// This file contains the functions for GET/POST req/res to the database. The 'EventRouter' file is linked so that it routes/reads
+// through this file and executes all functions one at a time. After completing each function asynchronously, it contains the
+// stored data and objects (kind of like a state). Then, later the 'router.js' file will use this exported file and update the
+// contents on front-end.
+
 const asyncHandler = require("express-async-handler");
 const events = require("../router/models/Events");
 const interests = require("../router/models/interestGroup");
+const User = require("../router/models/Users");
 
 //Creates an event JSON object, taking info from the front-end to populate attributes based
 // on the event schema 'router/models/Events.js'
 
 const createEvent = asyncHandler(async (req, res) => {
   try {
+    console.log('does this go thru', req.body)
     const makeEvent = await events.create({
-        title: req.body.title,
-        desc: req.body.desc,
-        location: req.body.location,
-        date:req.body.date,
-        time:req.body.time,
-        user: [],
-        CurrentGroup: interests._id
+      title: req.body.title,
+      desc: req.body.desc,
+      location: req.body.location,
+      date: req.body.date,
+      time: req.body.time,
+      user: [],
+      CurrentGroup: interests._id
     });
-    console.log(makeEvent);
-    res.send(makeEvent);
+    //console.log(makeEvent);
+    res.send(makeEvent); // the response is created AFTER request made; send the new Event JSON and console.log to show
   } catch (error) {
-    res.status(400);
+    res.status(400).send("Sorry, that didnt go through");
     throw new Error(error.message);
   }
 });
-
 
 const addToEvent = asyncHandler(async (req, res) => {
   const { eventID, userId } = req.body;
@@ -56,5 +63,5 @@ const addToEvent = asyncHandler(async (req, res) => {
 // function, 'createEvent'
 module.exports = {
   createEvent,
-  addToEvent
+  addToEvent,
 };
