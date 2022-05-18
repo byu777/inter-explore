@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -6,38 +6,144 @@ import {
   FlatList,
   Button,
   TouchableOpacity,
+  Platform,
 } from "react-native";
 import trackerApi from "../api/tracker";
 import { Context as AuthContext } from "./../context/AuthContext";
-import PushNotification from "react-native-push-notification";
+
+// // imports using LogRocket youtuber way
+// import createSender from "../utils/register";
+
+// expo notifications imports
+import * as Device from 'expo-device';
+import * as Notifications from "expo-notifications";
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
 export default function EventList() {
   const { state } = useContext(AuthContext);
-  const primaryInterest = state.user.primaryInterest;
-  const secondaryInterest = state.user.secondaryInterest;
+  // // from youtuber;
+  // const [sender, setSender] = useState(null);
+
+  // -------------------expo notification----------------------------
+  const [expoPushToken, setExpoPushToken] = useState('');
+  const [notification, setNotification] = useState(false);
+  const notiListener = useRef();
+  const respListener = useRef();
+
+  useEffect(() => {
+    registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+
+    notiListener.current = Notifications.addNotificationReceivedListener(notification => {
+      setNotification(notification);
+    });
+
+    respListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+      console.log(response);
+    });
+
+    return () => {
+      Notifications.removeNotificationSubscription(notiListener.current);
+      Notifications.removeNotificationSubscription(respListener.current);
+    }
+  }, []);
+
+  async function schedulePushNotification(message) {
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: 'You got a notification bruh',
+        body: message,
+        data: { data: message.data},
+      },
+      trigger: { seconds: 2 },
+    });
+  }
+
+  async function registerForPushNotificationsAsync() {
+    let token;
+    if (Device.isDevice) {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        alert('Failed to get push token for push notification!');
+        return;
+      }
+      token = (await Notifications.getExpoPushTokenAsync()).data;
+      console.log(token);
+    } else {
+      alert('Must use physical device for Push Notifications');
+    }
+  
+    if (Platform.OS === 'android') {
+      Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+    }
+  
+    return token;
+  }
+
+  // ------------------------ end of Expo notif -----------------------------
+
+  // const primaryInterest = state.user.primaryInterest;
+  // const secondaryInterest = state.user.secondaryInterest;
 
   const [eventList, setEventList] = useState("events");
   // const [prInterest, setPrInterest] = useState('basketball');
   // const [seInterest, setSeInterest] = useState('soccer');
 
-  // useEffect() will run whenever the 'eventList' variable changes
-  useEffect(() => {
-    // const list = trackerApi.get('/events/getEvents');
-    // setEventList(list);
-    console.log("event list updated");
-  }, [eventList]);
+  // // --------------------  Youtuber method ---------------------------------
+  // // useEffect to generate the push token and add that function to our state
+  // useEffect(() => {
+  //   //create send function promise
+  //   const s = createSender();
+  //   // add notification listener to trigger event when notification is sent
+  //   addNotificationReceivedListener((notification) => {
+  //     console.log('Notification coming!');
+  //     console.log(notification);
+  //   });
 
-  const handleNotifications = (item) => {
-    PushNotification.localNotification({
-      channelId: 'test-channel',
-      title: 'You clicked on ' + item.title,
-      message: item.desc,
-    })
-  }
+  //   //add function to state when send promise is complete
+  //   s.then((sendFunc) => {
+  //     console.log(typeof sendFunc);
+  //     setSender({ sendFunc });
+  //   });
+  // }, []);
 
-  const displayUsersForEvent = () => {
-    
-  }
+  // //another useEffect that will SEND push alert
+  // // this function will run anytime the 'sender' state changes
+  // useEffect(() => {
+  //   //if the send function exists, send a notification
+  //   if (sender && sender.sendFunc instanceof Function) {
+  //     console.log(sender);
+  //     sender.sendFunc('hello');
+  //   }
+  // }, [sender]);
+
+  // const handleNotifications = (item) => {
+  //   PushNotification.localNotification({
+  //     channelId: 'test-channel',
+  //     title: 'You clicked on ' + item.title,
+  //     message: item.desc,
+  //   })
+  // }
+
+  // const displayUsersForEvent = () => {
+
+  // }
 
   const fetchEventList = () => {
     // get all users
@@ -161,7 +267,13 @@ export default function EventList() {
   return (
     <View style={styles.container}>
       {/* better for large arrays because it loads the item as you scroll down; not all at once */}
-      <FlatList
+      <Text>Your expo push token: {expoPushToken} </Text>
+      <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+        <Text>Title: {notification && notification.request.content.title} </Text>
+        <Text>Body: {notification && notification.request.content.body}</Text>
+        <Text>Data: {notification && JSON.stringify(notification.request.content.data)}</Text>
+      </View>
+      {/* <FlatList
         keyExtractor={(item) => item._id}
         data={events}
         renderItem={({ item }) => (
@@ -214,8 +326,12 @@ export default function EventList() {
             </View>
           </TouchableOpacity>
         )}
-      />
-      <Button onClick={fetchEventList}></Button>
+      /> */}
+      <Button 
+      title="Press to schedule a notification"
+      onPress={async () => {
+        await schedulePushNotification();
+      }}/>
     </View>
   );
 }

@@ -26,15 +26,15 @@ import {
 } from "./../components/LoginStyles";
 import KeyboardAvoidingWrapper from "./../components/KeyboardAvoidingWrapper";
 import { Context as AuthContext } from './../context/AuthContext';
-import PushNotification from "react-native-push-notification";
+// import PushNotification from "react-native-push-notification";
 
-PushNotification.configure({
-  onNotification: function(notification) {
-    console.log('NOTIFICATION:', notification);
+// PushNotification.configure({
+//   onNotification: function(notification) {
+//     console.log('NOTIFICATION:', notification);
 
-  },
-  requestPermissions: Platform.OS === 'ios'
-})
+//   },
+//   requestPermissions: Platform.OS === 'ios'
+// })
 
 // Colors
 const { darkLight } = Colors;
@@ -44,18 +44,18 @@ const Login = ({ navigation }) => {
 
   const {state, signin} = useContext(AuthContext);
 
-  useEffect(() => {
-    createChannels();
-  }, []);
+  // useEffect(() => {
+  //   createChannels();
+  // }, []);
 
   {state.token ? navigation.navigate("Tab") : null}
 
-  const createChannels = () => {
-    PushNotification.createChannel({
-      channelId: "test-channel",
-      channelName: "Test Channel",
-    })
-  }
+  // const createChannels = () => {
+  //   PushNotification.createChannel({
+  //     channelId: "test-channel",
+  //     channelName: "Test Channel",
+  //   })
+  // }
 
   return (
     <KeyboardAvoidingWrapper>
