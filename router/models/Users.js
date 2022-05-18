@@ -27,6 +27,11 @@ const userSchema = new mongoose.Schema ({
         type: String,
         require: true
     },
+    isAdmin: {
+        type: Boolean,
+        required: true,
+        default: false,
+      },
 
     secondaryInterest:{
         type: String,
