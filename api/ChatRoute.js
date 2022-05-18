@@ -29,7 +29,7 @@ const createGroupChat = asyncHandler(async (req, res) => {
     try {
       const groupChat = await interests.create({
         InterestName: req.body.InterestName,
-        user: []
+        user: users
       });
   
     //   const fullGroupChat = await interests.findOne({ _id: groupChat._id })
@@ -77,13 +77,29 @@ const createGroupChat = asyncHandler(async (req, res) => {
     }
   )
     .populate("users", "-password")
-    .populate("groupAdmin", "-password");
+ 
 
   if (!removed) {
     res.status(404);
     throw new Error("Chat Not Found");
   } else {
     res.json(removed);
+  }
+});
+const Deleteinterest = asyncHandler(async (req, res) => {
+  const interest = await interests.findById(req.params.id);
+
+  if (interest.user.toString() !== req.user._id.toString()) {
+    res.status(401);
+    throw new Error("You can't perform this action");
+  }
+
+  if (interest) {
+    await interests.remove();
+    res.json({ message: " Removed" });
+  } else {
+    res.status(404);
+    throw new Error("ound");
   }
 });
 
@@ -111,11 +127,21 @@ const createGroupChat = asyncHandler(async (req, res) => {
     }
   })
 
+
   module.exports = {
     fetchChats,
     createGroupChat,
     addToGroup,
     removeFromGroup,
     getInterestNames,
-    getAllInterests
+    getAllInterests,
+    Deleteinterest
   };
+  
+  // animlas <----------- when you are fetching interest get that all user id  from that interest <------
+
+    // have to get this user id <-------> animals
+
+  // or we could to bejinmin be like if they have a typo we will just remove them from chat and possibly tell the users that "this is removed with push notification" 
+
+  // ^ <=----- add those ppl to a newly created animals by admin which edit profile 
