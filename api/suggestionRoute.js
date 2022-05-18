@@ -1,10 +1,11 @@
 const { model } = require("mongoose");
 const asyncHandler = require("express-async-handler");
 const suggestion = require("../router/models/Suggestion");
+const interestGroup = require("../router/models/interestGroup");
 
 const createSuggestion = asyncHandler(async (req, res) => {
   try {
-    const groupChat = await suggestion.create({
+    const newSuggestion = await suggestion.create({
       suggestionName: req.body.suggestionName,
     });
   } catch (error) {
@@ -33,4 +34,17 @@ const deleteSuggestion = asyncHandler(async (req, res) => {
   }
 })
 
-module.exports = { createSuggestion, getAllSuggestions, deleteSuggestion };
+const addToInterests = asyncHandler(async (req, res) => {
+  try {
+    const addedInterest = await interestGroup.create({
+      InterestName: req.body.InterestName,
+      user: []
+    });
+    res.send(addedInterest);
+  } catch (error) {
+    res.status(400);
+    throw new Error(error.message);
+  }
+})
+
+module.exports = { createSuggestion, getAllSuggestions, deleteSuggestion, addToInterests };

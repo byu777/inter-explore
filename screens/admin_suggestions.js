@@ -54,10 +54,8 @@ export default function AdminSuggestions() {
         {
           text: "Remove",
           onPress: () => {
-            // const filteredData = suggestionData.filter(item => item.id !== id);
-            // setSuggestionData(filteredData);
             deleteFromSuggestions(id, interest);
-            Alert.alert("Confirmation", interest + " has been deleted.");
+            Alert.alert("Suggestion deleted", interest + " has been deleted.");
           },
         },
       ]
@@ -67,8 +65,8 @@ export default function AdminSuggestions() {
   /**
    * Add the suggestion to the interests collection and
    * removes it from the suggestion collection.
-   * @param {*} id unique id of interest
-   * @param {*} interest name of interest
+   * @param {string} id unique id of interest
+   * @param {string} interest name of interest
    */
   const handleAddSuggestion = (id, interest) => {
     Alert.alert(
@@ -78,7 +76,11 @@ export default function AdminSuggestions() {
         { text: "Cancel", onPress: () => {} },
         {
           text: "Add",
-          onPress: () => {},
+          onPress: () => {
+            addToInterests(interest);
+            deleteFromSuggestions(id, interest);
+            Alert.alert("Suggestion added", interest + " has been added to the main interest list.");
+          },
         },
       ]
     );
@@ -90,8 +92,6 @@ export default function AdminSuggestions() {
    * @param {string} suggestionName Name of the suggestion
    */
   async function deleteFromSuggestions(suggestionId, suggestionName) {
-    // const filteredData = suggestionData.filter(item => item.id !== id);
-    // setSuggestionData(filteredData);
     const response = await trackerApi.delete(
       "/api/suggestions/deleteSuggestion",
       { data: { suggestionId, suggestionName } }
@@ -111,7 +111,6 @@ export default function AdminSuggestions() {
       { suggestionName }
     );
     console.log(response);
-    // getAllSuggestions();
   }
 
   /**
@@ -122,10 +121,13 @@ export default function AdminSuggestions() {
     const response = await trackerApi.get("/api/suggestions/getAllSuggestions");
     console.log(response.data);
     setSuggestionData(response.data);
-    // useEffect(() => {
-    //   getAllSuggestions();
-    // }, []);
     return response.data;
+  }
+
+  async function addToInterests(InterestName) {
+    const response = await trackerApi.post("/api/suggestions/addToInterests",
+    {InterestName});
+    console.log(response);
   }
 
   /**
@@ -135,11 +137,9 @@ export default function AdminSuggestions() {
    */
   const InterestSuggestionItem = ({ id, interest }) => (
     <View style={adminStyles.suggestionField}>
-      <Pressable onPress={() => handleDeleteSuggestion(id, interest)}>
         <Text style={adminStyles.suggestionName}>
-          {id} = {interest}
+          {interest}
         </Text>
-      </Pressable>
       <TouchableOpacity
         onPress={() => handleAddSuggestion(id, interest)}
         style={adminStyles.interestButton}
@@ -158,10 +158,7 @@ export default function AdminSuggestions() {
   return (
     <SafeAreaView style={{ backgroundColor: "#023047" }}>
       <Text style={adminStyles.titleSections}>New Interest Suggestions</Text>
-      <Text style={{ textAlign: "center", color: "#FFB703", padding: 10 }}>
-        Click on the suggestion to add or remove it.
-      </Text>
-      <TextInput
+      {/* <TextInput
         placeholder="New Suggestion"
         style={{
           borderWidth: 3,
@@ -176,7 +173,7 @@ export default function AdminSuggestions() {
         onPress={() => addToSuggestions(suggestion)}
       >
         <Text style={{ textAlign: "center" }}>Add to Database</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <TouchableOpacity
         style={adminStyles.interestButton}
         onPress={() => getAllSuggestions()}
@@ -205,7 +202,7 @@ const adminStyles = StyleSheet.create({
     fontSize: 30,
     color: "#FFB703",
     textAlign: "center",
-    padding: 20
+    padding: 10
   },
   suggestionName: {
     padding: 20,
@@ -213,13 +210,13 @@ const adminStyles = StyleSheet.create({
     textAlign: "center",
   },
   suggestionField: {
-    flex: 1,
+    flex: 2,
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-evenly",
     borderWidth: 3,
     borderColor: "black",
-    margin: 15,
+    margin: 5,
   },
   deleteBox: {
     backgroundColor: "red",
@@ -232,8 +229,9 @@ const adminStyles = StyleSheet.create({
   interestButton: {
     backgroundColor: "#FFB703",
     alignItems: "center",
-    padding: 15,
+    padding: 10,
     borderRadius: 10,
-    margin: 5,
+    margin: 10,
+    borderWidth: 5
   },
 });
