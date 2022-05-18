@@ -14,13 +14,12 @@ import { Context as AuthContext } from './../context/AuthContext';
 import * as ImagePicker from 'expo-image-picker'
 
 
-export default function Profile() {
+export default function Profile({navigation}) {
 
-  const {state} = useContext(AuthContext);
+  const {state,getInterests} = useContext(AuthContext);
 
   const [image, setImage] = useState(null);
 
-  console.log(state.user);
   const firstname = state.user.firstName;
   const primary = state.user.primaryInterest;
   const secondary = state.user.secondaryInterest;
@@ -29,8 +28,9 @@ export default function Profile() {
   useEffect( async () => {
     if(Platform.OS !== 'web'){
       const {status} = await ImagePicker.requestMediaLibraryPermissionsAsync
+      getInterests()
       if(status !== 'granted'){
-        alert("Permission Denied")
+
       }
     }
   }, [])
@@ -52,11 +52,13 @@ export default function Profile() {
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.titleBar}>
           <Ionicons name="ios-arrow-back" size={24} color="#52575D"></Ionicons>
+          <TouchableOpacity onPress={() => navigation.navigate("EditProfile")}>
           <Ionicons
-            name="md-ellipsis-vertical-sharp"
+            name="pencil-outline"
             size={24}
             color="#52575D"
           ></Ionicons>
+          </TouchableOpacity>
         </View>
 
         <View style={{ alignSelf: "center"}}>

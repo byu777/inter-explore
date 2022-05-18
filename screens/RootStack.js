@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 // screens
 import Login from './../screens/Login';
+import EditProfile from './../screens/EditProfile';
 import Signup from './../screens/Signup';
 import Tab from './../tabs/tab'
 import Chatroom from './chatroom';
@@ -32,10 +33,13 @@ const RootStack = () => {
                         paddingLeft: 20
                     }
                 }}
-            > 
+            >   
+                
                 <Stack.Screen name="Login" component={Login} />
                 <Stack.Screen name="Signup" component={Signup} />
                 <Stack.Screen name="Tab" component={Tab} />
+                <Stack.Screen name="EditProfile" component={EditProfile} 
+                options={{headerShown: true}}/>
                 <Stack.Screen name="Chatroom" component={Chatroom} 
                 options={{headerShown: true}} />
                 <Stack.Screen name="MessageBoardPage" component={MessageBoardPage} />

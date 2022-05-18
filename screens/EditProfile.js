@@ -1,5 +1,5 @@
 
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {
   View,
   Text,
@@ -22,43 +22,31 @@ import {
 
 import { Context as AuthContext } from './../context/AuthContext';
 import SelectDropdown from 'react-native-select-dropdown';
-import { useDispatch, useSelector } from "react-redux";
 import trackerApi from "../api/tracker";
 
-const EditProfileScreen = () => {
+const EditProfileScreen = ({ navigation }) => {
 
-  const {state, submit, getInterests, updateProfile} = useContext(AuthContext);
-  getInterests();
+  const {state, getInterests} = useContext(AuthContext);
 
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  
-  //const dispatch = useDispatch();
+  const newUser = state.user;
 
-  // useEffect(() => {
-  //   if (!state.user) {
-  //     history.push("/");
-  //   } else {
-  //     setName(state.user.firstName);
-  //     setEmail(state.user.email);
-  //   }
-  // }, [history, state.user]);
-
-
-  const submitHandler = async(e) => {
-    e.preventDefault();
-  try{
+  useEffect(() => {
+    console.log("get interests")
+    //getInterests()
     
-    const newUser = state.user;
-    newUser.email = 'ah'
-    newUser.firstName = 'tom'
+  } , [])
 
-    updateProfile(newUser)
-    // console.log(newUser)
-    // //console.log(state.user)
-    // const { data } = await trackerApi.post("/api/users/profile", newUser);
-    // console.log(data)
+
+  const submitHandler = async(values) => {
+  try{
+    newUser.firstName = values.firstName
+    newUser.email = values.email
+    newUser.primaryInterest = values.primaryInterest
+    newUser.secondaryInterest = values.secondaryInterest
+    console.log(newUser)
+    await trackerApi.post("/api/interests/profile", newUser);
   }catch(err){
+
     console.log(err)
   }
     
@@ -78,11 +66,11 @@ const EditProfileScreen = () => {
               secondaryInterest: "",
             }}
             onSubmit={(values) => {
-              console.log(values)
               if (values.email != '' && values.firstName != '' &&
                   values.primaryInterest != '' && values.secondaryInterest != '') {
                  if (values.email.includes("@")){
-                  submit(values)
+                  submitHandler(values)
+                  navigation.navigate("Tab")
                  } else {
                    state.errorMessage = "You must enter a valid email address"
                  }
@@ -95,20 +83,18 @@ const EditProfileScreen = () => {
               <StyledFormArea>
                 <MyTextInput
                   label="Name"
-                  placeholder={state.user.name}
+                  placeholder={''}
                   onChangeText={handleChange("firstName")}
                   onBlur={handleBlur("firstName")}
-                  values={name}
-                  onChange={(e) => setName(e.target.value)}
+                  values={values.name}
                 />
                 <MyTextInput
                   label="Email Address"
-                  placeholder={state.user.email}
+                  placeholder={''}
                   onChangeText={handleChange("email")}
                   onBlur={handleBlur("email")}
-                  values={email}
+                  values={values.email}
                   keyboardType="email-address"
-                  onChange={(e) => setEmail(e.target.value)}
                 />
                 <SelectDropdown
                   data={state.interests}
@@ -155,8 +141,8 @@ const EditProfileScreen = () => {
                   rowTextStyle={styles.dropdown1RowTxtStyle}
                 />
                 {state.errorMessage ? <ErrorText>{state.errorMessage}</ErrorText> : null}
-                <StyledButton onPress={submitHandler}>
-                  <ButtonText>Submit</ButtonText>
+                <StyledButton onPress={handleSubmit}>
+                  <ButtonText>Update</ButtonText>
                 </StyledButton>
                 <Line />
               </StyledFormArea>

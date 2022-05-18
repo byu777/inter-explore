@@ -2,6 +2,7 @@ import createDataContext from "./createDataContext";
 import trackerApi from "../api/tracker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+
 const authReducer = (state, action) => {
   switch (action.type) {
     case 'add_error':
@@ -107,26 +108,20 @@ const getInterests = (dispatch) => async () => {
       }
     };
 
+
 const updateProfile = (user) => async (dispatch, getState) => {
       try {
-        // dispatch({ type: 'user_update_request' });
+        await dispatch({ type: 'user_update_request' });
 
-        // const updatedUser = state.user;
-        // updateUser.user.firstName
-        // const {
-        //   userLogin: { user },
-        // } = getState();
-    
-        // const config = {
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //     Authorization: `Bearer ${user.token}`,
-        //   },
-        // };
+        const config = {
+          headers: {
+            "Content-Type": "application/json"
+          },
+        };
         
-        const { data } = await trackerApi.post("/api/users/profile", user);
+        const { data } = await trackerApi.post("/api/interests/profile", user, config);
     
-        dispatch({ type: 'setUser', payload: data });
+        await dispatch({ type: 'setUser', payload: data });
             // dispatch({ type: 'login', payload: data });
 
     

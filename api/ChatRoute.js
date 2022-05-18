@@ -83,7 +83,7 @@ const createGroupChat = asyncHandler(async (req, res) => {
     const user = await User.findById(req.body._id);
   
     if (user) {
-      user.name = req.body.name || user.name;
+      user.firstName = req.body.firstName || user.firstName;
       user.email = req.body.email || user.email;
       user.primaryInterest = req.body.primaryInterest || user.primaryInterest;
       user.secondaryInterest = req.body.secondaryInterest|| user.secondaryInterest;

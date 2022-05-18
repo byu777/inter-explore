@@ -80,7 +80,7 @@ const Tabs = () => {
         />
         <Tab.Screen
           name="Profile"
-          component={EditProfile}
+          component={Profile}
           options={{
             tabBarIcon: ({ focused, color, size }) => (
               <Ionicons name="person" color={color} size={size} />
