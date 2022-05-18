@@ -12,7 +12,6 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
-// const asyncHandler = require("express-async-handler");
 
 /**
  * Entry into admin page front and back end.
@@ -20,18 +19,22 @@ import {
  */
 export default function AdminSuggestions() {
   /**
-   * Constant of hard coded data to test suggestion rendering.
+   * Data from 'suggestions' collection in JSON format.
    */
-  const [suggestionData, setSuggestionData] = useState([
-    ""
-  ]);
+  const [suggestionData, setSuggestionData] = useState([""]);
   useEffect(() => {
     getAllSuggestions();
   }, []);
-  console.log("After getting data");
 
+  /**
+   * State to hold text from text input.
+   */
   const [suggestion, setSuggestion] = useState(null);
 
+  /**
+   * Sets the state of the suggestion from text input.
+   * @param {string} suggestion text from text input
+   */
   const onSuggestionChange = (suggestion) => {
     setSuggestion(suggestion);
   };
@@ -51,9 +54,9 @@ export default function AdminSuggestions() {
         {
           text: "Remove",
           onPress: () => {
-            // const filterData = TEMP_DATA.filter((item) => item.id !== id);
-            // setTEMP_DATA(filterData);
-            removeFromGroup(id);
+            // const filteredData = suggestionData.filter(item => item.id !== id);
+            // setSuggestionData(filteredData);
+            deleteFromSuggestions(id, interest);
             Alert.alert("Confirmation", interest + " has been deleted.");
           },
         },
@@ -75,45 +78,54 @@ export default function AdminSuggestions() {
         { text: "Cancel", onPress: () => {} },
         {
           text: "Add",
-          onPress: () => {
-            // const filterData = TEMP_DATA.filter((item) => item.id !== id);
-            // setTEMP_DATA(filterData);
-            // Alert.alert("Confirmation", interest + " has been added to the list of interests.");
-            // addToGroup(interest);
-          },
+          onPress: () => {},
         },
       ]
     );
   };
 
-  async function removeFromGroup(suggestionId, suggestionName) {
-    console.log({suggestionName});
-    console.log({suggestionId});
+  /**
+   * Deletes item from suggestions collection.
+   * @param {string} suggestionId Unique auto-generated ID of suggestion
+   * @param {string} suggestionName Name of the suggestion
+   */
+  async function deleteFromSuggestions(suggestionId, suggestionName) {
+    // const filteredData = suggestionData.filter(item => item.id !== id);
+    // setSuggestionData(filteredData);
     const response = await trackerApi.delete(
       "/api/suggestions/deleteSuggestion",
-      {suggestionId, suggestionName}
-    );  
+      { data: { suggestionId, suggestionName } }
+    );
     console.log(response.data);
+    
   }
 
-  // const addToSuggestions = asyncHandler(
+  /**
+   * Adds item to suggestions collection.
+   * @param {string} suggestionName Name of the suggestion
+   */
   async function addToSuggestions(suggestionName) {
-    // api call to get interests
     console.log({ suggestionName });
     const response = await trackerApi.post(
       "/api/suggestions/createSuggestion",
       { suggestionName }
     );
     console.log(response);
+    // getAllSuggestions();
   }
 
+  /**
+   * Retrieves all data from the suggestions collection.
+   * @returns JSON object of data
+   */
   async function getAllSuggestions() {
-      const response = await trackerApi.get("/api/suggestions/getAllSuggestions");
-      console.log(response.data);
-      setSuggestionData(response.data);
-      console.log("test");
-      return response.data;
-    
+    const response = await trackerApi.get("/api/suggestions/getAllSuggestions");
+    console.log(response.data);
+    setSuggestionData(response.data);
+    // useEffect(() => {
+    //   getAllSuggestions();
+    // }, []);
+    return response.data;
   }
 
   /**
@@ -146,7 +158,7 @@ export default function AdminSuggestions() {
   return (
     <SafeAreaView style={{ backgroundColor: "#023047" }}>
       <Text style={adminStyles.titleSections}>New Interest Suggestions</Text>
-      <Text style={{ textAlign: "center", color: "#FFB703" }}>
+      <Text style={{ textAlign: "center", color: "#FFB703", padding: 10 }}>
         Click on the suggestion to add or remove it.
       </Text>
       <TextInput
@@ -164,6 +176,12 @@ export default function AdminSuggestions() {
         onPress={() => addToSuggestions(suggestion)}
       >
         <Text style={{ textAlign: "center" }}>Add to Database</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={adminStyles.interestButton}
+        onPress={() => getAllSuggestions()}
+      >
+        <Text style={{ textAlign: "center" }}>Refresh</Text>
       </TouchableOpacity>
       <FlatList
         data={suggestionData}
@@ -187,6 +205,7 @@ const adminStyles = StyleSheet.create({
     fontSize: 30,
     color: "#FFB703",
     textAlign: "center",
+    padding: 20
   },
   suggestionName: {
     padding: 20,
