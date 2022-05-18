@@ -12,10 +12,28 @@ import {
 } from "react-native";
 
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import PushNotification from "react-native-push-notification";
+import PushNotificationIOS from "@react-native-community/push-notification-ios";
+
+
+PushNotification.configure({
+  onNotification: function(notification) {
+    console.log('NOTIFICATION:', notification);
+
+  },
+  requestPermissions: Platform.OS === 'ios'
+})
 
 // --------------------------- Message Board page -----------------------------
 
 export default function MessageBoardPage({ navigation }) {
+
+  const createChannels = () => {
+    PushNotification.createChannel({
+      channelId: "test-channel",
+      channelName: "Test Channel",
+    })
+  }
   return (
     <SafeAreaView style={{ backgroundColor: "#ece6dd", marginBottom: 25 }}>
       <View style={mb_styles.textinput_cont}>

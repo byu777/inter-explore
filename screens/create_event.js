@@ -57,6 +57,7 @@ export default function MakeEventPage({ navigation }) {
 
   const onSubmitFormHandler = async (event) => {
     console.log("press the button");
+    // if the input is valid (title, desc, etc...) create a response and POST it using the proper route
     if (isValidForm()) {
       try {
         const response = await trackerApi.post("/api/events/createEvent",{
@@ -68,9 +69,6 @@ export default function MakeEventPage({ navigation }) {
       } catch (error) {
         console.log(error);
       }
-      
-      
-      //console.log(response);
     }
   };
   return (
@@ -116,6 +114,7 @@ export default function MakeEventPage({ navigation }) {
           {/* this is a custom Datepicker that I made; how do i grab the date/time state from it and put it on this MakeEventPage's state? */}
           <CustomDatePicker
           value={CustomDatePicker.date}
+          
           //onChangeText={console.log(CustomDatePicker.data)}
           />
         </View>

@@ -7,6 +7,8 @@
 const asyncHandler = require("express-async-handler");
 const events = require("../router/models/Events");
 const interests = require("../router/models/interestGroup");
+// const Users = require("../router/models/Users");
+// const { events } = require("../router/models/Users");
 const User = require("../router/models/Users");
 
 //Creates an event JSON object, taking info from the front-end to populate attributes based
@@ -29,6 +31,31 @@ const createEvent = asyncHandler(async (req, res) => {
   } catch (error) {
     res.status(400).send("Sorry, that didnt go through");
     throw new Error(error.message);
+  }
+});
+
+const getEventsForUser = asyncHandler(async (req, res) => {
+  try {
+
+    //any way to reference current logged in user's primary/secondary interest?
+    // const prInterest = user.primaryInterest;
+    // const scInterest = user.secondaryInterest;
+    // const eventList = await events.find();
+    // const allEvents = [];
+
+    
+    
+    // check if event contains the primary or secondary interest; if so, add to 'allEvents'
+    for (let i = 0; i < eventList.length; i++) {
+      if (eventList[i].primaryInterest == prInterest || eventList[i].secondaryInterest == scInterest ) {
+        allEvents += eventList[i];
+      }
+
+    }
+    console.log(allEvents);
+    res.send(allEvents);
+  } catch (error) {
+    console.log(error);
   }
 });
 
@@ -64,4 +91,5 @@ const addToEvent = asyncHandler(async (req, res) => {
 module.exports = {
   createEvent,
   addToEvent,
+  getEventsForUser,
 };

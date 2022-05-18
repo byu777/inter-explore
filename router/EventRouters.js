@@ -7,14 +7,16 @@ const express = require("express");
 //require() provides the path; all these functions are contained in the 'EventRoute.js' file
 const {
     createEvent,
-    addToEvent
+    addToEvent,
+    getEventsForUser,
   } = require("../api/EventRoute");
 
 //create a routing handler
-const router = express.Router();
+const router = express.Router(); 
 
-// uses the 'createEvent' function from the 'EventRoute.js' file
+// The router has to complete all the functions listed below
 router.route("/createEvent").post(createEvent);
 router.route("/createEventadd").post(addToEvent);
+router.route("/getEventsForUser").get(getEventsForUser);
 
 module.exports = router; 
