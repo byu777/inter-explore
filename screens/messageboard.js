@@ -5,7 +5,8 @@ import {
   View,
   SafeAreaView,
   TouchableOpacity,
-  Dimensions
+  Dimensions,
+  FlatList
 } from "react-native";
 
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
