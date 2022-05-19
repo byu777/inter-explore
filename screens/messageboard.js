@@ -6,24 +6,24 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Dimensions,
-  FlatList
+  FlatList,
 } from "react-native";
 
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Context as AuthContext } from "./../context/AuthContext";
 import { useFonts } from "expo-font";
 
-const Room = ({ title, icon_string, num_members, navigation }) => (
+const Room = ({ title, navigation, chat }) => (
   <View style={mb_styles.row_container}>
     <Ionicons
-      name={icon_string}
+      name={"basketball"}
       size={70}
       color="#d62828"
       style={mb_styles.left_icon}
     ></Ionicons>
     <Text style={mb_styles.room_title}>{title}</Text>
     <TouchableOpacity
-      onPress={() => navigation.navigate("Chatroom")}
+      onPress={() => navigation.navigate("Chatroom", chat)}
       style={mb_styles.touchables_arrow}
     >
       <Ionicons name="arrow-forward" size={50} color="#d62828"></Ionicons>
@@ -36,28 +36,11 @@ const Room = ({ title, icon_string, num_members, navigation }) => (
 export default function MessageBoardPage({ navigation }) {
   const { state } = useContext(AuthContext);
 
-  //later, retrieve interests data from back-end
-  const [interests, setInterests] = useState([
-    {
-      title: "BASKETBALL",
-      num_members: "asd",
-      icon_string: "basketball",
-      key: 1,
-    },
-    {
-      title: "FOOTBALL",
-      num_members: "asd",
-      icon_string: "american-football",
-      key: 2,
-    },
-    { title: "BIKING", num_members: "asd", icon_string: "bicycle", key: 3 },
-    {
-      title: "BASEBALL",
-      num_members: "asd",
-      icon_string: "baseball-outline",
-      key: 4,
-    },
-  ]);
+  const [name, setName] = useState("");
+
+  useEffect(() => {
+    setName(state.user.firstName);
+  }, []);
 
   let [fontsLoaded] = useFonts({
     "Asap-Bold": require("../assets/fonts/Asap-Bold.ttf"),
@@ -75,27 +58,22 @@ export default function MessageBoardPage({ navigation }) {
   });
 
   const renderItem = ({ item }) => (
-    <Room
-      title={item.title}
-      icon_string={item.icon_string}
-      navigation={navigation}
-    />
+    <Room title={item.InterestName} navigation={navigation} chat={item} />
   );
 
   return (
     <SafeAreaView style={mb_styles.container}>
       <View style={mb_styles.top_section}>
-        <Text style={mb_styles.welcome_title}>Welcome back, Justinssssss</Text>
+        <Text style={mb_styles.welcome_title}>Welcome back, {name}</Text>
       </View>
 
       <View style={mb_styles.notice}>
-        <Text style={{color: '#03045e'}}>Here are your chats</Text>
+        <Text style={{ color: "#03045e" }}>Here are your chats</Text>
       </View>
-
       <FlatList
         style={mb_styles.mb_chat_container}
         keyExtractor={(item) => item.key}
-        data={interests}
+        data={state.chatGroups}
         renderItem={renderItem}
       />
     </SafeAreaView>
@@ -104,12 +82,12 @@ export default function MessageBoardPage({ navigation }) {
 
 // ***------------------------------- STYLING ---------------------------------*********************
 
-let fullWidth = Dimensions.get('window').width;
+let fullWidth = Dimensions.get("window").width;
 
 const mb_styles = StyleSheet.create({
   background: {
-     backgroundColor: "#ece6dd",
-      flex: 1
+    backgroundColor: "#ece6dd",
+    flex: 1,
   },
   container: {
     flex: 1,
@@ -117,11 +95,11 @@ const mb_styles = StyleSheet.create({
     flexDirection: "column",
   },
   top_section: {
-    flexDirection: 'row',
+    flexDirection: "row",
     padding: 5,
     alignSelf: "center",
     width: fullWidth,
-    color: 'white',
+    color: "white",
   },
   mb_chat_container: {
     flexDirection: "column",
@@ -181,14 +159,14 @@ const mb_styles = StyleSheet.create({
     fontSize: 20,
     padding: 5,
     position: "relative",
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   welcome_title: {
     fontSize: 40,
     flexWrap: "wrap",
     fontFamily: "Asap-Regular",
-    color: '#03045e',
-    fontWeight: 'bold',
+    color: "#03045e",
+    fontWeight: "bold",
   },
   appButtonContainer: {
     elevation: 8,
@@ -197,8 +175,8 @@ const mb_styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 12,
     margin: 2,
-    width: '40%',
-    alignSelf: "center"
+    width: "40%",
+    alignSelf: "center",
   },
   appButtonText: {
     fontSize: 14,
