@@ -1076,6 +1076,21 @@
   "resolved" "https://registry.npmjs.org/@emotion/unitless/-/unitless-0.7.5.tgz"
   "version" "0.7.5"
 
+"@expo-google-fonts/asap@^0.2.2":
+  "integrity" "sha512-fwQmuYP6ymRuBsPcxzCZXyiHiaZ4tHiFDts0v+XpBvua+5yJM77qEkVNjWbl1AbNWu1ztKrmUJwjOLhoD4meaQ=="
+  "resolved" "https://registry.npmjs.org/@expo-google-fonts/asap/-/asap-0.2.2.tgz"
+  "version" "0.2.2"
+
+"@expo-google-fonts/inter@^0.2.2":
+  "integrity" "sha512-dU6mSczI2xkRZbUhQQ5VB+D4AqLOF8ufCIfA1iBjrPZ/Qnka88E5Ez2Mvm41exdKR76norVvYD5GJIQYEEoO/Q=="
+  "resolved" "https://registry.npmjs.org/@expo-google-fonts/inter/-/inter-0.2.2.tgz"
+  "version" "0.2.2"
+
+"@expo-google-fonts/rajdhani@^0.2.2":
+  "integrity" "sha512-Zl4OxXmyPo8jqJJAv0bbKzAT1A/LuxMinABxAqUmFT8QXoNXkAifY/mnGCqx4DL03gbOemjdYlfLvsvbIkvP/g=="
+  "resolved" "https://registry.npmjs.org/@expo-google-fonts/rajdhani/-/rajdhani-0.2.2.tgz"
+  "version" "0.2.2"
+
 "@expo/bunyan@^4.0.0", "@expo/bunyan@4.0.0":
   "integrity" "sha512-Ydf4LidRB/EBI+YrB+cVLqIseiRfjUI/AeHBgjGMtq3GroraDu81OV7zqophRgupngoL3iS3JUMDMnxO7g39qA=="
   "resolved" "https://registry.npmjs.org/@expo/bunyan/-/bunyan-4.0.0.tgz"
@@ -3835,7 +3850,7 @@
     "@expo/config-plugins" "^4.0.14"
     "uuid" "^3.4.0"
 
-"expo-font@~10.1.0":
+"expo-font@^10.1.0", "expo-font@~10.1.0":
   "integrity" "sha512-vmhzpE95Ym4iOj8IELof+C/3Weert2B3LyxV5rBjGosjzBdov+o+S6b5mN7Yc9kyEGykwB6k7npL45X3hFYDQA=="
   "resolved" "https://registry.npmjs.org/expo-font/-/expo-font-10.1.0.tgz"
   "version" "10.1.0"

@@ -59,6 +59,26 @@ const getEventsForUser = asyncHandler(async (req, res) => {
   }
 });
 
+// >>>>>>>>>>>>>>>> how to reference our mongodb database here?
+
+// const mongoose = require('mongoose');
+// const bodyParser = require('body-parser');
+// const authentication = require('./authentication');
+// const mongoUri = 'mongodb+srv://user:123@cluster0.1ozdh.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+// mongoose.connect(mongoUri,
+//   async(err)=>{
+//       if(err) throw err;
+//       console.log("conncted to db")
+
+// });
+
+// retrieve the user's token, verify its the right token, and then set their
+// status to 'subscribed' for event (updating backend)
+// const retrieveEventSubscription = (pushToken, setIsSubscribed) => 
+// mongoose.
+
+
+
 const addToEvent = asyncHandler(async (req, res) => {
   const { eventID, userId } = req.body;
 
