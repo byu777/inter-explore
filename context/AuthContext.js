@@ -22,7 +22,7 @@ const authReducer = (state, action) => {
       return state;
   }
 };
-
+ 
 const clearErrorMessage = dispatch => () => {
   dispatch({ type: 'clear_error_message'})
 };
@@ -155,6 +155,6 @@ async function userInterests(user) {
 
 export const { Provider, Context } = createDataContext(
   authReducer,
-  { signin, signout, signup, clearErrorMessage, getInterests },
-  { token: null, errorMessage: '', user: null, interests: null, chatGroups: null}
+  { signin, signout, signup, clearErrorMessage, getInterests},
+  { token: null, errorMessage: '', user: null, interests: null}
 );

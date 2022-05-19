@@ -42,22 +42,33 @@ export default function MakeEventPage({ navigation }) {
   const isAllFieldsValid = (title, location, desc) => {
     // console.log(Object.values(desc).every((value) => value.trim()))
     // console.log(title, location, desc);
-    return Object.values(title, location, desc).every((value) => value.trim());
+    if (title != '' && location != '' && desc != '') {
+      return true
+    }
+    // (values.email != '' && values.password != '' && values.firstName != '' &&
+    //            values.userName != '' && values.primaryInterest != '' && values.secondaryInterest != '')
+
+    // return Object.values(title, location, desc).every((value) => value.trim());
   };
 
   const isValidForm = () => {
     if (isAllFieldsValid(title, location, desc)) return true;
   };
 
-  const onSubmitFormHandler = async () => {
+  const onSubmitFormHandler = async (event) => {
     console.log("press the button");
+    // if the input is valid (title, desc, etc...) create a response and POST it using the proper route
     if (isValidForm()) {
-      const response = await trackerApi.post("/api/events/createEvent",{
-        title,
-        location,
-        desc,
-      });
-      //console.log(response);
+      try {
+        const response = await trackerApi.post("/api/events/createEvent",{
+          title,
+          location,
+          desc,
+        });
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
   return (
@@ -103,6 +114,7 @@ export default function MakeEventPage({ navigation }) {
           {/* this is a custom Datepicker that I made; how do i grab the date/time state from it and put it on this MakeEventPage's state? */}
           <CustomDatePicker
           value={CustomDatePicker.date}
+          
           //onChangeText={console.log(CustomDatePicker.data)}
           />
         </View>

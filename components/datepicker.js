@@ -56,7 +56,7 @@ export default function CustomDatePicker() {
         </View>
       </View>
 
-      <Text style={{ fontWeight: "bold", fontSize: 20 }}>{text}</Text>
+      <Text style={{ color: '#530127', fontSize: 15 }}>{text}</Text>
 
       {show && (
         <DateTimePicker

@@ -5,7 +5,8 @@ const {
   addToGroup,
   removeFromGroup,
   getInterestNames,
-  getAllInterests
+  getAllInterests,
+  getAllUsers,
 } = require("../api/ChatRoute");
 const router = express.Router();
 
@@ -15,5 +16,6 @@ router.route("/groupadd").put(addToGroup);
 router.route("/groupremove").put(removeFromGroup);
 router.route("/getInterestNames").get(getInterestNames);
 router.route("/getAllInterests").get(getAllInterests);
+router.route("/getAllUsers").get(getAllUsers);
 
 module.exports = router;
