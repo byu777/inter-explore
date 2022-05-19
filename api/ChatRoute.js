@@ -9,9 +9,9 @@ const User = require("../router/models/Users");
 //to list of users.
 const fetchChats = asyncHandler(async (req, res) => {
   try {
-    interests
-      .find({ users: { $elemMatch: { $eq: req.user._id } } })
-      .populate("Users", "-password")
+    //console.log(req);
+      interests.find({ users: { $elemMatch: { $eq: req._id } } })
+      .populate("user", "-password")
       .populate("latestMessage")
       .sort({ updatedAt: -1 })
       .then(async (results) => {
