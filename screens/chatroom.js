@@ -188,6 +188,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: "row",
+    padding: Platform.OS === "android" ? 45 : 0
   },
   appButtonContainer: {
     elevation: 8,
