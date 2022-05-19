@@ -23,9 +23,6 @@ const authReducer = (state, action) => {
       return state;
   }
 };
-<<<<<<< HEAD
- 
-=======
 
 const userUpdateReducer = (state = {}, action) => {
   switch (action.type) {
@@ -40,7 +37,6 @@ const userUpdateReducer = (state = {}, action) => {
   }
 };
 
->>>>>>> Richard
 const clearErrorMessage = dispatch => () => {
   dispatch({ type: 'clear_error_message'})
 };

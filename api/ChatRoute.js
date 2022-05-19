@@ -130,17 +130,7 @@ const getAllUsers = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = {
-  fetchChats,
-  createGroupChat,
-  addToGroup,
-  removeFromGroup,
-  getInterestNames,
-  getAllInterests,
-  getAllUsers,
-};
-  })
-
+  
   const updateUserProfile = asyncHandler(async (req, res) => {
 
     const user = await User.findById(req.body._id);
@@ -168,6 +158,9 @@ module.exports = {
     fetchChats,
     createGroupChat,
     addToGroup,
-    getInterests,
+    removeFromGroup,
+    getInterestNames,
+    getAllInterests,
+    getAllUsers,
     updateUserProfile
   };
