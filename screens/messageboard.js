@@ -16,7 +16,9 @@ import { Ionicons } from "@expo/vector-icons";
 // --------------------------- Message Board page -----------------------------
 
 export default function MessageBoardPage({ navigation }) {
-  const { state } = useContext(AuthContext);
+  const { state, signout } = useContext(AuthContext);
+
+  {state.token ? null : navigation.navigate("Login")}
 
   return (
     <SafeAreaView style={mb_styles.background}>
@@ -59,6 +61,9 @@ export default function MessageBoardPage({ navigation }) {
           </View>
         )}
       />
+      <TouchableOpacity style={mb_styles.appButtonContainer} onPress={() => signout()}>
+        <Text style={mb_styles.appButtonText}>Sign Out</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -145,6 +150,23 @@ const mb_styles = StyleSheet.create({
     justifyContent: "flex-end",
     marginRight: 10,
     flex: 0.5,
+  },
+  appButtonContainer: {
+    elevation: 8,
+    backgroundColor: "#009688",
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    margin: 2,
+    width: '40%',
+    alignSelf: "center"
+  },
+  appButtonText: {
+    fontSize: 14,
+    color: "#fff",
+    fontWeight: "bold",
+    alignSelf: "center",
+    textTransform: "uppercase",
   },
 });
 

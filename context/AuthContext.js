@@ -11,7 +11,7 @@ const authReducer = (state, action) => {
     case 'setUser':
       return {...state, user: action.payload};
     case 'signOut':
-      return {token: null, errorMessage: '', user: null};
+      return {token: null, errorMessage: '', user: null, interests: null, chatGroups: null};
     case 'clear_error_message':
       return {...state, errorMessage: ''};
     case 'interests':
@@ -53,9 +53,11 @@ const signup = (dispatch) => async ({
       await AsyncStorage.setItem('token', response.data.token);
       await dispatch({ type: 'login', payload: response.data.token})
       await dispatch({type: 'setUser', payload: response.data.user})
-      //console.log(response.data);
+
+      // Set user interests chat groups to state
+      const chatGroups = await userInterests(response.data.user);
+      await dispatch({type: 'userInterests', payload: chatGroups});
     } catch (err) {
-      //console.log(err);
       await dispatch({type: 'add_error', payload: 'Something went wrong with sign up'})
     }
   };
@@ -77,9 +79,7 @@ const signin = (dispatch) => {
           await dispatch({type: 'setUser', payload: response.data.user})
           
           // Set user interests chat groups to state
-          // console.log(response.data.user);
           const chatGroups = await userInterests(response.data.user);
-          //console.log(chatGroups);
           await dispatch({type: 'userInterests', payload: chatGroups});
 
         } else if (response.data.isMatch == false) {
@@ -94,7 +94,7 @@ const signin = (dispatch) => {
 const signout = (dispatch) => async () => {
     await AsyncStorage.removeItem('token');
     await dispatch({type: 'signOut'})
-    //console.log("Signed Out");
+    console.log("Signed Out");
 };
 
 
@@ -106,17 +106,6 @@ const getInterests = (dispatch) => async () => {
         console.log(err);
       }
 };
-
-// const addToInterests = (dispatch) => async (user) => {
-//   try {
-//     console.log(state.user);
-//     let primary = user.primaryInterest;
-//     const interestOne = await trackerApi.get("/api/interests/getInterestID", { Interest: primary })
-//     console.log(interestOne)
-//   } catch (err) {
-//     console.log(err);
-//   }
-// };
 
 // Grabs all interests from the database and searches through the interests to match them with the selected
 // interests for the user, then uses those interest Id's and the user Id's to add the user to the proper group chats
@@ -158,7 +147,6 @@ async function userInterests(user) {
       if (listOfInterests[i].InterestName == primary || listOfInterests[i].InterestName == secondary) {
         // api call to add user to group chat based on interest id and user id
         userInterests.push(listOfInterests[i]);
-        //console.log(listOfInterests[i]);
       }
     }
     return userInterests;

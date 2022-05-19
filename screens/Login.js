@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { View } from "react-native";
 //icons
@@ -35,7 +35,11 @@ const Login = ({ navigation }) => {
 
   const {state, signin} = useContext(AuthContext);
 
-  {state.token ? navigation.navigate("Tab") : null}
+  useEffect(() => {
+    {state.token ? navigation.navigate("Tab") : null}
+  }, [state.token]);
+
+
 
   return (
     <KeyboardAvoidingWrapper>

@@ -20,10 +20,18 @@ export default function Profile() {
 
   const [image, setImage] = useState(null);
 
-  const firstname = state.user.firstName;
-  const primary = state.user.primaryInterest;
-  const secondary = state.user.secondaryInterest;
-  const email = state.user.email;
+  var firstname, primary, secondary, email;
+  if (state.user != null) {
+    firstname = state.user.firstName;
+    primary = state.user.primaryInterest;
+    secondary = state.user.secondaryInterest;
+    email = state.user.email;
+  } else {
+    firstname = "default";
+    primary = "default";
+    secondary = "default";
+    email = "default";
+  }
 
   useEffect( async () => {
     if(Platform.OS !== 'web'){

@@ -1,26 +1,30 @@
 import { useRoute } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   StyleSheet,
   Text,
   View,
-  Button,
   Image,
   SafeAreaView,
   FlatList,
   TouchableOpacity,
   TextInput,
+  KeyboardAvoidingView,
+  Modal,
+  ScrollView,
 } from "react-native";
 import trackerApi from "../api/tracker";
+import { Context as AuthContext } from "./../context/AuthContext";
 import io from "socket.io-client";
+import KeyboardAvoidingWrapper from "./../components/KeyboardAvoidingWrapper";
 
-//current url, after deployment will change to url where application is deployed
+// Current url is localhost, after deployment will change to url where application is deployed
 // Variables needed for socket.io
 // const ENDPOINT = "http://localhost:3000";
 // var socket, selectedChatCompare;
 
-
 const Chatroom = ({ navigation }) => {
+  const { state } = useContext(AuthContext);
   const route = useRoute();
   navigation.setOptions({ title: route.params.InterestName });
 
@@ -28,20 +32,19 @@ const Chatroom = ({ navigation }) => {
   const [newMessage, setNewMessage] = useState();
 
   const fetchMessages = async () => {
-    if(!route.params._id) return;
+    if (!route.params._id) return;
 
     try {
-      const response = await trackerApi.get(`/api/Messages/${route.params._id}`);
+      const response = await trackerApi.get(
+        `/api/Messages/${route.params._id}`
+      );
 
       setMessages(response.data);
-      
-    } catch (error) {
-      
-    }
-  }
+    } catch (error) {}
+  };
   useEffect(() => {
     fetchMessages();
-  }, [route.params_id])
+  }, [route.params_id]);
 
   // useEffect to connect socket.io-client to socket.io server side
   // useEffect(() => {
@@ -50,10 +53,14 @@ const Chatroom = ({ navigation }) => {
   // }, [])
 
   const sendMessage = async () => {
-    if(newMessage != null || newMessage != ''){
+    if (newMessage != null || newMessage != "") {
       try {
-        setNewMessage(""); 
-        const response = await trackerApi.post('/api/Messages/', {content: newMessage, chatId: route.params._id })
+        setNewMessage("");
+        const response = await trackerApi.post("/api/Messages/", {
+          sender: state.user._id,
+          content: newMessage,
+          chatId: route.params._id,
+        });
 
         setMessages([...messages, response.data]);
       } catch (error) {
@@ -64,43 +71,68 @@ const Chatroom = ({ navigation }) => {
 
   const onChangeMessageHandler = (message) => {
     setNewMessage(message);
-
   };
 
   return (
-    <SafeAreaView style={styles.main_container}>
+  <SafeAreaView style={styles.main_container}>
       <View style={styles.buttonContainer}>
-      <TouchableOpacity style={styles.appButtonContainer}>
-        <Text style={styles.appButtonText}>Members</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.appButtonContainer} onPress={() => navigation.navigate("CreateEvent")}>
-        <Text style={styles.appButtonText}>Make Event</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.appButtonContainer}
+          onPress={() => setVisible(true)}
+        >
+          <Text style={styles.appButtonText}>Members</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.appButtonContainer}
+          onPress={() => navigation.navigate("CreateEvent")}
+        >
+          <Text style={styles.appButtonText}>Make Event</Text>
+        </TouchableOpacity>
       </View>
 
       {/* container for chat messages area */}
       <View style={styles.chat_area}>
-      <FlatList
-        data={messages}
-        style={styles.ChatMessages}
-        renderItem={({ item }) => (
-          <Text>{item.content[0]}</Text>
-        )}
-      />
+        <FlatList
+          data={messages}
+          style={styles.ChatMessages}
+          renderItem={({ item }) => (
+            <View
+              style={{
+                alignSelf: `${
+                  item.sender._id === state.user._id ? "flex-end" : "flex-start"
+                }`,
+                backgroundColor: `${
+                  item.sender._id === state.user._id ? "#B9F5D0" : "#BEE3F8"
+                }`,
+                borderRadius: 20,
+                maxWidth: "75%",
+                margin: 3,
+                flex: 1,
+              }}
+            >
+              <Text style={styles.chatMessagesText}>{item.content[0]}</Text>
+            </View>
+          )}
+        />
       </View>
-
-      <View style={styles.sendMessageArea}>
-        <TextInput 
-         style={styles.typeMessage}
-         placeholder="Send a Message..."
-         onChangeText={onChangeMessageHandler}
-         value={newMessage}
-         />
-        <TouchableOpacity style={styles.appSendButtonContainer} onPress={sendMessage}>
-        <Text style={styles.appSendButtonText}>Send</Text>
-        </TouchableOpacity>
-      </View>
+      <KeyboardAvoidingView>
+        <View style={styles.sendMessageArea}>
+          <TextInput
+            style={styles.typeMessage}
+            placeholder="Send a Message..."
+            onChangeText={onChangeMessageHandler}
+            value={newMessage}
+          />
+          <TouchableOpacity
+            style={styles.appSendButtonContainer}
+            onPress={sendMessage}
+          >
+            <Text style={styles.appSendButtonText}>Send</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
+
   );
 };
 
@@ -155,7 +187,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   buttonContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   appButtonContainer: {
     elevation: 8,
@@ -164,8 +196,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 12,
     margin: 2,
-    width: '49%'
-
+    width: "49%",
   },
   appButtonText: {
     fontSize: 14,
@@ -180,9 +211,9 @@ const styles = StyleSheet.create({
     borderRadius: 0,
     paddingVertical: 10,
     paddingHorizontal: 12,
-    alignSelf: 'flex-end',
+    alignSelf: "flex-end",
     margin: 2,
-  }, 
+  },
   appSendButtonText: {
     fontSize: 14,
     color: "#fff",
@@ -191,22 +222,28 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
   },
   sendMessageArea: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   typeMessage: {
-    backgroundColor: 'transparent',
-    width: '75%',
+    backgroundColor: "transparent",
+    width: "75%",
     marginLeft: 10,
     marginRight: 10,
     borderBottomWidth: 1,
     borderLeftWidth: 1,
     borderRightWidth: 1,
     borderTopWidth: 1,
-    borderColor: '#009688',
+    borderColor: "#009688",
   },
   ChatMessages: {
-    width: "100%"
-  }
+    width: "100%",
+  },
+  chatMessagesBackground: {},
+  chatMessagesText: {
+    fontSize: 16,
+    padding: 10,
+    flexWrap: "wrap",
+  },
 });
 
 export default Chatroom;
