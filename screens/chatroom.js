@@ -12,19 +12,51 @@ import {
   KeyboardAvoidingView,
   Modal,
   ScrollView,
+  ImageBackground,
 } from "react-native";
 import trackerApi from "../api/tracker";
 import { Context as AuthContext } from "./../context/AuthContext";
 import io from "socket.io-client";
 import KeyboardAvoidingWrapper from "./../components/KeyboardAvoidingWrapper";
+import { Ionicons } from "@expo/vector-icons";
 
 // Current url is localhost, after deployment will change to url where application is deployed
 // Variables needed for socket.io
 // const ENDPOINT = "http://localhost:3000";
 // var socket, selectedChatCompare;
 
+const image = require("../assets/images/background1.jpg");
+
+const INITIAL_STATE = [
+  {
+    _id: 1,
+    msg: "Copium",
+  },
+  {
+    _id: 2,
+    msg: "Faze",
+  },
+  {
+    _id: 3,
+    msg: "CS",
+  },
+  {
+    _id: 4,
+    msg: "sdsds",
+  },
+  {
+    _id: 5,
+    msg: "lul",
+  },
+  {
+    _id: 6,
+    msg: "Huff that",
+  },
+]
+
 const Chatroom = ({ navigation }) => {
   const { state } = useContext(AuthContext);
+  //const {state} = useState(INITIAL_STATE);
   const route = useRoute();
   navigation.setOptions({ title: route.params.InterestName });
 
@@ -32,6 +64,7 @@ const Chatroom = ({ navigation }) => {
   const [newMessage, setNewMessage] = useState();
 
   const fetchMessages = async () => {
+    // if the 'unique id' doesnt match, its not user so exit
     if (!route.params._id) return;
 
     try {
@@ -44,7 +77,7 @@ const Chatroom = ({ navigation }) => {
   };
   useEffect(() => {
     fetchMessages();
-  }, [route.params_id]);
+  }, [route.params._id]);
 
   // useEffect to connect socket.io-client to socket.io server side
   // useEffect(() => {
@@ -74,65 +107,73 @@ const Chatroom = ({ navigation }) => {
   };
 
   return (
-  <SafeAreaView style={styles.main_container}>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.appButtonContainer}
-          onPress={() => setVisible(true)}
-        >
-          <Text style={styles.appButtonText}>Members</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.appButtonContainer}
-          onPress={() => navigation.navigate("CreateEvent")}
-        >
-          <Text style={styles.appButtonText}>Make Event</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* container for chat messages area */}
-      <View style={styles.chat_area}>
-        <FlatList
-          data={messages}
-          style={styles.ChatMessages}
-          renderItem={({ item }) => (
-            <View
-              style={{
-                alignSelf: `${
-                  item.sender._id === state.user._id ? "flex-end" : "flex-start"
-                }`,
-                backgroundColor: `${
-                  item.sender._id === state.user._id ? "#B9F5D0" : "#BEE3F8"
-                }`,
-                borderRadius: 20,
-                maxWidth: "75%",
-                margin: 3,
-                flex: 1,
-              }}
-            >
-              <Text style={styles.chatMessagesText}>{item.content[0]}</Text>
-            </View>
-          )}
-        />
-      </View>
-      <KeyboardAvoidingView>
-        <View style={styles.sendMessageArea}>
-          <TextInput
-            style={styles.typeMessage}
-            placeholder="Send a Message..."
-            onChangeText={onChangeMessageHandler}
-            value={newMessage}
-          />
+    <SafeAreaView style={styles.main_container}>
+      <ImageBackground source={image} style={styles.bg_image}>
+        <View style={styles.buttonContainer}>
           <TouchableOpacity
-            style={styles.appSendButtonContainer}
-            onPress={sendMessage}
+            style={styles.member_btn}
+            onPress={() => setVisible(true)}
           >
-            <Text style={styles.appSendButtonText}>Send</Text>
+            <Ionicons 
+            name={"basketball"}
+            size={70}
+            color="#d62828"
+            style={mb_styles.left_icon}></Ionicons>
+            <Text style={styles.appButtonText}>Members</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.appButtonContainer}
+            onPress={() => navigation.navigate("CreateEvent")}
+          >
+            <Text style={styles.appButtonText}>Make Event</Text>
           </TouchableOpacity>
         </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
 
+        {/* container for chat messages area */}
+        <View style={styles.chat_area}>
+          <FlatList
+            data={messages}
+            style={styles.ChatMessages}
+            renderItem={({ item }) => (
+              <View
+                style={{
+                  alignSelf: `${
+                    item.sender._id === state.user._id
+                      ? "flex-end"
+                      : "flex-start"
+                  }`,
+                  backgroundColor: `${
+                    item.sender._id === state.user._id ? "#B9F5D0" : "#BEE3F8"
+                  }`,
+                  borderRadius: 20,
+                  maxWidth: "75%",
+                  margin: 3,
+                  flex: 1,
+                }}
+              >
+                <Text style={styles.chatMessagesText}>{item.content[0]}</Text>
+              </View>
+            )}
+          />
+        </View>
+        <KeyboardAvoidingView>
+          <View style={styles.sendMessageArea}>
+            <TextInput
+              style={styles.typeMessage}
+              placeholder="Send a Message..."
+              onChangeText={onChangeMessageHandler}
+              value={newMessage}
+            />
+            <TouchableOpacity
+              style={styles.appSendButtonContainer}
+              onPress={sendMessage}
+            >
+              <Text style={styles.appSendButtonText}>Send</Text>
+            </TouchableOpacity>
+          </View>
+        </KeyboardAvoidingView>
+      </ImageBackground>
+    </SafeAreaView>
   );
 };
 
@@ -140,8 +181,14 @@ const Chatroom = ({ navigation }) => {
 const styles = StyleSheet.create({
   main_container: {
     flex: 1,
-    marginTop: 8,
-    backgroundColor: "transparent",
+    backgroundColor: "#90e0ef",
+    flexDirection: "column",
+  },
+  bg_image: {
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'center',
+    opacity: 0.6,
   },
   member_container: {
     flexDirection: "row",
@@ -161,7 +208,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "flex-start",
     justifyContent: "flex-start",
-    backgroundColor: "#ece6dd",
+    backgroundColor: "transparent",
     margin: 10,
     flex: 4,
   },
@@ -188,7 +235,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: "row",
-    padding: Platform.OS === "android" ? 45 : 0
+    padding: Platform.OS === "android" ? 45 : 0,
   },
   appButtonContainer: {
     elevation: 8,
