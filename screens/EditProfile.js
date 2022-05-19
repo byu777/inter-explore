@@ -30,13 +30,6 @@ const EditProfileScreen = ({ navigation }) => {
 
   const newUser = state.user;
 
-  useEffect(() => {
-    console.log("get interests")
-    //getInterests()
-    
-  } , [])
-
-
   const submitHandler = async(values) => {
   try{
     newUser.firstName = values.firstName
@@ -64,13 +57,14 @@ const EditProfileScreen = ({ navigation }) => {
               firstName: "",
               primaryInterest: "",
               secondaryInterest: "",
+              pic:state.user.pic
             }}
             onSubmit={(values) => {
               if (values.email != '' && values.firstName != '' &&
                   values.primaryInterest != '' && values.secondaryInterest != '') {
                  if (values.email.includes("@")){
                   submitHandler(values)
-                  navigation.navigate("Tab")
+                  navigation.navigate("Tab", values)
                  } else {
                    state.errorMessage = "You must enter a valid email address"
                  }

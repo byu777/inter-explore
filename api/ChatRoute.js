@@ -87,6 +87,7 @@ const createGroupChat = asyncHandler(async (req, res) => {
       user.email = req.body.email || user.email;
       user.primaryInterest = req.body.primaryInterest || user.primaryInterest;
       user.secondaryInterest = req.body.secondaryInterest|| user.secondaryInterest;
+      user.pic = req.body.pic|| user.pic;
       if (req.body.password) {
         user.password = req.body.password;
       }
