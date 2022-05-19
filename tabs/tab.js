@@ -8,6 +8,7 @@ import MakeEventPage from "../screens/create_event";
 import EventList from "../screens/event_list";
 import { useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import EditProfile from "../screens/EditProfile";
 
 import { StyleSheet, Text, View, Image } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";

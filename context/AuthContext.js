@@ -2,6 +2,7 @@ import createDataContext from "./createDataContext";
 import trackerApi from "../api/tracker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+
 const authReducer = (state, action) => {
   switch (action.type) {
     case 'add_error':
@@ -22,7 +23,24 @@ const authReducer = (state, action) => {
       return state;
   }
 };
+<<<<<<< HEAD
  
+=======
+
+const userUpdateReducer = (state = {}, action) => {
+  switch (action.type) {
+    case 'user_update_request':
+      return { loading: true };
+    case 'user_update_success':
+      return { loading: false, user: action.payload, success: true };
+    case 'user_update_fail':
+      return { loading: false, error: action.payload, success: false };
+    default:
+      return state;
+  }
+};
+
+>>>>>>> Richard
 const clearErrorMessage = dispatch => () => {
   dispatch({ type: 'clear_error_message'})
 };
@@ -152,6 +170,35 @@ async function userInterests(user) {
     return userInterests;
 }
 
+
+
+const updateProfile = (user) => async (dispatch, getState) => {
+      try {
+        await dispatch({ type: 'user_update_request' });
+
+        const config = {
+          headers: {
+            "Content-Type": "application/json"
+          },
+        };
+        
+        const { data } = await trackerApi.post("/api/interests/profile", user, config);
+    
+        await dispatch({ type: 'setUser', payload: data });
+            // dispatch({ type: 'login', payload: data });
+
+    
+        AsyncStorage.setItem("userInfo", JSON.stringify(data));
+      } catch (error) {
+        dispatch({
+          type: 'user_update_fail',
+          payload:
+            error.response && error.response.data.message
+              ? error.response.data.message
+              : error.message,
+        });
+      }
+    };
 
 export const { Provider, Context } = createDataContext(
   authReducer,

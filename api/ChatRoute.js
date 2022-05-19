@@ -139,3 +139,35 @@ module.exports = {
   getAllInterests,
   getAllUsers,
 };
+  })
+
+  const updateUserProfile = asyncHandler(async (req, res) => {
+
+    const user = await User.findById(req.body._id);
+  
+    if (user) {
+      user.firstName = req.body.firstName || user.firstName;
+      user.email = req.body.email || user.email;
+      user.primaryInterest = req.body.primaryInterest || user.primaryInterest;
+      user.secondaryInterest = req.body.secondaryInterest|| user.secondaryInterest;
+      user.pic = req.body.pic|| user.pic;
+      if (req.body.password) {
+        user.password = req.body.password;
+      }
+  
+      const updatedUser = await user.save();
+      res.json(updatedUser)
+  
+    } else {
+      res.status(404);
+      throw new Error("User Not Found");
+    }
+  });
+
+  module.exports = {
+    fetchChats,
+    createGroupChat,
+    addToGroup,
+    getInterests,
+    updateUserProfile
+  };
