@@ -11,6 +11,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   TextInput,
+  Modal,
 } from "react-native";
 
 /**
@@ -35,6 +36,10 @@ export default function AdminSuggestions() {
    * State to hold text from text input.
    */
   const [suggestion, setSuggestion] = useState(null);
+
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const [inputText, setInputText] = useState("");
 
   /**
    * Sets the state of the suggestion from text input.
@@ -153,6 +158,13 @@ export default function AdminSuggestions() {
     console.log(response);
   }
 
+  async function updateSuggestion(InterestNameOld, InterestNameNew) {
+    const response = await trackerApi.put("/api/suggestions/updateInterest", {
+      InterestNameOld, InterestNameNew
+    });
+    console.log(response);
+  }
+
   /**
    * Renders an individual suggestion with ID number and interest name.
    * @param {*} interestObject object of interest id and interest name
@@ -167,6 +179,25 @@ export default function AdminSuggestions() {
       >
         <Text style={{ fontWeight: "bold", color: "green" }}>Add</Text>
       </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => setModalVisible(true)}
+        style={adminStyles.interestButton}
+      >
+        <Text style={{ fontWeight: "bold", color: "red" }}>Edit</Text>
+      </TouchableOpacity>
+      <Modal animationType="slide" transparent={true} visible={modalVisible} onRequestClose={() => {setModalVisible(!modalVisible)}}>
+        <View style={adminStyles.modalView}>
+          <Text>Inside the modal for {interest}</Text>
+          <Text>Insert new suggestion to update with:</Text>
+          <TextInput style={{borderColor: "black", borderWidth: 5, borderRadius: 10}} placeholder="New name" onChangeText={setInputText}></TextInput>
+          <Pressable style={adminStyles.interestButton} onPress={() => {setModalVisible(!modalVisible)}}>
+            <Text>Update</Text>
+          </Pressable>
+          <Pressable style={adminStyles.interestButton} onPress={() => {setModalVisible(!modalVisible)}}>
+            <Text>Cancel</Text>
+          </Pressable>
+        </View>
+      </Modal>
       <TouchableOpacity
         onPress={() => handleDeleteSuggestion(id, interest)}
         style={adminStyles.interestButton}
@@ -231,7 +262,7 @@ const adminStyles = StyleSheet.create({
     textAlign: "center"
   },
   suggestionName: {
-    padding: 20,
+    padding: 10,
     color: "#FFB703",
     textAlign: "center",
   },
@@ -259,5 +290,20 @@ const adminStyles = StyleSheet.create({
     borderRadius: 10,
     margin: 10,
     borderWidth: 5,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
   },
 });

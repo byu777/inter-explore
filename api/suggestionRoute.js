@@ -47,4 +47,19 @@ const addToInterests = asyncHandler(async (req, res) => {
   }
 })
 
-module.exports = { createSuggestion, getAllSuggestions, deleteSuggestion, addToInterests };
+const updateInterest = asyncHandler(async (req, res) => {
+  try {
+    const updatedInterest = await suggestion.updateOne({
+      suggestionName: req.body.InterestNameOld,
+    }, 
+    {suggestionName: req.body.InterestNameNew})
+    res.send(updatedInterest.acknowledged);
+    res.send("Matched documents: " + updatedInterest.matchedCount);
+    res.send("Updated documents: " + updatedInterest.modifiedCount);
+  } catch (error) {
+    res.status(400);
+    throw new Error(error.message);
+  }
+})
+
+module.exports = { createSuggestion, getAllSuggestions, deleteSuggestion, addToInterests, updateInterest };
