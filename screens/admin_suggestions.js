@@ -27,6 +27,11 @@ export default function AdminSuggestions() {
   }, []);
 
   /**
+   * State to hold if data is being fetched after swiping down on list.
+   */
+  const [isFetching, setIsFetching] = useState(false);
+
+  /**
    * State to hold text from text input.
    */
   const [suggestion, setSuggestion] = useState(null);
@@ -79,7 +84,10 @@ export default function AdminSuggestions() {
           onPress: () => {
             addToInterests(interest);
             deleteFromSuggestions(id, interest);
-            Alert.alert("Suggestion added", interest + " has been added to the main interest list.");
+            Alert.alert(
+              "Suggestion added",
+              interest + " has been added to the main interest list."
+            );
           },
         },
       ]
@@ -97,7 +105,6 @@ export default function AdminSuggestions() {
       { data: { suggestionId, suggestionName } }
     );
     console.log(response.data);
-    
   }
 
   /**
@@ -114,19 +121,35 @@ export default function AdminSuggestions() {
   }
 
   /**
-   * Retrieves all data from the suggestions collection.
+   * Retrieves all data from the suggestions collection. If the 
+   * data returned is a string (when no new data detected), no update of the Flatlist occurs.
    * @returns JSON object of data
    */
   async function getAllSuggestions() {
+    setIsFetching(true);
     const response = await trackerApi.get("/api/suggestions/getAllSuggestions");
-    console.log(response.data);
-    setSuggestionData(response.data);
-    return response.data;
+    console.log(typeof(response.data));
+    if (typeof(response.data) == "object") {
+
+      console.log(response.data);
+      setSuggestionData(response.data);
+      setIsFetching(false);
+      return response.data;
+    }
+    else {
+      setIsFetching(false);
+    }
+    
   }
 
+  /**
+   * Adds the suggestion to the 'interests' collection.
+   * @param {string} InterestName name of the interest
+   */
   async function addToInterests(InterestName) {
-    const response = await trackerApi.post("/api/suggestions/addToInterests",
-    {InterestName});
+    const response = await trackerApi.post("/api/suggestions/addToInterests", {
+      InterestName,
+    });
     console.log(response);
   }
 
@@ -137,9 +160,7 @@ export default function AdminSuggestions() {
    */
   const InterestSuggestionItem = ({ id, interest }) => (
     <View style={adminStyles.suggestionField}>
-        <Text style={adminStyles.suggestionName}>
-          {interest}
-        </Text>
+      <Text style={adminStyles.suggestionName}>{interest}</Text>
       <TouchableOpacity
         onPress={() => handleAddSuggestion(id, interest)}
         style={adminStyles.interestButton}
@@ -156,8 +177,9 @@ export default function AdminSuggestions() {
   );
 
   return (
-    <SafeAreaView style={{ backgroundColor: "#023047" }}>
+    <SafeAreaView style={{ backgroundColor: "#023047", flex: 1 }}>
       <Text style={adminStyles.titleSections}>New Interest Suggestions</Text>
+      <Text style={adminStyles.subtitle}>To check for new suggestions, swipe down on list area.</Text>
       {/* <TextInput
         placeholder="New Suggestion"
         style={{
@@ -174,12 +196,8 @@ export default function AdminSuggestions() {
       >
         <Text style={{ textAlign: "center" }}>Add to Database</Text>
       </TouchableOpacity> */}
-      <TouchableOpacity
-        style={adminStyles.interestButton}
-        onPress={() => getAllSuggestions()}
-      >
-        <Text style={{ textAlign: "center" }}>Refresh</Text>
-      </TouchableOpacity>
+      <View style={{borderColor: "red", borderWidth: 5, borderRadius: 10}}>
+
       <FlatList
         data={suggestionData}
         renderItem={({ item }) => (
@@ -188,8 +206,11 @@ export default function AdminSuggestions() {
             interest={item.suggestionName}
           ></InterestSuggestionItem>
         )}
+        refreshing={isFetching}
+        onRefresh={getAllSuggestions}
       />
       <StatusBar style="auto" />
+      </View>
     </SafeAreaView>
   );
 }
@@ -202,7 +223,12 @@ const adminStyles = StyleSheet.create({
     fontSize: 30,
     color: "#FFB703",
     textAlign: "center",
-    padding: 10
+    padding: 15,
+  },
+  subtitle: {
+    fontSize: 15,
+    color: "#FFB703",
+    textAlign: "center"
   },
   suggestionName: {
     padding: 20,
@@ -232,6 +258,6 @@ const adminStyles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     margin: 10,
-    borderWidth: 5
+    borderWidth: 5,
   },
 });

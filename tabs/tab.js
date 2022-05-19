@@ -7,6 +7,7 @@ import Chatroom from "../screens/chatroom";
 import LandingPage from "../screens/landing_page";
 import MakeEventPage from "../screens/create_event";
 import EventList from "../screens/event_list";
+import AdminSuggestions from "../screens/admin_suggestions";
 import { useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
@@ -113,6 +114,15 @@ const Tabs = () => {
           options={{
             tabBarIcon: ({ focused, color, size }) => (
               <MaterialIcons name="event" color={color} size={size} />
+            ), 
+          }}
+        />
+        <Tab.Screen
+          name="Admin - Suggestion management"
+          component={AdminSuggestions}
+          options={{
+            tabBarIcon: ({ focused, color, size }) => (
+              <Ionicons name="shield-checkmark-outline" color={color} size={size} />
             ), 
           }}
         />
