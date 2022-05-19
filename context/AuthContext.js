@@ -150,7 +150,7 @@ async function userInterests(user) {
     const userInterests = [];
 
     // api call to get interests
-    const response = await trackerApi.get("/api/interests/getAllInterests")
+    const response = await trackerApi.get("/api/interests/", user._id);
     const listOfInterests = response.data;
 
     for(let i = 0; i < listOfInterests.length; i++) {
@@ -158,7 +158,7 @@ async function userInterests(user) {
       if (listOfInterests[i].InterestName == primary || listOfInterests[i].InterestName == secondary) {
         // api call to add user to group chat based on interest id and user id
         userInterests.push(listOfInterests[i]);
-        console.log(listOfInterests[i]);
+        //console.log(listOfInterests[i]);
       }
     }
     return userInterests;

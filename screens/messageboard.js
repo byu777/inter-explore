@@ -17,7 +17,6 @@ import { Ionicons } from "@expo/vector-icons";
 
 export default function MessageBoardPage({ navigation }) {
   const { state } = useContext(AuthContext);
-  console.log(state.chatGroups);
 
   return (
     <SafeAreaView style={mb_styles.background}>
@@ -47,7 +46,7 @@ export default function MessageBoardPage({ navigation }) {
               </View>
 
               <TouchableOpacity
-                onPress={() => navigation.navigate("Chatroom")}
+                onPress={() => navigation.navigate("Chatroom", item)}
                 style={mb_styles.touchables_arrow}
               >
                 <Ionicons
@@ -60,75 +59,6 @@ export default function MessageBoardPage({ navigation }) {
           </View>
         )}
       />
-
-      {/* <View style={mb_styles.list_item_inbox}>
-          <Ionicons
-            name="basketball"
-            size={70}
-            color="#52575D"
-            style={mb_styles.left_icon}
-          ></Ionicons>
-
-          <View style={mb_styles.list_item_description}>
-            <Text style={{ fontSize: 25 }}>BASKETBALL</Text>
-            <Text>For all you basketball lovers!</Text>
-          </View>
-
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Chatroom")}
-            style={mb_styles.touchables_arrow}
-          >
-            <Ionicons name="arrow-forward" size={25} color="#0c000e"></Ionicons>
-          </TouchableOpacity>
-        </View>
-
-        <View style={mb_styles.list_item_inbox}>
-          <Ionicons name="baseball" size={70} color="#52575D" style={mb_styles.left_icon}></Ionicons>
-
-          <View style={mb_styles.list_item_description}>
-            <Text style={{ fontSize: 25 }}>BASEBALL</Text>
-            <Text>For all you baseball lovers!</Text>
-          </View>
-
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Chatroom")}
-            style={mb_styles.touchables_arrow}
-          >
-            <Ionicons name="arrow-forward" size={25} color="#0c000e"></Ionicons>
-          </TouchableOpacity>
-        </View>
-
-        <View style={mb_styles.list_item_inbox}>
-          <Ionicons name="bicycle" size={70} color="#52575D" style={mb_styles.left_icon}></Ionicons>
-
-          <View style={mb_styles.list_item_description}>
-            <Text style={{ fontSize: 25 }}>BIKING</Text>
-            <Text>For all you bikers!</Text>
-          </View>
-
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Chatroom")}
-            style={mb_styles.touchables_arrow}
-          >
-            <Ionicons name="arrow-forward" size={25} color="#0c000e"></Ionicons>
-          </TouchableOpacity>
-        </View>
-
-        <View style={mb_styles.list_item_inbox}>
-          <Ionicons name="golf" size={70} color="#52575D" style={mb_styles.left_icon}></Ionicons>
-
-          <View style={mb_styles.list_item_description}>
-            <Text style={{ fontSize: 25 }}>GOLF</Text>
-            <Text>For all you golf lovers!</Text>
-          </View>
-
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Chatroom")}
-            style={mb_styles.touchables_arrow}
-          >
-            <Ionicons name="arrow-forward" size={25} color="#0c000e"></Ionicons>
-          </TouchableOpacity>
-        </View> */}
     </SafeAreaView>
   );
 }

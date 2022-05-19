@@ -1,7 +1,7 @@
 import React from 'react';
 
 // React navigation
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useRoute } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 // screens
@@ -28,7 +28,6 @@ const RootStack = () => {
                     },
                     headerTintColor: '#219EBC',
                     headerTransparent: true,
-                    headerTitle: '',
                     headerLeftContainerStyle: {
                         paddingLeft: 20
                     }
@@ -38,11 +37,11 @@ const RootStack = () => {
                 <Stack.Screen name="Signup" component={Signup} />
                 <Stack.Screen name="Tab" component={Tab} />
                 <Stack.Screen name="Chatroom" component={Chatroom} 
-                options={{headerShown: true}} />
+                options={{headerShown: true, title: ""}} />
                 <Stack.Screen name="MessageBoardPage" component={MessageBoardPage} />
                 <Stack.Screen name="EventList" component={EventList} />
                 <Stack.Screen name="CreateEvent" component={MakeEventPage}
-                options={{headerShown: true}} />
+                options={{headerShown: true, title: ""}} />
             </Stack.Navigator>
         </NavigationContainer>
     )
