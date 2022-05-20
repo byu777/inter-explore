@@ -40,8 +40,6 @@ const Signup = ({ navigation }) => {
   // States for user sign up
   const {state, signup, getInterests} = useContext(AuthContext);
 
-  getInterests();
-
   useEffect(() => {
     {state.token ? navigation.navigate("Tab") : null}
   }, [state.token]);
@@ -65,7 +63,8 @@ const Signup = ({ navigation }) => {
             onSubmit={(values) => {
               //console.log(values)
               if (values.email != '' && values.password != '' && values.firstName != '' &&
-               values.userName != '' && values.primaryInterest != '' && values.secondaryInterest != '') {
+               values.userName != '' && values.primaryInterest != '' && values.secondaryInterest != '' &&
+               values.primaryInterest != values.secondaryInterest) {
                  if (values.email.includes("@")){
                   signup(values);
                  } else {
@@ -163,11 +162,17 @@ const Signup = ({ navigation }) => {
                 <StyledButton onPress={handleSubmit}>
                   <ButtonText>Signup</ButtonText>
                 </StyledButton>
-                <Line />
                 <ExtraView>
                   <ExtraText>Already have an account?</ExtraText>
-                  <TextLink onPress={() => navigation.navigate("Login")}>
+                    <TextLink onPress={() => navigation.navigate("Login")}>
                     <TextLinkContent>Login</TextLinkContent>
+                  </TextLink>
+                </ExtraView>
+                <Line/>
+                <ExtraView>
+                  <ExtraText>Want to suggest a new interest?</ExtraText>
+                    <TextLink onPress={() => navigation.navigate("Suggestions")}>
+                    <TextLinkContent>Click Here</TextLinkContent>
                   </TextLink>
                 </ExtraView>
               </StyledFormArea>

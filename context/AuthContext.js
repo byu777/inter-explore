@@ -19,6 +19,8 @@ const authReducer = (state, action) => {
       return {...state, interests: action.payload};
     case 'userInterests':
       return {...state, chatGroups: action.payload};
+    case 'newInterest':
+      return {...state, newInterest: action.payload};
     default:
       return state;
   }
@@ -196,8 +198,23 @@ const updateProfile = (user) => async (dispatch, getState) => {
       }
     };
 
+    const addNewInterest = (dispatch) => async (InterestName, review) => {
+      try {
+        const response = await trackerApi.post('/api/interests/group', 
+        {
+            InterestName: InterestName,
+            review: review
+        })
+        await dispatch({ type: 'newInterest', payload: 'Yes'});
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+  };
+
+
 export const { Provider, Context } = createDataContext(
   authReducer,
-  { signin, signout, signup, clearErrorMessage, getInterests},
-  { token: null, errorMessage: '', user: null, interests: null}
+  { signin, signout, signup, clearErrorMessage, getInterests, addNewInterest},
+  { token: null, errorMessage: '', user: null, interests: null, newInterest: ''}
 );

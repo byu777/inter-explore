@@ -36,6 +36,7 @@ const createGroupChat = asyncHandler(async (req, res) => {
     const groupChat = await interests.create({
       InterestName: req.body.InterestName,
       user: [],
+      review: req.body.review,
     });
 
     //   const fullGroupChat = await interests.findOne({ _id: groupChat._id })

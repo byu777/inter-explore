@@ -35,7 +35,6 @@ const Room = ({ title, navigation, chat }) => (
 
 export default function MessageBoardPage({ navigation }) {
   const { state } = useContext(AuthContext);
-
   const [name, setName] = useState("");
 
   useEffect(() => {

@@ -13,6 +13,7 @@ import Chatroom from './chatroom';
 import MessageBoardPage from './messageboard';
 import EventList from './event_list';
 import MakeEventPage from "./../screens/create_event";
+import Suggestions from './Suggestions';
 
 // Context
 import { Provider as AuthProvider} from './../context/AuthContext';
@@ -38,6 +39,8 @@ const RootStack = () => {
                 
                 <Stack.Screen name="Login" component={Login} />
                 <Stack.Screen name="Signup" component={Signup} />
+                <Stack.Screen name="Suggestions" component={Suggestions}
+                options={{headerShown: true, title: ""}} />
                 <Stack.Screen name="Tab" component={Tab} />
                 <Stack.Screen name="EditProfile" component={EditProfile} 
                 options={{headerShown: true}}/>

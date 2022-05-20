@@ -42,7 +42,15 @@ const { darkLight } = Colors;
 const Login = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
 
-  const {state, signin} = useContext(AuthContext);
+  const {state, signin, getInterests} = useContext(AuthContext);
+
+  useEffect(() => {
+    getInterests()
+  }, []);
+
+  useEffect(() => {
+    getInterests()
+  }, [state.newInterests]);
 
   useEffect(() => {
     {state.token ? navigation.navigate("Tab") : null}

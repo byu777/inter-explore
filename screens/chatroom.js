@@ -16,7 +16,6 @@ import {
 import trackerApi from "../api/tracker";
 import { Context as AuthContext } from "./../context/AuthContext";
 import io from "socket.io-client";
-import KeyboardAvoidingWrapper from "./../components/KeyboardAvoidingWrapper";
 
 // Current url is localhost, after deployment will change to url where application is deployed
 // Variables needed for socket.io
@@ -30,7 +29,6 @@ const Chatroom = ({ navigation }) => {
 
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState();
-
   const fetchMessages = async () => {
     if (!route.params._id) return;
 

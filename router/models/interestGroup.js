@@ -22,6 +22,11 @@ const InterestSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Message",
     },
+    review:{
+      type: Boolean,
+      require: true,
+      default: false,
+  }
   },
   {
     timestamps: true,
