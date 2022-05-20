@@ -118,7 +118,7 @@ const Chatroom = ({ navigation }) => {
             name={"basketball"}
             size={70}
             color="#d62828"
-            style={mb_styles.left_icon}></Ionicons>
+            style={styles.left_icon}></Ionicons>
             <Text style={styles.appButtonText}>Members</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -291,6 +291,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     padding: 10,
     flexWrap: "wrap",
+  },
+  left_icon: {
+    flex: 2,
+    marginLeft: 5,
   },
 });
 
