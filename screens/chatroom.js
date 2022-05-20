@@ -13,6 +13,7 @@ import {
   Modal,
   ScrollView,
   ImageBackground,
+  Dimensions,
 } from "react-native";
 import trackerApi from "../api/tracker";
 import { Context as AuthContext } from "./../context/AuthContext";
@@ -25,34 +26,34 @@ import { Ionicons } from "@expo/vector-icons";
 // const ENDPOINT = "http://localhost:3000";
 // var socket, selectedChatCompare;
 
-const image = require("../assets/images/background1.jpg");
+const image = require("../assets/images/bg2.jpg");
 
-const INITIAL_STATE = [
-  {
-    _id: 1,
-    msg: "Copium",
-  },
-  {
-    _id: 2,
-    msg: "Faze",
-  },
-  {
-    _id: 3,
-    msg: "CS",
-  },
-  {
-    _id: 4,
-    msg: "sdsds",
-  },
-  {
-    _id: 5,
-    msg: "lul",
-  },
-  {
-    _id: 6,
-    msg: "Huff that",
-  },
-]
+// const INITIAL_STATE = [
+//   {
+//     _id: 1,
+//     msg: "Copium",
+//   },
+//   {
+//     _id: 2,
+//     msg: "Faze",
+//   },
+//   {
+//     _id: 3,
+//     msg: "CS",
+//   },
+//   {
+//     _id: 4,
+//     msg: "sdsds",
+//   },
+//   {
+//     _id: 5,
+//     msg: "lul",
+//   },
+//   {
+//     _id: 6,
+//     msg: "Huff that",
+//   },
+// ]
 
 const Chatroom = ({ navigation }) => {
   const { state } = useContext(AuthContext);
@@ -109,23 +110,20 @@ const Chatroom = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.main_container}>
       <ImageBackground source={image} style={styles.bg_image}>
-        <View style={styles.buttonContainer}>
+        <View style={styles.top_area}>
           <TouchableOpacity
-            style={styles.member_btn}
+            style={styles.top_btn_1}
             onPress={() => setVisible(true)}
           >
-            <Ionicons 
-            name={"basketball"}
-            size={70}
-            color="#d62828"
-            style={styles.left_icon}></Ionicons>
-            <Text style={styles.appButtonText}>Members</Text>
+            <Ionicons name="people" size={30} color="#ecebf3"></Ionicons>
+            <Text style={styles.top_btn_1_text}>Members</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.appButtonContainer}
+            style={styles.top_btn_2}
             onPress={() => navigation.navigate("CreateEvent")}
           >
-            <Text style={styles.appButtonText}>Make Event</Text>
+            <Ionicons name="today-sharp" size={30} color="#ecebf3"></Ionicons>
+            <Text style={styles.top_btn_2_text}>Make Event</Text>
           </TouchableOpacity>
         </View>
 
@@ -143,10 +141,12 @@ const Chatroom = ({ navigation }) => {
                       : "flex-start"
                   }`,
                   backgroundColor: `${
-                    item.sender._id === state.user._id ? "#B9F5D0" : "#BEE3F8"
+                    item.sender._id === state.user._id ? "#c7d6d5" : "#6d7275"
                   }`,
                   borderRadius: 20,
-                  maxWidth: "75%",
+                  borderWidth: 1.5,
+                  borderColor: "black",
+                  maxWidth: Dimensions.get("window").width * 0.75,
                   margin: 3,
                   flex: 1,
                 }}
@@ -156,22 +156,18 @@ const Chatroom = ({ navigation }) => {
             )}
           />
         </View>
-        <KeyboardAvoidingView>
-          <View style={styles.sendMessageArea}>
-            <TextInput
-              style={styles.typeMessage}
-              placeholder="Send a Message..."
-              onChangeText={onChangeMessageHandler}
-              value={newMessage}
-            />
-            <TouchableOpacity
-              style={styles.appSendButtonContainer}
-              onPress={sendMessage}
-            >
-              <Text style={styles.appSendButtonText}>Send</Text>
-            </TouchableOpacity>
-          </View>
-        </KeyboardAvoidingView>
+
+        <View style={styles.sendMessageArea}>
+          <TextInput
+            style={styles.typeMessage}
+            placeholder="Message..."
+            onChangeText={onChangeMessageHandler}
+            value={newMessage}
+          />
+          <TouchableOpacity style={styles.send_msg} onPress={sendMessage}>
+            <Ionicons name="send-sharp" size={35} color="#d00000"></Ionicons>
+          </TouchableOpacity>
+        </View>
       </ImageBackground>
     </SafeAreaView>
   );
@@ -186,107 +182,148 @@ const styles = StyleSheet.create({
   },
   bg_image: {
     flex: 1,
-    resizeMode: 'cover',
-    justifyContent: 'center',
-    opacity: 0.6,
+    resizeMode: "cover",
+    justifyContent: "center",
+    opacity: 0.7,
   },
-  member_container: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignSelf: "center",
-    alignItems: "center",
-    flex: 0.5,
-    margin: 10,
-    flexWrap: "wrap",
-  },
-  image_container: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    justifyContent: "space-around",
-  },
+  // member_container: {
+  //   flexDirection: "row",
+  //   justifyContent: "space-around",
+  //   alignSelf: "center",
+  //   alignItems: "center",
+  //   flex: 0.5,
+  //   margin: 10,
+  //   flexWrap: "wrap",
+  // },
+  // image_container: {
+  //   flexDirection: "row",
+  //   alignItems: "flex-start",
+  //   justifyContent: "space-around",
+  // },
   chat_area: {
     flexDirection: "column",
     alignItems: "flex-start",
     justifyContent: "flex-start",
     backgroundColor: "transparent",
     margin: 10,
-    flex: 4,
+    flex: 8,
   },
 
-  chat_row: {
+  // chat_row: {
+  //   flexDirection: "row",
+  //   textAlign: "center",
+  //   justifyContent: "flex-start",
+  //   flexWrap: "wrap",
+  //   margin: 5,
+  // },
+  // make_event: {
+  //   marginBottom: 15,
+  //   width: 150,
+  //   alignItems: "center",
+  //   alignSelf: "center",
+  //   backgroundColor: "#ece6dd",
+  // },
+  // touchables_arrow: {
+  //   backgroundColor: "#db5f4d",
+  //   width: 100,
+  //   borderRadius: 5,
+  //   flex: 1,
+  // },
+  top_area: {
     flexDirection: "row",
-    textAlign: "center",
-    justifyContent: "flex-start",
-    flexWrap: "wrap",
-    margin: 5,
+    flex: 2,
+    paddingTop: 25,
+    //padding: Platform.OS === "android" ? 45 : 0,
   },
-  make_event: {
-    marginBottom: 15,
-    width: 150,
+  top_btn_1: {
+    flex: 3,
+    flexDirection: "column",
+    backgroundColor: "transparent",
+    alignContent: "center",
     alignItems: "center",
-    alignSelf: "center",
-    backgroundColor: "#ece6dd",
+    justifyContent: "center",
   },
-  touchables_arrow: {
-    backgroundColor: "#db5f4d",
-    width: 100,
-    borderRadius: 5,
-    flex: 1,
-  },
-  buttonContainer: {
-    flexDirection: "row",
-    padding: Platform.OS === "android" ? 45 : 0,
-  },
-  appButtonContainer: {
-    elevation: 8,
-    backgroundColor: "#009688",
-    borderRadius: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    margin: 2,
-    width: "49%",
-  },
-  appButtonText: {
+  top_btn_1_text: {
     fontSize: 14,
-    color: "#fff",
+    color: "#ecebf3",
     fontWeight: "bold",
     alignSelf: "center",
     textTransform: "uppercase",
   },
-  appSendButtonContainer: {
-    elevation: 8,
-    backgroundColor: "#009688",
-    borderRadius: 0,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    alignSelf: "flex-end",
-    margin: 2,
+  top_btn_2: {
+    flex: 3,
+    flexDirection: "column",
+    backgroundColor: "transparent",
+    alignContent: "center",
+    alignItems: "center",
+    justifyContent: "center",
   },
-  appSendButtonText: {
+  top_btn_2_text: {
     fontSize: 14,
-    color: "#fff",
+    color: "#ecebf3",
     fontWeight: "bold",
     alignSelf: "center",
     textTransform: "uppercase",
   },
+  // appButtonContainer: {
+  //   elevation: 8,
+  //   backgroundColor: "#009688",
+  //   borderRadius: 20,
+  //   paddingVertical: 10,
+  //   paddingHorizontal: 12,
+  //   margin: 2,
+  //   width: "49%",
+  // },
+  // appButtonText: {
+  //   fontSize: 14,
+  //   color: "#fff",
+  //   fontWeight: "bold",
+  //   alignSelf: "center",
+  //   textTransform: "uppercase",
+  // },
+  // appSendButtonText: {
+  //   fontSize: 14,
+  //   color: "#fff",
+  //   fontWeight: "bold",
+  //   alignSelf: "center",
+  //   textTransform: "uppercase",
+  // },
   sendMessageArea: {
     flexDirection: "row",
+    flex: 1,
+    backgroundColor: "white",
+    maxWidth: Dimensions.get("window").width * 0.95,
+    padding: 5,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: 'black',
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    bottom: 10,
+    left: 10,
   },
   typeMessage: {
     backgroundColor: "transparent",
-    width: "75%",
-    marginLeft: 10,
-    marginRight: 10,
-    borderBottomWidth: 1,
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
-    borderTopWidth: 1,
-    borderColor: "#009688",
+    alignSelf: "flex-start",
+    justifyContent: "flex-end",
+    alignContent: 'center',
+    alignItems: 'center',
+    flex: 8,
+    color: '#000001',
+  },
+  send_msg: {
+    flex: 2,
+    backgroundColor: "transparent",
+    justifyContent: "center",
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
   },
   ChatMessages: {
     width: "100%",
   },
-  chatMessagesBackground: {},
   chatMessagesText: {
     fontSize: 16,
     padding: 10,
