@@ -154,6 +154,22 @@ const getAllUsers = asyncHandler(async (req, res) => {
       throw new Error("User Not Found");
     }
   });
+  const Deleteinterest = asyncHandler(async (req, res) => {
+    const interest = await interests.findById(req.params.id);
+  
+    if (interest.user.toString() !== req.user._id.toString()) {
+      res.status(401);
+      throw new Error("You can't perform this action");
+    }
+  
+    if (interest) {
+      await interests.remove();
+      res.json({ message: " Removed" });
+    } else {
+      res.status(404);
+      throw new Error("ound");
+    }
+  });
 
   module.exports = {
     fetchChats,
@@ -163,5 +179,6 @@ const getAllUsers = asyncHandler(async (req, res) => {
     getInterestNames,
     getAllInterests,
     getAllUsers,
-    updateUserProfile
+    updateUserProfile,
+    Deleteinterest
   };
