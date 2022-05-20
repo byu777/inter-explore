@@ -41,7 +41,7 @@ const Signup = ({ navigation }) => {
   const {state, signup, getInterests} = useContext(AuthContext);
 
   getInterests();
-
+ 
   useEffect(() => {
     {state.token ? navigation.navigate("Tab") : null}
   }, [state.token]);

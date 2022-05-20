@@ -137,7 +137,7 @@ const mb_styles = StyleSheet.create({
   notice: {
     margin: 5,
     alignItems: "flex-start",
-    fontFamily: "Asap-Regular",
+    //fontFamily: "Asap-Regular",
     fontSize: 20,
   },
   row_container: {
@@ -164,7 +164,7 @@ const mb_styles = StyleSheet.create({
   welcome_title: {
     fontSize: 40,
     flexWrap: "wrap",
-    fontFamily: "Asap-Regular",
+    //fontFamily: "Asap-Regular",
     color: "#03045e",
     fontWeight: "bold",
   },
