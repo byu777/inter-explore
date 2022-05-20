@@ -21,6 +21,8 @@ const authReducer = (state, action) => {
       return {...state, chatGroups: action.payload};
     case 'newInterest':
       return {...state, newInterest: action.payload};
+    case 'reviewInterests':
+      return {...state, reviewInterests: action.payload};
     default:
       return state;
   }
@@ -98,6 +100,10 @@ const signin = (dispatch) => {
           const chatGroups = await userInterests(response.data.user);
           await dispatch({type: 'userInterests', payload: chatGroups});
 
+          // Populate interests to review for admin
+          const review = await getReviewInterests();
+          await dispatch({type: 'reviewInterests', payload: review})
+
         } else if (response.data.isMatch == false) {
           await dispatch({type: 'add_error', payload: 'Password is incorrect'})
         }
@@ -145,6 +151,19 @@ async function addToInterests(user) {
       const res = await trackerApi.put("/api/interests/groupadd", {"chatId": interestID, "userId": userID});
     }
   }
+}
+
+async function getReviewInterests() {
+  const response = await trackerApi.get("/api/interests/getAllInterests")
+  const listOfInterests = response.data;
+  let interestsToReview = []
+  // Loop through all interests to find matches.
+  for(let i = 0; i < listOfInterests.length; i++) {
+    if (listOfInterests[i].review == true) {
+      interestsToReview.push(listOfInterests[i]);
+    }
+  }
+  return interestsToReview
 }
 
 async function userInterests(user) {
@@ -216,5 +235,5 @@ const updateProfile = (user) => async (dispatch, getState) => {
 export const { Provider, Context } = createDataContext(
   authReducer,
   { signin, signout, signup, clearErrorMessage, getInterests, addNewInterest},
-  { token: null, errorMessage: '', user: null, interests: null, newInterest: ''}
+  { token: null, errorMessage: '', user: null, interests: null, newInterest: '', reviewInterests: []}
 );

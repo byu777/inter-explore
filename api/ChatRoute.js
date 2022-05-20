@@ -154,20 +154,35 @@ const getAllUsers = asyncHandler(async (req, res) => {
       throw new Error("User Not Found");
     }
   });
+
   const Deleteinterest = asyncHandler(async (req, res) => {
-    const interest = await interests.findById(req.params.id);
-  
-    if (interest.user.toString() !== req.user._id.toString()) {
-      res.status(401);
-      throw new Error("You can't perform this action");
-    }
+    const interest = await interests.findById(req.body._id);
+    
+    // if (interest.user.toString() !== req.user._id.toString()) {
+    //   res.status(401);
+    //   throw new Error("You can't perform this action");
+    // }
   
     if (interest) {
-      await interests.remove();
+      await interest.remove();
       res.json({ message: " Removed" });
     } else {
       res.status(404);
       throw new Error("ound");
+    }
+  });
+
+  const updateInterest = asyncHandler(async (req, res) => {
+    const interest = await interests.findById(req.body._id);
+    if (interest) {
+      interest.review = false
+  
+      const updatedInterest = await interest.save();
+      res.json(updatedInterest)
+  
+    } else {
+      res.status(404);
+      throw new Error("User Not Found");
     }
   });
 
@@ -180,5 +195,6 @@ const getAllUsers = asyncHandler(async (req, res) => {
     getAllInterests,
     getAllUsers,
     updateUserProfile,
-    Deleteinterest
+    Deleteinterest,
+    updateInterest
   };

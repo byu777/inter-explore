@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useContext, useEffect } from "react";
 import {
   StyleSheet,
   SafeAreaView,
@@ -10,20 +10,19 @@ import {
   Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Context as AuthContext } from './../context/AuthContext';
+import trackerApi from "../api/tracker";
 const COLORS = {primary: '#1f145c', white: '#fff'};
 
 const Adminpage = () => {
-  const [interests, setInterests] = React.useState([]);
-  const [textInput, setTextInput] = React.useState('');
+  const [interests, setInterests] = useState([]);
+  const [textInput, setTextInput] = useState('');
 
-  React.useEffect(() => {
-    getinterestsFromUserDevice();
+  const {state} = useContext(AuthContext);
+
+  useEffect(() => {
+    setInterests(state.reviewInterests)
   }, []);
-
-  React.useEffect(() => {
-    saveInterestsToUserDevice(interests);
-  }, [interests]);
 
   const addInterest = () => {
     if (textInput == '') {
@@ -39,44 +38,25 @@ const Adminpage = () => {
     }
   };
 
-  const saveInterestsToUserDevice = async interests => {
-    try {
-      const stringifyInterests = JSON.stringify(interests);
-      await AsyncStorage.setItem('interests', stringifyInterests);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const getinterestsFromUserDevice = async () => {
-    try {
-      const interests = await AsyncStorage.getItem('interests');
-      if (interests != null) {
-        setInterests(JSON.parse(interests));
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const markinterestComplete = interestsId => {
-    const acceptinterests = interests.filter(item => item.id != interestsId);
-    Alert.alert('Confirm', 'accept interests?', [
+  const acceptInterest = item => {
+    const acceptInterest = interests.filter(interest => interest._id != item._id);
+    const response = trackerApi.post('/api/interests/updateInterest', item);
+    Alert.alert('Confirm', 'Accept Interest?', [
         {
           text: 'Yes',
-          onPress: () => setInterests(acceptinterests),
+          onPress: () => setInterests(acceptInterest),
         },
         {
           text: 'No',
         },
       ]);
-
   };
 
-  const rejectInterests = interestsId => {
-    const rejectinterests = interests.filter(item => item.id != interestsId);
-   
-    Alert.alert('Confirm', 'reject interests?', [
+  const rejectInterests = item => {
+    const rejectinterests = interests.filter(interest => interest._id != item._id);
+    const response = trackerApi.put('/api/interests/groupdelete', item);
+
+    Alert.alert('Confirm', 'Reject Interest?', [
         {
           text: 'Yes',
           onPress: () => setInterests(rejectinterests),
@@ -85,8 +65,8 @@ const Adminpage = () => {
           text: 'No',
         },
       ]);
-
   };
+
   const clearAllinterests = () => {
     Alert.alert('Confirm', 'Clear interests?', [
       {
@@ -109,17 +89,17 @@ const Adminpage = () => {
               color: COLORS.primary,
               textDecorationLine: interests?.completed ? 'line-through' : 'none',
             }}>
-            {interests?.task}
+            {interests.InterestName}
           </Text>
         </View>
         {!interests?.completed && (
-          <TouchableOpacity onPress={() => markinterestComplete(interests.id)}>
+          <TouchableOpacity onPress={() => acceptInterest(interests)}>
             <View style={[styles.actionIcon, {backgroundColor: 'green'}]}>
               <Icon name="done" size={20} color="white" />
             </View>
           </TouchableOpacity>
         )}
-        <TouchableOpacity onPress={() => rejectInterests(interests.id)}>
+        <TouchableOpacity onPress={() => rejectInterests(interests)}>
           <View style={styles.actionIcon}>
             <Icon name="delete" size={20} color="white" />
           </View>
@@ -151,7 +131,7 @@ const Adminpage = () => {
         renderItem={({item}) => <ListItem interests={item} />}
       />
 
-      <View style={styles.footer}>
+      {/* <View style={styles.footer}>
         <View style={styles.inputContainer}>
           <TextInput
             value={textInput}
@@ -164,7 +144,7 @@ const Adminpage = () => {
             <Icon name="add" color="white" size={30} />
           </View>
         </TouchableOpacity>
-      </View>
+      </View> */}
     </SafeAreaView>
   );
 };

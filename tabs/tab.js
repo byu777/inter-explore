@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Profile from "../screens/Profile";
@@ -9,14 +9,18 @@ import EventList from "../screens/event_list";
 import { useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import EditProfile from "../screens/EditProfile";
+import Adminpage from "../screens/adminrequest";
 
 import { StyleSheet, Text, View, Image } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Context as AuthContext } from './../context/AuthContext';
 
 const Tab = createBottomTabNavigator();
 
 const Tabs = () => {
+  const {state} = useContext(AuthContext);
+  let admin = state.user.isAdmin
   return (
       <Tab.Navigator
       screenOptions={{
@@ -69,6 +73,17 @@ const Tabs = () => {
             ), 
           }}
         />
+        {state.user.isAdmin === true ?         
+        <Tab.Screen
+          name="Admin"
+          component={Adminpage}
+          options={{
+            tabBarIcon: ({ focused, color, size }) => (
+              <MaterialIcons name="admin-panel-settings" color={color} size={size} />
+            ), 
+          }}
+        />
+        : null}
       </Tab.Navigator>
   );
 };
