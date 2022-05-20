@@ -14,11 +14,12 @@ import {
   ScrollView,
   ImageBackground,
   Dimensions,
+  Pressable,
+  StatusBar,
 } from "react-native";
 import trackerApi from "../api/tracker";
 import { Context as AuthContext } from "./../context/AuthContext";
 import io from "socket.io-client";
-import KeyboardAvoidingWrapper from "./../components/KeyboardAvoidingWrapper";
 import { Ionicons } from "@expo/vector-icons";
 
 // Current url is localhost, after deployment will change to url where application is deployed
@@ -28,32 +29,11 @@ import { Ionicons } from "@expo/vector-icons";
 
 const image = require("../assets/images/bg2.jpg");
 
-// const INITIAL_STATE = [
-//   {
-//     _id: 1,
-//     msg: "Copium",
-//   },
-//   {
-//     _id: 2,
-//     msg: "Faze",
-//   },
-//   {
-//     _id: 3,
-//     msg: "CS",
-//   },
-//   {
-//     _id: 4,
-//     msg: "sdsds",
-//   },
-//   {
-//     _id: 5,
-//     msg: "lul",
-//   },
-//   {
-//     _id: 6,
-//     msg: "Huff that",
-//   },
-// ]
+const MembersList = ({ firstName }) => (
+  <View>
+    <Text>{firstName}</Text>
+  </View>
+)
 
 const Chatroom = ({ navigation }) => {
   const { state } = useContext(AuthContext);
@@ -63,6 +43,11 @@ const Chatroom = ({ navigation }) => {
 
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState();
+  // const [modalVisible, setModalVisible] = useState(false);
+
+  // setModalVisible(visible) {
+  //   setModalVisible({modalVisible: visible});
+  // }
 
   const fetchMessages = async () => {
     // if the 'unique id' doesnt match, its not user so exit
@@ -110,6 +95,30 @@ const Chatroom = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.main_container}>
       <ImageBackground source={image} style={styles.bg_image}>
+
+      {/* <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Hello World!</Text>
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setModalVisible(!modalVisible)}>
+              <Text style={styles.textStyle}>Hide Modal</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+      <Pressable style={[styles.button, styles.buttonOpen]} onPress={() => setModalVisible(true)}>
+        <Text style={styles.textStyle}>Show Modal</Text>
+      </Pressable> */}
+
         <View style={styles.top_area}>
           <TouchableOpacity
             style={styles.top_btn_1}
@@ -179,6 +188,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#90e0ef",
     flexDirection: "column",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   bg_image: {
     flex: 1,
@@ -186,20 +197,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     opacity: 0.7,
   },
-  // member_container: {
-  //   flexDirection: "row",
-  //   justifyContent: "space-around",
-  //   alignSelf: "center",
-  //   alignItems: "center",
-  //   flex: 0.5,
-  //   margin: 10,
-  //   flexWrap: "wrap",
-  // },
-  // image_container: {
-  //   flexDirection: "row",
-  //   alignItems: "flex-start",
-  //   justifyContent: "space-around",
-  // },
+
   chat_area: {
     flexDirection: "column",
     alignItems: "flex-start",
@@ -209,31 +207,10 @@ const styles = StyleSheet.create({
     flex: 8,
   },
 
-  // chat_row: {
-  //   flexDirection: "row",
-  //   textAlign: "center",
-  //   justifyContent: "flex-start",
-  //   flexWrap: "wrap",
-  //   margin: 5,
-  // },
-  // make_event: {
-  //   marginBottom: 15,
-  //   width: 150,
-  //   alignItems: "center",
-  //   alignSelf: "center",
-  //   backgroundColor: "#ece6dd",
-  // },
-  // touchables_arrow: {
-  //   backgroundColor: "#db5f4d",
-  //   width: 100,
-  //   borderRadius: 5,
-  //   flex: 1,
-  // },
   top_area: {
     flexDirection: "row",
     flex: 2,
-    paddingTop: 25,
-    //padding: Platform.OS === "android" ? 45 : 0,
+    paddingTop: StatusBar.currentHeight,
   },
   top_btn_1: {
     flex: 3,
@@ -265,29 +242,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     textTransform: "uppercase",
   },
-  // appButtonContainer: {
-  //   elevation: 8,
-  //   backgroundColor: "#009688",
-  //   borderRadius: 20,
-  //   paddingVertical: 10,
-  //   paddingHorizontal: 12,
-  //   margin: 2,
-  //   width: "49%",
-  // },
-  // appButtonText: {
-  //   fontSize: 14,
-  //   color: "#fff",
-  //   fontWeight: "bold",
-  //   alignSelf: "center",
-  //   textTransform: "uppercase",
-  // },
-  // appSendButtonText: {
-  //   fontSize: 14,
-  //   color: "#fff",
-  //   fontWeight: "bold",
-  //   alignSelf: "center",
-  //   textTransform: "uppercase",
-  // },
+
   sendMessageArea: {
     flexDirection: "row",
     flex: 1,
