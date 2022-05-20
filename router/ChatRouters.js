@@ -8,7 +8,8 @@ const {
   getAllInterests,
   Deleteinterest,
   getAllUsers,
-  updateUserProfile
+  updateUserProfile,
+  Deleteinterest
 } = require("../api/ChatRoute");
 const router = express.Router();
 
@@ -21,5 +22,6 @@ router.route("/getInterestNames").get(getInterestNames);
 router.route("/getAllInterests").get(getAllInterests);
 router.route("/getAllUsers").get(getAllUsers);
 router.route("/profile").post(updateUserProfile);
+
 
 module.exports = router;
