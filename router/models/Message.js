@@ -6,7 +6,6 @@ const MessageSchema = new mongoose.Schema ({
     type: mongoose.Schema.Types.ObjectId, 
     ref: "Users" 
     },
-
     content: [{
      type: String,
      require: true
@@ -18,7 +17,6 @@ const MessageSchema = new mongoose.Schema ({
 },
     {
         timestamps : true
-
     }
 
 

@@ -36,6 +36,11 @@ const userSchema = new mongoose.Schema ({
     secondaryInterest:{
         type: String,
         require: true
+    },
+    pic:{
+        type: String,
+        require: true,
+        default:'https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg'
     }
     // move this here
 });
@@ -69,6 +74,5 @@ const userSchema = new mongoose.Schema ({
             cb(null, isMatch);
         });
     } 
-
 
     module.exports = mongoose.model('Users', userSchema);

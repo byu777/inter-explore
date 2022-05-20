@@ -1,11 +1,12 @@
 import React from 'react';
 
 // React navigation
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useRoute } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 // screens
 import Login from './../screens/Login';
+import EditProfile from './../screens/EditProfile';
 import Signup from './../screens/Signup';
 import Tab from './../tabs/tab'
 import Chatroom from './chatroom';
@@ -15,6 +16,7 @@ import MakeEventPage from "./../screens/create_event";
 
 // Context
 import { Provider as AuthProvider} from './../context/AuthContext';
+import { Provider as EventProvider } from '../context/EventContext';
 
 const Stack = createNativeStackNavigator();
 
@@ -28,21 +30,23 @@ const RootStack = () => {
                     },
                     headerTintColor: '#219EBC',
                     headerTransparent: true,
-                    headerTitle: '',
                     headerLeftContainerStyle: {
                         paddingLeft: 20
                     }
                 }}
-            > 
+            >   
+                
                 <Stack.Screen name="Login" component={Login} />
                 <Stack.Screen name="Signup" component={Signup} />
                 <Stack.Screen name="Tab" component={Tab} />
+                <Stack.Screen name="EditProfile" component={EditProfile} 
+                options={{headerShown: true}}/>
                 <Stack.Screen name="Chatroom" component={Chatroom} 
-                options={{headerShown: true}} />
+                options={{headerShown: true, title: ""}} />
                 <Stack.Screen name="MessageBoardPage" component={MessageBoardPage} />
                 <Stack.Screen name="EventList" component={EventList} />
                 <Stack.Screen name="CreateEvent" component={MakeEventPage}
-                options={{headerShown: true}} />
+                options={{headerShown: true, title: ""}} />
             </Stack.Navigator>
         </NavigationContainer>
     )

@@ -4,43 +4,17 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Profile from "../screens/Profile";
 import MessageBoardPage from "../screens/messageboard";
 import Chatroom from "../screens/chatroom";
-import LandingPage from "../screens/landing_page";
 import MakeEventPage from "../screens/create_event";
 import EventList from "../screens/event_list";
 import { useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import EditProfile from "../screens/EditProfile";
 
 import { StyleSheet, Text, View, Image } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Stack } from "react-bootstrap";
 
 const Tab = createBottomTabNavigator();
-
-// const CustomTabBarButtons = ({ children, onPress }) => (
-//   <TouchableOpacity
-//     style={{
-//       top: -30,
-//       justifyContent: "center",
-//       alignItems: "center",
-//       ...tabStyles.shadow,
-//     }}
-//     onPress={onPress}
-//   >
-//     <View style={{ width: 70, height: 70, borderRadius: 35, backgroundColor: '#e32f45' }}>
-//       {children}
-//     </View>
-//   </TouchableOpacity>
-// );
-
-const MessageToChatStack = () => {
-  return (
-    <Stack.Navigator screenOptions={{ headerShown: false}}>
-      <Stack.Screen name="Groups" component={MessageBoardPage} />
-      <Stack.Screen name="Chats" component={Chatroom} />
-    </Stack.Navigator>
-  );
-};
 
 const Tabs = () => {
   return (
@@ -86,27 +60,6 @@ const Tabs = () => {
             ), 
           }}
         />
-        {/* <Tab.Screen
-          name="Groups"
-          component={MessageBoardPage}
-          options={{
-            tabBarIcon: ({ focused, color, size }) => (
-              <MaterialCommunityIcons name="account-group" color={color} size={size} />
-            ), 
-          }}
-        /> */}
-
-        {/* <Tab.Screen
-          name="Chats"
-          component={Chatroom}
-          options={{
-            tabBarBadge: 5,
-            tabBarIcon: ({ focused, color, size }) => (
-              <Ionicons name="md-chatbox-outline" color={color} size={size} />
-            ), 
-          }}
-        /> */}
-
         <Tab.Screen
           name="Event"
           component={EventList}

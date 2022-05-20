@@ -1,153 +1,113 @@
-import React from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   StyleSheet,
   Text,
   View,
-  Button,
-  TextInput,
-  Image,
   SafeAreaView,
-  FlatList,
   TouchableOpacity,
+  Dimensions,
+  FlatList,
 } from "react-native";
 
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Context as AuthContext } from "./../context/AuthContext";
+import { useFonts } from "expo-font";
+
+const Room = ({ title, navigation, chat }) => (
+  <View style={mb_styles.row_container}>
+    <Ionicons
+      name={"basketball"}
+      size={70}
+      color="#d62828"
+      style={mb_styles.left_icon}
+    ></Ionicons>
+    <Text style={mb_styles.room_title}>{title}</Text>
+    <TouchableOpacity
+      onPress={() => navigation.navigate("Chatroom", chat)}
+      style={mb_styles.touchables_arrow}
+    >
+      <Ionicons name="arrow-forward" size={50} color="#d62828"></Ionicons>
+    </TouchableOpacity>
+  </View>
+);
 
 // --------------------------- Message Board page -----------------------------
 
 export default function MessageBoardPage({ navigation }) {
+  const { state } = useContext(AuthContext);
+
+  const [name, setName] = useState("");
+
+  useEffect(() => {
+    setName(state.user.firstName);
+  }, []);
+
+  let [fontsLoaded] = useFonts({
+    "Asap-Bold": require("../assets/fonts/Asap-Bold.ttf"),
+    "Asap-Medium": require("../assets/fonts/Asap-Medium.ttf"),
+    "Asap-Regular": require("../assets/fonts/Asap-Regular.ttf"),
+    "Rajdhani-Bold": require("../assets/fonts/Rajdhani-Bold.ttf"),
+    "Rajdhani-Light": require("../assets/fonts/Rajdhani-Light.ttf"),
+    "Rajdhani-Medium": require("../assets/fonts/Rajdhani-Medium.ttf"),
+    "Rajdhani-Regular": require("../assets/fonts/Rajdhani-Regular.ttf"),
+    "Koulen-Regular": require("../assets/fonts/Koulen-Regular.ttf"),
+    "Montserrat-Black": require("../assets/fonts/Montserrat-Black.ttf"),
+    "Montserrat-Regular": require("../assets/fonts/Montserrat-Regular.ttf"),
+    "SourceSansPro-Bold": require("../assets/fonts/SourceSansPro-Bold.ttf"),
+    "SourceSansPro-Light": require("../assets/fonts/SourceSansPro-Light.ttf"),
+  });
+
+  const renderItem = ({ item }) => (
+    <Room title={item.InterestName} navigation={navigation} chat={item} />
+  );
+
   return (
-    <SafeAreaView style={{ backgroundColor: "#ece6dd", marginBottom: 25 }}>
-      <View style={mb_styles.textinput_cont}>
-        {/* <TextInput
-          style={mb_styles.textinput_search}
-          onChangeText={onChangeText}
-          placeholder="search.."
-          value={text} //allows alphanumeric input into TextInput
-        /> */}
+    <SafeAreaView style={mb_styles.container}>
+      <View style={mb_styles.top_section}>
+        <Text style={mb_styles.welcome_title}>Welcome back, {name}</Text>
       </View>
 
-      {/* inbox container */}
-      <View style={mb_styles.mb_chat_container}>
-        {/* can pull chat groups from database later and put in flatlist */}
-        {/* <FlatList/>   */}
-
-        <View style={mb_styles.list_item_inbox}>
-          <Ionicons
-            name="basketball"
-            size={70}
-            color="#52575D"
-            style={mb_styles.left_icon}
-          ></Ionicons>
-
-          <View style={mb_styles.list_item_description}>
-            <Text style={{ fontSize: 25 }}>BASKETBALL</Text>
-            <Text>For all you basketball lovers!</Text>
-          </View>
-
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Chatroom")}
-            style={mb_styles.touchables_arrow}
-          >
-            <Ionicons name="arrow-forward" size={25} color="#0c000e"></Ionicons>
-          </TouchableOpacity>
-        </View>
-
-        <View style={mb_styles.list_item_inbox}>
-          <Ionicons name="baseball" size={70} color="#52575D" style={mb_styles.left_icon}></Ionicons>
-
-          <View style={mb_styles.list_item_description}>
-            <Text style={{ fontSize: 25 }}>BASEBALL</Text>
-            <Text>For all you baseball lovers!</Text>
-          </View>
-
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Chatroom")}
-            style={mb_styles.touchables_arrow}
-          >
-            <Ionicons name="arrow-forward" size={25} color="#0c000e"></Ionicons>
-          </TouchableOpacity>
-        </View>
-
-        <View style={mb_styles.list_item_inbox}>
-          <Ionicons name="bicycle" size={70} color="#52575D" style={mb_styles.left_icon}></Ionicons>
-
-          <View style={mb_styles.list_item_description}>
-            <Text style={{ fontSize: 25 }}>BIKING</Text>
-            <Text>For all you bikers!</Text>
-          </View>
-
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Chatroom")}
-            style={mb_styles.touchables_arrow}
-          >
-            <Ionicons name="arrow-forward" size={25} color="#0c000e"></Ionicons>
-          </TouchableOpacity>
-        </View>
-
-        <View style={mb_styles.list_item_inbox}>
-          <Ionicons name="golf" size={70} color="#52575D" style={mb_styles.left_icon}></Ionicons>
-
-          <View style={mb_styles.list_item_description}>
-            <Text style={{ fontSize: 25 }}>GOLF</Text>
-            <Text>For all you golf lovers!</Text>
-          </View>
-
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Chatroom")}
-            style={mb_styles.touchables_arrow}
-          >
-            <Ionicons name="arrow-forward" size={25} color="#0c000e"></Ionicons>
-          </TouchableOpacity>
-        </View>
+      <View style={mb_styles.notice}>
+        <Text style={{ color: "#03045e" }}>Here are your chats</Text>
       </View>
+      <FlatList
+        style={mb_styles.mb_chat_container}
+        keyExtractor={(item) => item.key}
+        data={state.chatGroups}
+        renderItem={renderItem}
+      />
     </SafeAreaView>
   );
 }
 
 // ***------------------------------- STYLING ---------------------------------*********************
 
+let fullWidth = Dimensions.get("window").width;
+
 const mb_styles = StyleSheet.create({
+  background: {
+    backgroundColor: "#ece6dd",
+    flex: 1,
+  },
   container: {
     flex: 1,
-    marginTop: 8,
-    backgroundColor: "lightyellow",
+    backgroundColor: "#90e0ef",
+    flexDirection: "column",
   },
-  text_center: {
-    textAlign: "center",
-    justifyContent: "center",
-    alignSelf: "center",
-  },
-  textinput_cont: {
-    borderWidth: 1,
-    borderColor: "black",
-    height: 40,
-    width: 300,
-    textAlign: "center",
-    justifyContent: "center",
-    alignSelf: "center",
-    marginTop: 30,
-  },
-  textinput_search: {
-    flex: 1,
-    fontSize: 20,
-    alignSelf: "flex-start",
-    margin: 5,
+  top_section: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    textAlign: "center",
+    padding: 5,
+    alignSelf: "center",
+    width: fullWidth,
+    color: "white",
   },
   mb_chat_container: {
     flexDirection: "column",
-    justifyContent: "flex-end",
-    height: 600,
-    margin: 10,
-  },
-  mb_image_container: {
-    flexDirection: "column",
-    justifyContent: "space-around",
-    alignItems: "center",
-    margin: 5,
+    backgroundColor: "white",
+    borderRadius: 20,
+    borderWidth: 1.5,
+    height: 700,
+    padding: 5,
   },
   list_item_description: {
     flexWrap: "wrap",
@@ -164,26 +124,66 @@ const mb_styles = StyleSheet.create({
     justifyContent: "space-around",
     borderRadius: 10,
   },
-  button_chat: {
-    flexDirection: "column",
-    justifyContent: "center",
-    alignSelf: "center",
-    width: 75,
-    marginTop: 30,
-  },
   left_icon: {
-    flex: 1.5,
+    flex: 2,
     marginLeft: 5,
   },
   touchables_arrow: {
-    backgroundColor: "#db5f4d",
-    padding: 10,
-    width: 50,
-    borderRadius: 10,
-    position: "relative",
+    flex: 2,
     justifyContent: "flex-end",
-    marginRight: 10,
-    flex: 0.5,
+    alignSelf: "center",
+    left: 25,
+  },
+  notice: {
+    margin: 5,
+    alignItems: "flex-start",
+    fontFamily: "Asap-Regular",
+    fontSize: 20,
+  },
+  row_container: {
+    flexDirection: "row",
+    backgroundColor: "white",
+    borderRadius: 5,
+    paddingTop: 15,
+    paddingBottom: 15,
+    textAlign: "center",
+  },
+  room_title: {
+    flex: 4,
+    justifyContent: "center",
+    alignContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
+    textAlign: "center",
+    fontFamily: "Rajdhani-Regular",
+    fontSize: 20,
+    padding: 5,
+    position: "relative",
+    fontWeight: "bold",
+  },
+  welcome_title: {
+    fontSize: 40,
+    flexWrap: "wrap",
+    fontFamily: "Asap-Regular",
+    color: "#03045e",
+    fontWeight: "bold",
+  },
+  appButtonContainer: {
+    elevation: 8,
+    backgroundColor: "#009688",
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    margin: 2,
+    width: "40%",
+    alignSelf: "center",
+  },
+  appButtonText: {
+    fontSize: 14,
+    color: "#fff",
+    fontWeight: "bold",
+    alignSelf: "center",
+    textTransform: "uppercase",
   },
 });
 
