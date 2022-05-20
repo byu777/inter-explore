@@ -1,174 +1,293 @@
-import React from "react";
+import { useRoute } from "@react-navigation/native";
+import React, { useEffect, useState, useContext } from "react";
 import {
   StyleSheet,
   Text,
   View,
-  Button,
-  TextInput,
   Image,
   SafeAreaView,
-  Alert,
+  FlatList,
+  TouchableOpacity,
+  TextInput,
+  KeyboardAvoidingView,
+  Modal,
+  ScrollView,
+  ImageBackground,
+  Dimensions,
+  Pressable,
+  StatusBar,
 } from "react-native";
-import MakeEventPage from "./create_event";
+import trackerApi from "../api/tracker";
+import { Context as AuthContext } from "./../context/AuthContext";
+import io from "socket.io-client";
+import { Ionicons } from "@expo/vector-icons";
 
-// ---------------------------Chatroom page ------------------------------
+// Current url is localhost, after deployment will change to url where application is deployed
+// Variables needed for socket.io
+// const ENDPOINT = "http://localhost:3000";
+// var socket, selectedChatCompare;
+
+const image = require("../assets/images/bg2.jpg");
+
+const MembersList = ({ firstName }) => (
+  <View>
+    <Text>{firstName}</Text>
+  </View>
+)
+
 const Chatroom = ({ navigation }) => {
-  return (
-    <SafeAreaView style={chatroom_styles.main_container}>
+  const { state } = useContext(AuthContext);
+  //const {state} = useState(INITIAL_STATE);
+  const route = useRoute();
+  navigation.setOptions({ title: route.params.InterestName });
 
-        {/* container for member list */}
-        <View style={chatroom_styles.member_container}>
-          {/* pull names from group collection and populate here */}
-          <Text>Eric, Richard, Justin, Gabriel, Johnny...</Text>
-          <Button
-            title="Members"
-            style={{ padding: 10 }}
-            onPress={() =>
-              Alert.alert("Members", "Members of Basketball", [
-                {
-                  text: "Cancel",
-                  onPress: () => console.log("Cancel pressed"),
-                  style: "cancel",
-                },
-                {
-                  text: "OK",
-                  onPress: () => console.log("OK pressed"),
-                  style: "ok",
-                },
-              ])
-            }
-          />
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState();
+  // const [modalVisible, setModalVisible] = useState(false);
+
+  // setModalVisible(visible) {
+  //   setModalVisible({modalVisible: visible});
+  // }
+
+  const fetchMessages = async () => {
+    // if the 'unique id' doesnt match, its not user so exit
+    if (!route.params._id) return;
+
+    try {
+      const response = await trackerApi.get(
+        `/api/Messages/${route.params._id}`
+      );
+
+      setMessages(response.data);
+    } catch (error) {}
+  };
+  useEffect(() => {
+    fetchMessages();
+  }, [route.params._id]);
+
+  // useEffect to connect socket.io-client to socket.io server side
+  // useEffect(() => {
+  //   console.log("running");
+  //   socket = io(ENDPOINT);
+  // }, [])
+
+  const sendMessage = async () => {
+    if (newMessage != null || newMessage != "") {
+      try {
+        setNewMessage("");
+        const response = await trackerApi.post("/api/Messages/", {
+          sender: state.user._id,
+          content: newMessage,
+          chatId: route.params._id,
+        });
+
+        setMessages([...messages, response.data]);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  const onChangeMessageHandler = (message) => {
+    setNewMessage(message);
+  };
+
+  return (
+    <SafeAreaView style={styles.main_container}>
+      <ImageBackground source={image} style={styles.bg_image}>
+
+      {/* <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Hello World!</Text>
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setModalVisible(!modalVisible)}>
+              <Text style={styles.textStyle}>Hide Modal</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+      <Pressable style={[styles.button, styles.buttonOpen]} onPress={() => setModalVisible(true)}>
+        <Text style={styles.textStyle}>Show Modal</Text>
+      </Pressable> */}
+
+        <View style={styles.top_area}>
+          <TouchableOpacity
+            style={styles.top_btn_1}
+            onPress={() => setVisible(true)}
+          >
+            <Ionicons name="people" size={30} color="#ecebf3"></Ionicons>
+            <Text style={styles.top_btn_1_text}>Members</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.top_btn_2}
+            onPress={() => navigation.navigate("CreateEvent")}
+          >
+            <Ionicons name="today-sharp" size={30} color="#ecebf3"></Ionicons>
+            <Text style={styles.top_btn_2_text}>Make Event</Text>
+          </TouchableOpacity>
         </View>
 
         {/* container for chat messages area */}
-        <View style={chatroom_styles.chat_area}>
-          <View style={chatroom_styles.chat_row}>
-            <View style={chatroom_styles.image_container}>
-              <Image
-                style={chatroom_styles.image_container}
-                source={require("../assets/favicon/favicon.png")}
-              ></Image>
-            </View>
-            <Text>
-              lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            </Text>
-          </View>
-
-          <View style={chatroom_styles.chat_row}>
-            <View style={chatroom_styles.image_container}>
-              <Image
-                style={chatroom_styles.image_container}
-                source={require("../assets/favicon/favicon.png")}
-              ></Image>
-            </View>
-            <Text>
-              lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            </Text>
-          </View>
-
-          <View style={chatroom_styles.chat_row}>
-            <View style={chatroom_styles.image_container}>
-              <Image
-                style={chatroom_styles.image_container}
-                source={require("../assets/favicon/favicon.png")}
-              ></Image>
-            </View>
-            <Text>
-              lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            </Text>
-          </View>
-
-          <View style={chatroom_styles.chat_row}>
-            <View style={chatroom_styles.image_container}>
-              <Image
-                style={chatroom_styles.image_container}
-                source={require("../assets/favicon/favicon.png")}
-              ></Image>
-            </View>
-            <Text>
-              lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            </Text>
-          </View>
-
-          <View style={chatroom_styles.chat_row}>
-            <View style={chatroom_styles.image_container}>
-              <Image
-                style={chatroom_styles.image_container}
-                source={require("../assets/favicon/favicon.png")}
-              ></Image>
-            </View>
-            <Text>
-              lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            </Text>
-          </View>
-        </View>
-
-        <View style={chatroom_styles.make_event}>
-          <Button
-            onPress={() => navigation.navigate("CreateEvent")} //add dialog box to input details
-            title="Make Event"
-            color="orange"
-            style={chatroom_styles.touchables_arrow}
+        <View style={styles.chat_area}>
+          <FlatList
+            data={messages}
+            style={styles.ChatMessages}
+            renderItem={({ item }) => (
+              <View
+                style={{
+                  alignSelf: `${
+                    item.sender._id === state.user._id
+                      ? "flex-end"
+                      : "flex-start"
+                  }`,
+                  backgroundColor: `${
+                    item.sender._id === state.user._id ? "#c7d6d5" : "#6d7275"
+                  }`,
+                  borderRadius: 20,
+                  borderWidth: 1.5,
+                  borderColor: "black",
+                  maxWidth: Dimensions.get("window").width * 0.75,
+                  margin: 3,
+                  flex: 1,
+                }}
+              >
+                <Text style={styles.chatMessagesText}>{item.content[0]}</Text>
+              </View>
+            )}
           />
         </View>
+
+        <View style={styles.sendMessageArea}>
+          <TextInput
+            style={styles.typeMessage}
+            placeholder="Message..."
+            onChangeText={onChangeMessageHandler}
+            value={newMessage}
+          />
+          <TouchableOpacity style={styles.send_msg} onPress={sendMessage}>
+            <Ionicons name="send-sharp" size={35} color="#d00000"></Ionicons>
+          </TouchableOpacity>
+        </View>
+      </ImageBackground>
     </SafeAreaView>
   );
 };
 
 // style sheet for chatroom page
-const chatroom_styles = StyleSheet.create({
+const styles = StyleSheet.create({
   main_container: {
-    // flexDirection: "column",
-    // alignItems: "center",
-    // justifyContent: "center",
     flex: 1,
-    marginTop: 8,
-    backgroundColor: "transparent",
-    //height: 600,
+    backgroundColor: "#90e0ef",
+    flexDirection: "column",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  member_container: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignSelf: "center",
-    alignItems: "center",
-    flex: 0.5,
-    margin: 10,
-    flexWrap: "wrap",
+  bg_image: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "center",
+    opacity: 0.7,
   },
-  image_container: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    justifyContent: "space-around",
-  },
+
   chat_area: {
     flexDirection: "column",
     alignItems: "flex-start",
     justifyContent: "flex-start",
+    backgroundColor: "transparent",
     margin: 10,
-    flex: 4,
-    //flex: 40,
+    flex: 8,
   },
 
-  chat_row: {
+  top_area: {
     flexDirection: "row",
-    textAlign: "center",
-    justifyContent: "flex-start",
-    flexWrap: "wrap",
-    margin: 5,
+    flex: 2,
+    paddingTop: StatusBar.currentHeight,
   },
-  make_event: {
-    marginBottom: 15,
-    width: 150,
+  top_btn_1: {
+    flex: 3,
+    flexDirection: "column",
+    backgroundColor: "transparent",
+    alignContent: "center",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  top_btn_1_text: {
+    fontSize: 14,
+    color: "#ecebf3",
+    fontWeight: "bold",
+    alignSelf: "center",
+    textTransform: "uppercase",
+  },
+  top_btn_2: {
+    flex: 3,
+    flexDirection: "column",
+    backgroundColor: "transparent",
+    alignContent: "center",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  top_btn_2_text: {
+    fontSize: 14,
+    color: "#ecebf3",
+    fontWeight: "bold",
+    alignSelf: "center",
+    textTransform: "uppercase",
+  },
+
+  sendMessageArea: {
+    flexDirection: "row",
+    flex: 1,
+    backgroundColor: "white",
+    maxWidth: Dimensions.get("window").width * 0.95,
+    padding: 5,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: 'black',
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    bottom: 10,
+    left: 10,
+  },
+  typeMessage: {
+    backgroundColor: "transparent",
+    alignSelf: "flex-start",
+    justifyContent: "flex-end",
+    alignContent: 'center',
+    alignItems: 'center',
+    flex: 8,
+    color: '#000001',
+  },
+  send_msg: {
+    flex: 2,
+    backgroundColor: "transparent",
+    justifyContent: "center",
+    alignContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
   },
-  touchables_arrow: {
-    backgroundColor: "#db5f4d",
-    width: 100,
-    borderRadius: 5,
-    flex: 1,
+  ChatMessages: {
+    width: "100%",
+  },
+  chatMessagesText: {
+    fontSize: 16,
+    padding: 10,
+    flexWrap: "wrap",
+  },
+  left_icon: {
+    flex: 2,
+    marginLeft: 5,
   },
 });
-
 
 export default Chatroom;

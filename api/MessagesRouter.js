@@ -2,13 +2,14 @@ const asyncHandler = require("express-async-handler");
 const Message = require("../router/models/Message");
 const User = require("../router/models/Users");
 const interests = require("../router/models/interestGroup");
+const events = require("../router/models/Events");
 
 
 const allMessages = asyncHandler(async (req, res) => {
   try {
     const messages = await Message.find({ chat: req.params.chatId })
       .populate("sender", "name pic email")
-      .populate("interests");
+      //.populate("interests");
     res.json(messages);
   } catch (error) {
     res.status(400);
@@ -18,7 +19,7 @@ const allMessages = asyncHandler(async (req, res) => {
 
 
 const sendMessage = asyncHandler(async (req, res) => {
-  const { content, chatId } = req.body;
+  const { content, chatId, sender } = req.body;
 
   if (!content || !chatId) {
     console.log("Invalid data passed into request");
@@ -26,9 +27,9 @@ const sendMessage = asyncHandler(async (req, res) => {
   }
 
   var newMessage = {
-  //  sender: req.user._id,
     content: content,
     chat: chatId,
+    sender: sender,
   };
 
   try {

@@ -7,32 +7,35 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
-  Button
 } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Context as AuthContext } from './../context/AuthContext';
 import * as ImagePicker from 'expo-image-picker'
+import trackerApi from "../api/tracker";
 
 
-export default function Profile() {
+export default function Profile({navigation}) {
 
-  const {state} = useContext(AuthContext);
+  const {state,getInterests} = useContext(AuthContext);
 
   const [image, setImage] = useState(null);
+  const [name, setName] = useState(null);
+  const [primary, setPrimary] = useState(null);
+  const [secondary, setSecondary] = useState(null);
+  const [email, setEmail] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const firstname = state.user.firstName;
-  const primary = state.user.primaryInterest;
-  const secondary = state.user.secondaryInterest;
-  const email = state.user.email;
-
-  useEffect( async () => {
-    if(Platform.OS !== 'web'){
-      const {status} = await ImagePicker.requestMediaLibraryPermissionsAsync
-      if(status !== 'granted'){
-        //alert("Permission Denied")
-      }
-    }
-  }, [])
+  const newUser = state.user
+  useEffect(() => {
+    setName(state.user.firstName)
+    setPrimary(state.user.primaryInterest)
+    setSecondary(state.user.secondaryInterest)
+    setEmail(state.user.email)
+    setImage(state.user.pic)
+    navigation.addListener("focus", () =>setLoading(!loading))
+    getInterests()
+  
+  }, [navigation,loading])
 
   const uploadPhoto = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -42,6 +45,9 @@ export default function Profile() {
     })
     console.log(result)
     if(!result.cancelled){
+      newUser.pic = result.uri
+      console.log(newUser)
+      await trackerApi.post("/api/interests/profile", newUser)
       setImage(result.uri)
     }
   }
@@ -51,11 +57,13 @@ export default function Profile() {
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.titleBar}>
           <Ionicons name="ios-arrow-back" size={24} color="#52575D"></Ionicons>
+          <TouchableOpacity onPress={() => navigation.navigate("EditProfile")}>
           <Ionicons
-            name="md-ellipsis-vertical-sharp"
+            name="pencil-outline"
             size={24}
             color="#52575D"
           ></Ionicons>
+          </TouchableOpacity>
         </View>
 
         <View style={{ alignSelf: "center"}}>
@@ -89,7 +97,7 @@ export default function Profile() {
 
         <View style={styles.infoContainer}>
           <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>
-          {firstname}
+          {name}
           </Text>
           <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>
             {email}
@@ -121,19 +129,19 @@ export default function Profile() {
         </View>
 
         <View style={styles.interestContainer}>
-          <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>
+          <Text style={[styles.text, { fontWeight: "200", fontSize: 24 }]}>
             Primary Interest
           </Text>
-          <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>
+          <Text style={[styles.text, { color: "#AEB5BC", fontSize: 18 }]}>
             {primary}
           </Text>
         </View>
 
         <View style={styles.interestContainer}>
-          <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>
+          <Text style={[styles.text, { fontWeight: "200", fontSize: 24 }]}>
             Secondary Interest
           </Text>
-          <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>
+          <Text style={[styles.text, { color: "#AEB5BC", fontSize: 18 }]}>
             {secondary}
           </Text>
         </View>

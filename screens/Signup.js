@@ -1,4 +1,4 @@
-import React, { useState, useContext} from "react";
+import React, { useState, useContext, useEffect} from "react";
 import { StatusBar } from "expo-status-bar";
 import { View, Text} from "react-native";
 //icons
@@ -31,17 +31,20 @@ import SelectDropdown from 'react-native-select-dropdown';
 import { StyleSheet } from "react-native";
 
 // Colors
-const { darkLight } = Colors;
+const { darkLight } = Colors; 
 
 const Signup = ({ navigation }) => {
   // State to hide and show password
   const [hidePassword, setHidePassword] = useState(true);
   
   // States for user sign up
-  const {state, signup, getInterests, addToInterests} = useContext(AuthContext);
+  const {state, signup, getInterests} = useContext(AuthContext);
 
   getInterests();
-  {state.token ? navigation.navigate("Tab") : null}
+ 
+  useEffect(() => {
+    {state.token ? navigation.navigate("Tab") : null}
+  }, [state.token]);
 
   return (
     <KeyboardAvoidingWrapper>

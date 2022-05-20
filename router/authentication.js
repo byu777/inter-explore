@@ -35,7 +35,7 @@ router.post("/signin", async (req, res) => {
       //console.log(user);
       user.comparePassword(password, function (err, isMatch) {
         if (err) throw err;
-        console.log("passowrd:", isMatch); // -> Password123: true
+        console.log("password:", isMatch); // -> Password123: true
         const token = jwt.sign({ userId: user._id }, "MY_SECRET_KEY");
         res.send({token: token, isMatch: isMatch, user: user});
       });
