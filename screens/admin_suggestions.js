@@ -18,7 +18,7 @@ import {
  * Entry into admin page front and back end.
  * @returns Admin page components
  */
-export default function AdminSuggestions() {
+export default function AdminSuggestions({navigation}) {
   /**
    * Data from 'suggestions' collection in JSON format.
    */
@@ -180,24 +180,14 @@ export default function AdminSuggestions() {
         <Text style={{ fontWeight: "bold", color: "green" }}>Add</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => setModalVisible(true)}
+        onPress={() => {navigation.navigate('SuggestionPageInfo', {
+          suggestionName: interest,
+          suggestionId: id,
+        });}}
         style={adminStyles.interestButton}
       >
         <Text style={{ fontWeight: "bold", color: "red" }}>Edit</Text>
       </TouchableOpacity>
-      <Modal animationType="slide" transparent={true} visible={modalVisible} onRequestClose={() => {setModalVisible(!modalVisible)}}>
-        <View style={adminStyles.modalView}>
-          <Text>Inside the modal for {interest}</Text>
-          <Text>Insert new suggestion to update with:</Text>
-          <TextInput style={{borderColor: "black", borderWidth: 5, borderRadius: 10}} placeholder="New name" onChangeText={setInputText}></TextInput>
-          <Pressable style={adminStyles.interestButton} onPress={() => {setModalVisible(!modalVisible)}}>
-            <Text>Update</Text>
-          </Pressable>
-          <Pressable style={adminStyles.interestButton} onPress={() => {setModalVisible(!modalVisible)}}>
-            <Text>Cancel</Text>
-          </Pressable>
-        </View>
-      </Modal>
       <TouchableOpacity
         onPress={() => handleDeleteSuggestion(id, interest)}
         style={adminStyles.interestButton}

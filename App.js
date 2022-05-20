@@ -5,8 +5,8 @@ import AdminSuggestions from "./screens/admin_suggestions";
 
 export default function App() {
   return (
-    // <RootStack/>
-    <AdminSuggestions/>
+    <RootStack/>
+    // <AdminSuggestions/>
     //<MakeEventPage/>
   );
 }

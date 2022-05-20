@@ -12,6 +12,8 @@ import Chatroom from './chatroom';
 import MessageBoardPage from './messageboard';
 import EventList from './event_list';
 import MakeEventPage from "./../screens/create_event";
+import AdminSuggestionsInfo from './admin_suggestions_info';
+import AdminSuggestions from './admin_suggestions';
 
 // Context
 import { Provider as AuthProvider} from './../context/AuthContext';
@@ -34,6 +36,8 @@ const RootStack = () => {
                     }
                 }}
             > 
+                <Stack.Screen name='SuggestionPage' component={AdminSuggestions}/>
+                <Stack.Screen name='SuggestionPageInfo' component={AdminSuggestionsInfo}/>
                 <Stack.Screen name="Login" component={Login} />
                 <Stack.Screen name="Signup" component={Signup} />
                 <Stack.Screen name="Tab" component={Tab} />
