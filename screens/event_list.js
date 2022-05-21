@@ -9,6 +9,7 @@ import {
   Platform,
   SafeAreaView,
   Dimensions,
+  ScrollView,
 } from "react-native";
 import trackerApi from "../api/tracker";
 import { Context as AuthContext } from "./../context/AuthContext";
@@ -49,15 +50,12 @@ const Event = ({ title, date, time, desc, location, item }) => (
 
     <View style={styles.desc_area}>
       <Text
-        style={styles.desc_text}
+        style={styles.desc_title}
       >
         {title}
       </Text>
       <Text
-        style={{
-          fontSize: 14,
-          color: "#db5f4d",
-        }}
+        style={styles.desc_text}
       >
         {location}
       </Text>
@@ -185,7 +183,7 @@ export default function EventList() {
   const [events, setEvents] = useState([
     {
       title: "Basketball game",
-      location: "asd",
+      location: "Lorem ipsum yoyoyoyoyoyo Lorem ipsum yoyoyoyoyoyoLorem ipsum yoyoyoyoyoyoLorem ipsum yoyoyoyoyoyoLorem ipsum yoyoyoyoyoyoLorem ipsum yoyoyoyoyoyoLorem ipsum yoyoyoyoyoyoLorem ipsum yoyoyoyoyoyoLorem ipsum yoyoyoyoyoyoLorem ipsum yoyoyoyoyoyo",
       date: "May 25, 2022",
       time: "6 PM",
       desc: "etc.",
@@ -283,12 +281,8 @@ export default function EventList() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={{ fontSize: 10 }}>Push token: {expoPushToken} </Text>
-      {/* <View style={styles.header}>
-        <Text style={{ fontSize: 20, flexWrap: "wrap" }}>
-          Welcome back, {state.user.firstName}
-        </Text>
-      </View> */}
+      {/* <Text style={{ fontSize: 10 }}>Push token: {expoPushToken} </Text> */}
+      
       <Text style={styles.header}>
         Upcoming Events
       </Text>
@@ -320,60 +314,91 @@ let fullHeight = Dimensions.get("window").height;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#90e0ef",
+    backgroundColor: "white",
     flexDirection: "column",
   },
   event_container: {
     flexDirection: "column",
-    backgroundColor: "#caf0f8",
-    borderRadius: 10,
-    borderWidth: 1.5,
-    height: fullHeight,
-    margin: 10,
+    backgroundColor: "white",
+    borderRadius: 5,
+    flexGrow: 0,
+    padding: 10,
+    margin: 20,
+    shadowColor: "#000000",
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    shadowOffset: {
+      height: 1,
+      width: 1
+    },
+    elevation: 10,
   },
   header: {
-    paddingLeft: 10,
+    paddingLeft: 20,
+    marginTop: 25,
     textAlign: "center",
     alignItems: "center",
-    fontSize: 20, 
+    fontSize: 25, 
     alignSelf: "flex-start", 
     fontFamily: "Montserrat-Bold",
     color: '#03045e',
   },
   row_container: {
     flexDirection: "row",
+    backgroundColor: "#E6E6FB",
+    borderRadius: 10,
     paddingTop: 15,
     paddingBottom: 15,
-    borderRadius: 20,
+    marginTop: 15,
+    marginBottom: 15,
+    marginHorizontal: 10,
+    margin: 10,
+    shadowColor: "#000000",
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    shadowOffset: {
+      height: 1,
+      width: 1
+    },
+    elevation: 10,
   },
   time_text: {
     textAlign: "center", 
-    fontSize: 16, 
-    color: '#d62828',
-    fontFamily: 'Koulen-Regular',
+    color: '#150578',
+    fontFamily: 'Montserrat-Bold',
     fontSize: 20,
+    paddingBottom: 10,
   },
   date_time: {
     flexDirection: 'column',
     flex: 2,
+    paddingTop: 5,
   },
   desc_area: {
-    flex: 3,
+    flex: 4,
     flexDirection: "column",
     fontSize: 24,
     width: 250,
-    flexWrap: "wrap",
     textAlign: 'center',
     justifyContent: 'space-around',
   },
-  desc_text: {
+  desc_title: {
     fontSize: 25,
+    flex: 1,
     flexWrap: "wrap",
-    textAlign: 'center',
-    justifyContent: 'center',
     alignSelf: 'center',
-    alignItems: 'center',
+    justifyContent: 'flex-start',
     alignContent: 'center',
-    fontFamily: 'SourceSansPro-Bold',
+    fontFamily: 'SourceSansPro-Regular',
+    color: '#150578',
+  },
+  desc_text: {
+    fontSize: 14,
+    flex: 5,
+    color: "#449dd1",
+    flexWrap: 'wrap',
+    fontFamily: 'SourceSansPro-Regular',
+    padding: 5,
+    marginLeft: 5,
   },
 });

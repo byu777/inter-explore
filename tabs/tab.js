@@ -26,9 +26,9 @@ const Tabs = () => {
       screenOptions={{
         tabBarShowLabel: false,
         headerShown: true,
-        tabBarStyle: {backgroundColor: '#530127'},
-        tabBarActiveTintColor: '#ece6dd',
-        tabBarInactiveTintColor: '#db5f4d',
+        tabBarStyle: {backgroundColor: '#1D0FB6'},
+        tabBarActiveTintColor: 'white',
+        tabBarInactiveTintColor: '#9B92F6',
       }}
         id='our_tab'
         tabBarOptions={{

@@ -17,16 +17,17 @@ const Room = ({ title, navigation, chat }) => (
   <View style={mb_styles.row_container}>
     <Ionicons
       name={"basketball"}
-      size={70}
-      color="#d62828"
+      size={55}
+      color="#2323D1"
       style={mb_styles.left_icon}
     ></Ionicons>
     <Text style={mb_styles.room_title}>{title}</Text>
     <TouchableOpacity
       onPress={() => navigation.navigate("Chatroom", chat)}
       style={mb_styles.touchables_arrow}
+      elevation={10}
     >
-      <Ionicons name="arrow-forward" size={50} color="#d62828"></Ionicons>
+      <Ionicons name="arrow-forward" size={50} color="#2323D1"></Ionicons>
     </TouchableOpacity>
   </View>
 );
@@ -67,9 +68,10 @@ export default function MessageBoardPage({ navigation }) {
       </View>
 
       <View style={mb_styles.notice}>
-        <Text style={{ color: "#03045e" }}>Here are your chats</Text>
+        <Text style={{ color: "#8E8D91" }}>Chatrooms...</Text>
       </View>
       <FlatList
+      justifyContent='center'
         style={mb_styles.mb_chat_container}
         keyExtractor={(item) => item.key}
         data={state.chatGroups}
@@ -84,45 +86,50 @@ export default function MessageBoardPage({ navigation }) {
 let fullWidth = Dimensions.get("window").width;
 
 const mb_styles = StyleSheet.create({
-  background: {
-    backgroundColor: "#ece6dd",
-    flex: 1,
-  },
   container: {
     flex: 1,
-    backgroundColor: "#90e0ef",
+    backgroundColor: "white",
     flexDirection: "column",
   },
   top_section: {
-    flexDirection: "row",
     padding: 5,
-    alignSelf: "center",
-    width: fullWidth,
+    marginTop: 10,
+    paddingBottom: 30,
     color: "white",
+    textAlign: 'center',
+    fontFamily: 'Montserrat-Regular',
   },
   mb_chat_container: {
     flexDirection: "column",
     backgroundColor: "white",
-    borderRadius: 20,
-    borderWidth: 1.5,
-    height: 700,
-    padding: 5,
-  },
-  list_item_description: {
-    flexWrap: "wrap",
-    justifyContent: "center",
-    flexShrink: 1,
-    flex: 4,
-  },
-  list_item_inbox: {
-    flexDirection: "row",
-    flex: 1,
+    borderRadius: 5,
+    flexGrow: 0,
+    padding: 10,
     margin: 10,
-    backgroundColor: "#e6b700",
-    alignItems: "center",
-    justifyContent: "space-around",
-    borderRadius: 10,
+    shadowColor: "#000000",
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    shadowOffset: {
+      height: 1,
+      width: 1
+    },
+    elevation: 10,
   },
+  // list_item_description: {
+  //   flexWrap: "wrap",
+  //   justifyContent: "center",
+  //   flexShrink: 1,
+  //   flex: 4,
+  // },
+  // list_item_inbox: {
+  //   flexDirection: "row",
+  //   flex: 1,
+  //   margin: 10,
+  //   backgroundColor: "#78c0e0",
+  //   alignItems: "center",
+  //   justifyContent: "space-around",
+  //   borderRadius: 10,
+  // },
   left_icon: {
     flex: 2,
     marginLeft: 5,
@@ -134,18 +141,30 @@ const mb_styles = StyleSheet.create({
     left: 25,
   },
   notice: {
-    margin: 5,
+    marginLeft: 15,
     alignItems: "flex-start",
     //fontFamily: "Asap-Regular",
     fontSize: 20,
+    color: '#C1C1C3',
   },
   row_container: {
     flexDirection: "row",
-    backgroundColor: "white",
-    borderRadius: 5,
+    backgroundColor: "#E6E6FB",
+    borderRadius: 10,
     paddingTop: 15,
     paddingBottom: 15,
+    marginTop: 15,
+    marginBottom: 15,
+    marginHorizontal: 10,
     textAlign: "center",
+    shadowColor: "#000000",
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    shadowOffset: {
+      height: 1,
+      width: 1
+    },
+    elevation: 5,
   },
   room_title: {
     flex: 4,
@@ -161,28 +180,12 @@ const mb_styles = StyleSheet.create({
     fontWeight: "bold",
   },
   welcome_title: {
-    fontSize: 40,
+    fontSize: 28,
     flexWrap: "wrap",
     //fontFamily: "Asap-Regular",
-    color: "#03045e",
+    color: '#1D0FB6',
     fontWeight: "bold",
-  },
-  appButtonContainer: {
-    elevation: 8,
-    backgroundColor: "#009688",
-    borderRadius: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    margin: 2,
-    width: "40%",
-    alignSelf: "center",
-  },
-  appButtonText: {
-    fontSize: 14,
-    color: "#fff",
-    fontWeight: "bold",
-    alignSelf: "center",
-    textTransform: "uppercase",
+    textAlign: 'center',
   },
 });
 
