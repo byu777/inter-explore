@@ -21,6 +21,7 @@ import trackerApi from "../api/tracker";
 import { Context as AuthContext } from "./../context/AuthContext";
 import io from "socket.io-client";
 import { Ionicons } from "@expo/vector-icons";
+import * as Device from "expo-device";
 
 // Current url is localhost, after deployment will change to url where application is deployed
 // Variables needed for socket.io
@@ -37,7 +38,6 @@ const MembersList = ({ firstName }) => (
 
 const Chatroom = ({ navigation }) => {
   const { state } = useContext(AuthContext);
-  //const {state} = useState(INITIAL_STATE);
   const route = useRoute();
   navigation.setOptions({ title: route.params.InterestName });
 
@@ -61,6 +61,7 @@ const Chatroom = ({ navigation }) => {
       setMessages(response.data);
     } catch (error) {}
   };
+
   useEffect(() => {
     fetchMessages();
   }, [route.params._id]);
@@ -124,14 +125,14 @@ const Chatroom = ({ navigation }) => {
             style={styles.top_btn_1}
             onPress={() => setVisible(true)}
           >
-            <Ionicons name="people" size={30} color="#ecebf3"></Ionicons>
+            <Ionicons name="people" size={30} color="black"></Ionicons>
             <Text style={styles.top_btn_1_text}>Members</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.top_btn_2}
             onPress={() => navigation.navigate("CreateEvent")}
           >
-            <Ionicons name="today-sharp" size={30} color="#ecebf3"></Ionicons>
+            <Ionicons name="today-sharp" size={30} color="black"></Ionicons>
             <Text style={styles.top_btn_2_text}>Make Event</Text>
           </TouchableOpacity>
         </View>
@@ -186,16 +187,14 @@ const Chatroom = ({ navigation }) => {
 const styles = StyleSheet.create({
   main_container: {
     flex: 1,
-    backgroundColor: "#90e0ef",
+    backgroundColor: "white",
     flexDirection: "column",
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   bg_image: {
     flex: 1,
     resizeMode: "cover",
     justifyContent: "center",
-    opacity: 0.7,
+    opacity: 0.5,
   },
 
   chat_area: {
@@ -204,12 +203,13 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     backgroundColor: "transparent",
     margin: 10,
-    flex: 8,
+    flex: 7,
   },
 
   top_area: {
     flexDirection: "row",
-    flex: 2,
+    flex: 3,
+    //paddingTop: Device.brand == "Apple" ? StatusBar.currentHeight : StatusBar.currentHeight - 5,
     paddingTop: StatusBar.currentHeight,
   },
   top_btn_1: {
@@ -221,8 +221,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   top_btn_1_text: {
-    fontSize: 14,
-    color: "#ecebf3",
+    fontSize: 18,
+    color: "black",
     fontWeight: "bold",
     alignSelf: "center",
     textTransform: "uppercase",
@@ -236,8 +236,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   top_btn_2_text: {
-    fontSize: 14,
-    color: "#ecebf3",
+    fontSize: 18,
+    color: "black",
     fontWeight: "bold",
     alignSelf: "center",
     textTransform: "uppercase",

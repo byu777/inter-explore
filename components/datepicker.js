@@ -4,9 +4,7 @@ import {
   Text,
   View,
   Button,
-  TextInput,
-  Alert,
-  SafeAreaView,
+  Pressable,
   Platform,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -47,16 +45,23 @@ export default function CustomDatePicker() {
   return (
     <View style={styles.container}>
       <View style={styles.btn_container}>
-        <View style={styles.date_btn}>
+        {/* <View style={styles.date_btn}>
           <Button title="Date" onPress={() => showMode("date")} />
-        </View>
+        </View> */}
+        <Pressable style={styles.date_btn} onPress={() => showMode("date")}>
+          <Text style={styles.textstyle}>Date</Text>
+        </Pressable>
 
-        <View style={styles.time_btn}>
+        <Pressable style={styles.time_btn} onPress={() => showMode("time")}>
+          <Text style={styles.textstyle}>Time</Text>
+        </Pressable>
+
+        {/* <View style={styles.time_btn}>
           <Button title="Time" onPress={() => showMode("time")} />
-        </View>
+        </View> */}
       </View>
 
-      <Text style={{ color: '#530127', fontSize: 15 }}>{text}</Text>
+      <Text style={{ color: '#0e0e52', fontSize: 15 }}>{text}</Text>
 
       {show && (
         <DateTimePicker
@@ -79,23 +84,36 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     alignItems: "center",
     padding: 10,
-    flexDirection: "row",
-    justifyContent: 'flex-start',
+    flexDirection: "column",
   },
   btn_container: {
       flexDirection: 'column',
-      padding: 15,
+      padding: 5,
       alignItems: 'flex-start',
       justifyContent: 'flex-start',
   },
   date_btn: {
-    backgroundColor: "red",
-    borderRadius: 10,
-    margin: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 4,
+    backgroundColor: '#150578',
+    margin: 10,
+    color: 'white',
   },
   time_btn: {
-    backgroundColor: "red",
-    borderRadius: 10,
-    margin: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 4,
+    backgroundColor: '#150578',
+    
+  },
+  textstyle: {
+    color: 'white',
+    textAlign: 'center',
+    elevation: 3,
   },
 });

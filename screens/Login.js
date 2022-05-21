@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
-import { View } from "react-native";
+import { View, Image } from "react-native";
 //icons
 import { Ionicons } from "@expo/vector-icons";
 //formik
@@ -74,6 +74,12 @@ const Login = ({ navigation }) => {
             resizeMode="cover"
             source={require("./../assets/logo/180w/Icon180.png")}
           />
+          {/* <View style={{borderRadius: 10, width: 100, height: 100}}>
+            <Image 
+            style={{resizeMode: "cover"}}
+            source={require("./../assets/logo/180w/Icon180.png")}>
+              </Image>
+              </View> */}
           <PageTitle>Inter-Explore</PageTitle>
           <Formik
             initialValues={{ email: "", password: "" }}

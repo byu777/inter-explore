@@ -309,7 +309,6 @@ export default function EventList() {
   );
 }
 
-let fullHeight = Dimensions.get("window").height;
 
 const styles = StyleSheet.create({
   container: {
@@ -339,7 +338,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     alignItems: "center",
     fontSize: 25, 
-    alignSelf: "flex-start", 
+    //alignSelf: "flex-start", 
     fontFamily: "Montserrat-Bold",
     color: '#03045e',
   },
