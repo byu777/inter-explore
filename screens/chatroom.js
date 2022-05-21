@@ -66,7 +66,6 @@ const Chatroom = ({ navigation }) => {
   };
   useEffect(() => {
     fetchMessages();
-    getEvents();
   }, [route.params._id]);
 
   // useEffect to connect socket.io-client to socket.io server side

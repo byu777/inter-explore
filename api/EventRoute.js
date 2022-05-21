@@ -57,21 +57,21 @@ const getEventsForUser = asyncHandler(async (req, res) => {
     // scInterest = User.secondaryInterest;
     const eventList = await events.find();
     let allEvents = [];
-    interests.findOne({InterestName: prInterest}).populate('currentEvents', 'title desc location').exec(function(err, item) {
+    const eventsItem = interests.findOne({InterestName: prInterest}).populate('currentEvents', 'title desc location').exec(function(err, item) {
       if (err) {
         console.log("error")
       }
       console.log(item);
-      console.log(item.currentEvents[0].title);
-      console.log(item.currentEvents[0].desc);
-      console.log(item.currentEvents[0].location);
-      // res.send(item.currentEvents);
+      // console.log(item.currentEvents[0].title);
+      // console.log(item.currentEvents[0].desc);
+      // console.log(item.currentEvents[0].location);
+      // console.log(item.currentEvents);
       // console.log(item.currentEvents.desc);
       // console.log(item.currentEvents.location);
       // console.log(item.currentEvents.date);
       res.send(item)
     });
-    
+    // console.log(eventsItem);
     
     // check if event contains the primary or secondary interest; if so, add to 'allEvents'
     for (let i = 0; i < eventList.length; i++) {
