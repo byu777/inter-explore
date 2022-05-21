@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect} from "react";
 import { StatusBar } from "expo-status-bar";
-import { View, Text} from "react-native";
+import { View, Text, ScrollView} from "react-native";
 //icons
 import { Ionicons } from "@expo/vector-icons";
 //formik
@@ -44,8 +44,13 @@ const Signup = ({ navigation }) => {
     {state.token ? navigation.navigate("Tab") : null}
   }, [state.token]);
 
+  useEffect(() => {
+    getInterests()
+  }, [state.newInterest]);
+
   return (
     <KeyboardAvoidingWrapper>
+      <ScrollView>
       <StyledContainer>
         <StatusBar style="dark" />
         <InnerContainer>
@@ -180,6 +185,7 @@ const Signup = ({ navigation }) => {
           </Formik>
         </InnerContainer>
       </StyledContainer>
+      </ScrollView>
     </KeyboardAvoidingWrapper>
   );
 };

@@ -18,23 +18,34 @@ const Adminpage = () => {
   const [interests, setInterests] = useState([]);
   const [textInput, setTextInput] = useState('');
 
-  const {state} = useContext(AuthContext);
+  const {state, addNewInterest } = useContext(AuthContext);
 
   useEffect(() => {
     setInterests(state.reviewInterests)
   }, []);
 
-  const addInterest = () => {
-    if (textInput == '') {
-      Alert.alert('Error', 'Please input interests');
+  function checkSame(InterestName) {
+    let interestNames = state.interests;
+    for (let i = 0; i < interestNames.length; i++){
+        if (interestNames[i] == InterestName){
+            return false;
+        }
+    }
+    return true
+  }
+  
+  
+  const AddInterest = () => {
+      if (textInput != ''){
+        if (checkSame(textInput) != false) {
+          const newInterests = addNewInterest(textInput, true)
+          setTextInput('');
+          Alert.alert('Success', 'Item Successfuly Added');
+        } else {
+          Alert.alert('Error', 'Interest already exists');
+        }
     } else {
-      const newInterests = {
-        id: Math.random(),
-        task: textInput,
-        completed: false,
-      };
-      setInterests([...interests, newInterests]);
-      setTextInput('');
+      Alert.alert('Error', 'Please input interest');
     }
   };
 
@@ -104,6 +115,11 @@ const Adminpage = () => {
             <Icon name="delete" size={20} color="white" />
           </View>
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => rejectInterests(interests)}>
+          <View style={[styles.actionIcon, {backgroundColor: 'blue'}]}>
+            <Icon name="edit" size={20} color="white" />
+          </View>
+        </TouchableOpacity>
       </View>
     );
   };
@@ -131,7 +147,7 @@ const Adminpage = () => {
         renderItem={({item}) => <ListItem interests={item} />}
       />
 
-      {/* <View style={styles.footer}>
+      <View style={styles.footer}>
         <View style={styles.inputContainer}>
           <TextInput
             value={textInput}
@@ -139,12 +155,12 @@ const Adminpage = () => {
             onChangeText={text => setTextInput(text)}
           />
         </View>
-        <TouchableOpacity onPress={addInterest}>
+        <TouchableOpacity onPress={AddInterest}>
           <View style={styles.iconContainer}>
             <Icon name="add" color="white" size={30} />
           </View>
         </TouchableOpacity>
-      </View> */}
+      </View>
     </SafeAreaView>
   );
 };

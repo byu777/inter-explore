@@ -47,10 +47,10 @@ const Login = ({ navigation }) => {
   useEffect(() => {
     getInterests()
   }, []);
-
+  
   useEffect(() => {
     getInterests()
-  }, [state.newInterests]);
+  }, [state.newInterest]);
 
   useEffect(() => {
     {state.token ? navigation.navigate("Tab") : null}
