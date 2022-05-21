@@ -3,7 +3,7 @@ import { DropDownListComponent } from '@syncfusion/ej2-react-dropdowns';
 import loginImg from "../assets/logo/40w/Icon40.png";
 
 export class Register extends React.Component {
-
+const 
   constructor(props) {
     super(props);
     this.sportsData = ['Badminton', 'Basketball', 'Cricket', 'Football', 'Golf', 'Hockey', 'Rugby', 'Snooker', 'Tennis'];
