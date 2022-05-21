@@ -26,7 +26,7 @@ import trackerApi from "../api/tracker";
 
 const EditProfileScreen = ({ navigation }) => {
 
-  const {state, getInterests} = useContext(AuthContext);
+  const {state, getInterests, updateUserInterests} = useContext(AuthContext);
 
   const newUser = state.user;
 
@@ -36,8 +36,9 @@ const EditProfileScreen = ({ navigation }) => {
     newUser.email = values.email
     newUser.primaryInterest = values.primaryInterest
     newUser.secondaryInterest = values.secondaryInterest
-    console.log(newUser)
+    console.log(state.user)
     await trackerApi.post("/api/interests/profile", newUser);
+    updateUserInterests(newUser, state.user);
   }catch(err){
 
     console.log(err)

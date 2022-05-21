@@ -73,12 +73,13 @@ const addToGroup = asyncHandler(async (req, res) => {
 });
 
 const removeFromGroup = asyncHandler(async (req, res) => {
+  console.log(req.body);
   const { chatId, userId } = req.body;
   const removed = await interests
     .findByIdAndUpdate(
       chatId,
       {
-        $pull: { users: userId },
+        $pull: { user: userId },
       },
       {
         new: true,
