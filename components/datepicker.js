@@ -6,6 +6,7 @@ import {
   Button,
   Pressable,
   Platform,
+  Dimensions,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
@@ -14,7 +15,7 @@ export default function CustomDatePicker() {
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState("date"); //change between timeMode and dateMode
   const [show, setShow] = useState(false); //boolean tells us to show box or not
-  const [text, setText] = useState("Empty"); //
+  const [text, setText] = useState(""); //
 
   //handles what happens when we change the date
   const onChange = (event, selectedDate) => {
@@ -44,10 +45,17 @@ export default function CustomDatePicker() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.btn_container}>
-        {/* <View style={styles.date_btn}>
+      <Pressable style={styles.date_btn} onPress={() => showMode("date")}>
+        <Text style={styles.textstyle}>Date</Text>
+      </Pressable>
+
+      <Pressable style={styles.time_btn} onPress={() => showMode("time")}>
+        <Text style={styles.textstyle}>Time</Text>
+      </Pressable>
+      {/* <View style={styles.btn_container}>
+        <View style={styles.date_btn}>
           <Button title="Date" onPress={() => showMode("date")} />
-        </View> */}
+        </View>
         <Pressable style={styles.date_btn} onPress={() => showMode("date")}>
           <Text style={styles.textstyle}>Date</Text>
         </Pressable>
@@ -56,12 +64,12 @@ export default function CustomDatePicker() {
           <Text style={styles.textstyle}>Time</Text>
         </Pressable>
 
-        {/* <View style={styles.time_btn}>
+        <View style={styles.time_btn}>
           <Button title="Time" onPress={() => showMode("time")} />
-        </View> */}
-      </View>
+        </View>
+      </View> */}
 
-      <Text style={{ color: '#0e0e52', fontSize: 15 }}>{text}</Text>
+      <Text style={{ color: "#0e0e52", fontSize: 15, textAlign: 'center', marginTop: 10, }}>{text}</Text>
 
       {show && (
         <DateTimePicker
@@ -80,40 +88,39 @@ export default function CustomDatePicker() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "space-evenly",
     backgroundColor: "transparent",
     alignItems: "center",
     padding: 10,
     flexDirection: "column",
   },
-  btn_container: {
-      flexDirection: 'column',
-      padding: 5,
-      alignItems: 'flex-start',
-      justifyContent: 'flex-start',
-  },
+  // btn_container: {
+  //   flexDirection: "column",
+  //   padding: 5,
+  //   // alignItems: 'flex-start',
+  //   // justifyContent: 'flex-start',
+  // },
   date_btn: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 12,
     paddingHorizontal: 32,
     borderRadius: 4,
-    backgroundColor: '#150578',
+    backgroundColor: "#150578",
     margin: 10,
-    color: 'white',
+    color: "white",
   },
   time_btn: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 12,
     paddingHorizontal: 30,
     borderRadius: 4,
-    backgroundColor: '#150578',
-    
+    backgroundColor: "#150578",
   },
   textstyle: {
-    color: 'white',
-    textAlign: 'center',
+    color: "white",
+    textAlign: "center",
     elevation: 3,
   },
 });

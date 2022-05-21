@@ -67,6 +67,8 @@ export default function MakeEventPage({ navigation }) {
       } catch (error) {
         console.log(error);
       }
+    } else {
+      alert("Please fill in all fields before scheduling!")
     }
   };
   return (
@@ -83,16 +85,6 @@ export default function MakeEventPage({ navigation }) {
         >
           {title}
         </TextInput>
-        {/* <Text style={styles.title_text_style}>Title</Text> */}
-
-          {/* <TextInput
-            style={styles.textInput_style}
-            placeholder="Title..."
-            placeholderTextColor="#6E6D71"
-            onChangeText={onChangeTitleHandler}
-          >
-            {title}
-          </TextInput> */}
 
       </View>
 
@@ -126,8 +118,6 @@ export default function MakeEventPage({ navigation }) {
 
       <Text style={styles.title_text_style}>Date</Text>
       <View style={styles.date}>
-        
-
         {/* this is a custom Datepicker that I made; how do i grab the date/time state from it and put it on this MakeEventPage's state? */}
         <CustomDatePicker
           value={CustomDatePicker.date}
@@ -135,7 +125,7 @@ export default function MakeEventPage({ navigation }) {
         />
       </View>
 
-      <Text>Click "Schedule" once you're done!</Text>
+      <Text style={styles.bottom_text}>Click "Schedule" once you're done!</Text>
       <View style={styles.buttons}>
         <Pressable
           style={styles.cancel_btn}
@@ -172,9 +162,6 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   title: {
-    //flex: 2,
-    //flexGrow: 0,
-    //height: fullHeight*0.1,
     borderRadius: 3,
     paddingTop: 10,
     paddingBottom: 10,
@@ -190,8 +177,6 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   location: {
-    //flex: 2,
-    //height: fullHeight*0.1,
     borderRadius: 3,
     paddingTop: 10,
     paddingBottom: 10,
@@ -207,9 +192,11 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   date: {
-    //flex: 3,
-    //height: fullHeight*0.2,
+
     height: 100,
+    flexGrow: 1,
+    justifyContent: 'space-around',
+    alignContent: 'space-around',
     borderRadius: 3,
     paddingTop: 10,
     paddingBottom: 10,
@@ -225,8 +212,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   description: {
-    //flex: 4,
-    //height: fullHeight*0.4,
+
     flexGrow: 1,
     borderRadius: 3,
     paddingTop: 10,
@@ -247,6 +233,7 @@ const styles = StyleSheet.create({
     alignContent: "center",
     alignSelf: "center",
     alignItems: "center",
+    paddingTop: 10,
   },
 
   title_text_style: {
@@ -256,14 +243,17 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     marginRight: 10,
   },
+  bottom_text: {
+    color: "#0e0e52",
+    justifyContent: "center",
+    textAlign: 'center',
+    paddingTop: 5,
+    marginLeft: 15,
+    marginRight: 10,
+  },
   textInput_style: {
-    //flex: 1,
-    // borderColor: "gray",
-    // borderWidth: 1,
-    // borderRadius: 5,
     padding: 5,
     marginLeft: 10,
-    //margin: 10,
   },
 
   buttons: {
@@ -271,6 +261,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     marginTop: 20,
     flex: 1,
+    //flexGrow: 1,
   },
   event_title: {
     textAlign: "center",
@@ -278,12 +269,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     color: "#0e0e52",
   },
-  // border_styles: {
-  //   borderWidth: 3,
-  //   borderRadius: 5,
-  //   borderColor: "#db5f4d",
-  //   flex: 2,
-  // },
+
   cancel_btn: {
     alignItems: "center",
     justifyContent: "center",
@@ -292,7 +278,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     elevation: 3,
     backgroundColor: "#150578",
-    margin: 15,
+    margin: 10,
   },
   sched_btn: {
     alignItems: "center",
@@ -302,11 +288,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     elevation: 3,
     backgroundColor: "#150578",
-    margin: 15,
-  },
-  form_area: {
-    flex: 0.9,
-    flexDirection: "column",
+    margin: 10,
   },
   btn_textstyle: {
     color: "white",
