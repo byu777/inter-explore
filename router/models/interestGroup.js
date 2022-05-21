@@ -9,7 +9,7 @@ const InterestSchema = new mongoose.Schema(
     currentEvents: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Events",
+        ref: "events",
       },
     ],
     user: [

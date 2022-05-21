@@ -36,13 +36,38 @@ const createEvent = asyncHandler(async (req, res) => {
 
 const getEventsForUser = asyncHandler(async (req, res) => {
   try {
-
+    let prInterest = "";
+    let scInterest = "";
     //any way to reference current logged in user's primary/secondary interest?
-    // const prInterest = user.primaryInterest;
-    // const scInterest = user.secondaryInterest;
-    // const eventList = await events.find();
-    // const allEvents = [];
-
+     User.findById(req.body.id, function(err, docs) {
+      if (err) {
+        console.log(err)
+      }
+      else {
+        console.log(docs)
+        console.log(docs.primaryInterest);
+        prInterest = docs.primaryInterest;
+        console.log(docs.secondaryInterest);
+        scInterest = docs.secondaryInterest;
+      }
+    })
+    // prInterest = User.primaryInterest;
+    // scInterest = User.secondaryInterest;
+    const eventList = await events.find();
+    let allEvents = [];
+    interests.findOne({InterestName: prInterest}).populate('currentEvents', 'title desc location').exec(function(err, item) {
+      if (err) {
+        console.log("error")
+      }
+      console.log(item);
+      console.log(item.currentEvents[0].title);
+      console.log(item.currentEvents[0].desc);
+      console.log(item.currentEvents[0].location);
+      // console.log(item.currentEvents.desc);
+      // console.log(item.currentEvents.location);
+      // console.log(item.currentEvents.date);
+      
+    });
     
     
     // check if event contains the primary or secondary interest; if so, add to 'allEvents'
@@ -52,7 +77,11 @@ const getEventsForUser = asyncHandler(async (req, res) => {
       }
 
     }
-    console.log(allEvents);
+    console.log(req.body.id);
+    // console.log(result);
+    // console.log(prInterest);
+    // console.log(scInterest);
+    // console.log(allEvents);
     res.send(allEvents);
   } catch (error) {
     console.log(error);
