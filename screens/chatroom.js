@@ -134,6 +134,13 @@ const Chatroom = ({ navigation }) => {
             <Ionicons name="today-sharp" size={30} color="#ecebf3"></Ionicons>
             <Text style={styles.top_btn_2_text}>Make Event</Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.top_btn_2}
+            onPress={() => console.log("pressed")}
+          >
+            <Ionicons name="calendar-sharp" size={30} color="#ecebf3"></Ionicons>
+            <Text style={styles.top_btn_2_text}>Event List</Text>
+          </TouchableOpacity>
         </View>
 
         {/* container for chat messages area */}
@@ -190,12 +197,14 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: 'center',
     alignItems: 'center',
+    width: 600
   },
   bg_image: {
     flex: 1,
     resizeMode: "cover",
     justifyContent: "center",
     opacity: 0.7,
+    width: 600
   },
 
   chat_area: {
@@ -205,12 +214,14 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     margin: 10,
     flex: 8,
+    width: 600
   },
 
   top_area: {
     flexDirection: "row",
     flex: 2,
     paddingTop: StatusBar.currentHeight,
+    width: 200
   },
   top_btn_1: {
     flex: 3,
