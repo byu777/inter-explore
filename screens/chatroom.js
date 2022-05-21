@@ -16,6 +16,7 @@ import {
   Dimensions,
   Pressable,
   StatusBar,
+  Button,
 } from "react-native";
 import trackerApi from "../api/tracker";
 import { Context as AuthContext } from "./../context/AuthContext";
@@ -43,6 +44,8 @@ const Chatroom = ({ navigation }) => {
 
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState();
+  const [isVisible, setIsVisible] = useState(false);
+  const [events, setEvents] = useState([]);
   // const [modalVisible, setModalVisible] = useState(false);
 
   // setModalVisible(visible) {
@@ -63,6 +66,7 @@ const Chatroom = ({ navigation }) => {
   };
   useEffect(() => {
     fetchMessages();
+    getEvents();
   }, [route.params._id]);
 
   // useEffect to connect socket.io-client to socket.io server side
@@ -91,6 +95,16 @@ const Chatroom = ({ navigation }) => {
   const onChangeMessageHandler = (message) => {
     setNewMessage(message);
   };
+
+  const getEvents = async () => {
+    try {
+      const response = await trackerApi.get("/api/events/getEventsForUser");
+      console.log(response.data);
+      setEvents(response.data);
+    } catch (error) {
+      
+    }
+  }
 
   return (
     <SafeAreaView style={styles.main_container}>
@@ -122,7 +136,7 @@ const Chatroom = ({ navigation }) => {
         <View style={styles.top_area}>
           <TouchableOpacity
             style={styles.top_btn_1}
-            onPress={() => setVisible(true)}
+            // onPress={() => setVisible(true)}
           >
             <Ionicons name="people" size={30} color="#ecebf3"></Ionicons>
             <Text style={styles.top_btn_1_text}>Members</Text>
@@ -136,12 +150,41 @@ const Chatroom = ({ navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.top_btn_2}
-            onPress={() => console.log("pressed")}
+            onPress={() => {
+              getEvents();
+              setIsVisible(true);}}
           >
             <Ionicons name="calendar-sharp" size={30} color="#ecebf3"></Ionicons>
             <Text style={styles.top_btn_2_text}>Event List</Text>
           </TouchableOpacity>
         </View>
+
+        <Modal
+        visible={isVisible}    
+        transparent={true}
+        animationType="slide"
+        // onDismiss={() => {
+        //   setIsVisible(!isVisible);}}
+        >
+          <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
+
+          <View style={{backgroundColor: "white", width: '80%', paddingHorizontal: 20, paddingVertical: 30, borderRadius: 20}}>
+
+        <Text>Inside modal</Text>
+        <FlatList
+        data={events}
+        renderItem={({item}) => {
+          <View>
+          <Text>{item.title}</Text>
+          <Text>{item.desc}</Text>
+          <Text>{item.location}</Text>
+          </View>
+        }}
+        />
+          <Button title="close" onPress={() => setIsVisible(!isVisible)}></Button>
+          </View>
+          </View>
+        </Modal>
 
         {/* container for chat messages area */}
         <View style={styles.chat_area}>
