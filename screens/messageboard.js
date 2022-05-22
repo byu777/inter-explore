@@ -115,21 +115,6 @@ const mb_styles = StyleSheet.create({
     },
     elevation: 10,
   },
-  // list_item_description: {
-  //   flexWrap: "wrap",
-  //   justifyContent: "center",
-  //   flexShrink: 1,
-  //   flex: 4,
-  // },
-  // list_item_inbox: {
-  //   flexDirection: "row",
-  //   flex: 1,
-  //   margin: 10,
-  //   backgroundColor: "#78c0e0",
-  //   alignItems: "center",
-  //   justifyContent: "space-around",
-  //   borderRadius: 10,
-  // },
   left_icon: {
     flex: 2,
     marginLeft: 5,

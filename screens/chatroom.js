@@ -16,6 +16,7 @@ import {
   Dimensions,
   Pressable,
   StatusBar,
+  Alert,
 } from "react-native";
 import trackerApi from "../api/tracker";
 import { Context as AuthContext } from "./../context/AuthContext";
@@ -38,7 +39,7 @@ const Chatroom = ({ navigation }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState();
   const [isMemberVisible, setIsMemberVisible] = useState(false);
-  const [memberList, setMemberList] = useState([]);
+  const memberList = route.params.user;
 
   const fetchMessages = async () => {
     // if the 'unique id' doesnt match, its not user so exit
@@ -53,22 +54,22 @@ const Chatroom = ({ navigation }) => {
     } catch (error) {}
   };
 
-  const MemberList = async () => {
-    try {
-      const response = await trackerApi.get("/api/interests/getAllUsersInInterest")
-      console.log('hello?\n', response.data.user);
-      const json = await response.json();  //--> why doesnt this work?
-      setMemberList(json.user);
-      //console.log('got the user list??', res.data);
-      // for (let name of res.data) {
-      //   setMemberList(memberList => [...memberList, name]);
-      // }
-      //setMemberList(res.data);
-      
-    } catch (err) {
-      console.log(err);
-    }
-  }
+  // const MemberList = async () => {
+  //   try {
+  //     const response = await trackerApi.get("/api/interests/getAllUsersInInterest")
+  //     console.log('hello?\n', response.data.user);
+  //     const json = await response.json();  //--> why doesnt this work?
+  //     setMemberList(json.user);
+  //     //console.log('got the user list??', res.data);
+  //     // for (let name of res.data) {
+  //     //   setMemberList(memberList => [...memberList, name]);
+  //     // }
+  //     //setMemberList(res.data);
+
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }
 
   useEffect(() => {
     fetchMessages();
@@ -101,42 +102,35 @@ const Chatroom = ({ navigation }) => {
     setNewMessage(message);
   };
 
+  const users = route.params.user;
+  console.log("is this users?", users);
+
   return (
     <SafeAreaView style={styles.main_container}>
-      <ImageBackground source={image} style={styles.bg_image}>
-        
-        <Modal
+
+<Modal
           visible={isMemberVisible}
           transparent={true}
           animationType="slide"
-          // onDismiss={() => {
-          //   setIsVisible(!isVisible);}}
         >
-          <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center", flexDirection: 'column' }}
-          >
-            <View
-              style={{
-                backgroundColor: "white",
-                width: "80%",
-                paddingHorizontal: 20,
-                paddingVertical: 30,
-                borderRadius: 20,
-              }}
-            >
-              <Text>Members</Text>
-              <FlatList
-                data={memberList}
-                renderItem={({ item }) => {
-                  <View>
-                    <Text>{item.firstName}</Text>
-                    {/* <Text>{item.desc}</Text>
-                    <Text>{item.location}</Text> */}
-                  </View>
-                }}
-              />
+          <View style={styles.modal_container}>
+            <View style={styles.modalView}>
+              <Text style={styles.modal_title}>Members in {route.params.InterestName} </Text>
+
+              {/* Use SafeAreaView instead of ScrollView */}
+              <SafeAreaView style={styles.modal_flatlist}>
+                <FlatList
+                  data={users}
+                  keyExtractor={(item) => `${item._id}`}
+                  renderItem={({ item }) => {
+                    <View>
+                      <Text>{item.firstName}</Text>
+                    </View>;
+                  }}
+                />
+              </SafeAreaView>
+
               <TouchableOpacity
-                
                 onPress={() => setIsMemberVisible(!isMemberVisible)}
               >
                 <Text>Close</Text>
@@ -144,12 +138,14 @@ const Chatroom = ({ navigation }) => {
             </View>
           </View>
         </Modal>
+      <ImageBackground source={image} style={styles.bg_image}>
+        {/* MODAL */}
+        
 
         <View style={styles.top_area}>
           <TouchableOpacity
             style={styles.top_btn_1}
             onPress={() => {
-              MemberList();
               setIsMemberVisible(true);
             }}
           >
@@ -187,6 +183,7 @@ const Chatroom = ({ navigation }) => {
                   maxWidth: Dimensions.get("window").width * 0.75,
                   margin: 3,
                   flex: 1,
+                  elevation: 5,
                 }}
               >
                 <Text style={styles.chatMessagesText}>{item.content[0]}</Text>
@@ -203,7 +200,7 @@ const Chatroom = ({ navigation }) => {
             value={newMessage}
           />
           <TouchableOpacity style={styles.send_msg} onPress={sendMessage}>
-            <Ionicons name="send-sharp" size={35} color="#0e0e52"></Ionicons>
+            <Ionicons name="send-sharp" size={30} color="#0e0e52"></Ionicons>
           </TouchableOpacity>
         </View>
       </ImageBackground>
@@ -316,6 +313,73 @@ const styles = StyleSheet.create({
     flex: 2,
     marginLeft: 5,
   },
+  modal_container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 5,
+    width: 450,
+  },
+  modalView: {
+    margin: 5,
+    flex: 1,
+    backgroundColor: 'white',
+    borderRadius: 5,
+    padding: 5,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modal_flatlist: {
+    backgroundColor: "white",
+    flexDirection: 'column',
+    justifyContent: 'center',
+    width: 200,
+    //flexGrow: 1,
+    //width: "90%",
+    //paddingHorizontal: 5,
+    //paddingVertical: 5,
+    borderRadius: 5,
+    shadowColor: "#000000",
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    shadowOffset: {
+      height: 1,
+      width: 1,
+    },
+    elevation: 7,
+  },
+  modal_title: {
+    textAlign: "center",
+    fontFamily: "Montserrat-Regular",
+  },
+  modal_rows: {
+    flexDirection: "row",
+    backgroundColor: "#E6E6FB",
+    //flexGrow: 1,
+    borderRadius: 10,
+    // paddingTop: 15,
+    // paddingBottom: 15,
+    // marginTop: 15,
+    // marginBottom: 15,
+    height: 50,
+    textAlign: "center",
+    shadowColor: "#000000",
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    shadowOffset: {
+      height: 1,
+      width: 1,
+    },
+    elevation: 5,
+  },
+  
 });
 
 export default Chatroom;
