@@ -1,6 +1,5 @@
 const asyncHandler = require("express-async-handler");
 const interests = require("../router/models/interestGroup");
-const Users = require("../router/models/Users");
 const User = require("../router/models/Users");
 
 //Run each function and update the collection
@@ -10,7 +9,8 @@ const User = require("../router/models/Users");
 const fetchChats = asyncHandler(async (req, res) => {
   try {
     //console.log(req);
-      interests.find({ users: { $elemMatch: { $eq: req._id } } })
+    interests
+      .find({ users: { $elemMatch: { $eq: req._id } } })
       .populate("user", "-password")
       .populate("latestMessage")
       .sort({ updatedAt: -1 })
@@ -120,81 +120,87 @@ const getAllInterests = asyncHandler(async (req, res) => {
   }
 });
 
-// Grabs all users from database and returns them as the whole object array
-const getAllUsers = asyncHandler(async (req, res) => {
+// Grab the users associated with that interest
+const getAllUsersInInterest = asyncHandler(async (req, res) => {
   try {
-    const allUsers = await User.find();
-    res.send(allUsers);
-    console.log('sent all users');
+    await interests.find({ InterestName: {$eq:"basketball"}}, (err, result) => {
+      if (!err) {
+        res.send(result)
+      }
+    });
+    // const listNames = [];
+    // for (i = 0; i < allUsers.length; i++) {
+    //   let firstName = allUsers[i].firstName.toString();
+    //   listNames[i] = firstName;
+    // }
+    //res.send(interestObj.data);
+    //console.log('sent all users', listNames);
   } catch (error) {
     console.log(error);
   }
 });
 
-  
-  const updateUserProfile = asyncHandler(async (req, res) => {
+const updateUserProfile = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.body._id);
 
-    const user = await User.findById(req.body._id);
-  
-    if (user) {
-      user.firstName = req.body.firstName || user.firstName;
-      user.email = req.body.email || user.email;
-      user.primaryInterest = req.body.primaryInterest || user.primaryInterest;
-      user.secondaryInterest = req.body.secondaryInterest|| user.secondaryInterest;
-      user.pic = req.body.pic|| user.pic;
-      if (req.body.password) {
-        user.password = req.body.password;
-      }
-  
-      const updatedUser = await user.save();
-      res.json(updatedUser)
-  
-    } else {
-      res.status(404);
-      throw new Error("User Not Found");
+  if (user) {
+    user.firstName = req.body.firstName || user.firstName;
+    user.email = req.body.email || user.email;
+    user.primaryInterest = req.body.primaryInterest || user.primaryInterest;
+    user.secondaryInterest =
+      req.body.secondaryInterest || user.secondaryInterest;
+    user.pic = req.body.pic || user.pic;
+    if (req.body.password) {
+      user.password = req.body.password;
     }
-  });
 
-  const Deleteinterest = asyncHandler(async (req, res) => {
-    const interest = await interests.findById(req.body._id);
-    
-    // if (interest.user.toString() !== req.user._id.toString()) {
-    //   res.status(401);
-    //   throw new Error("You can't perform this action");
-    // }
-  
-    if (interest) {
-      await interest.remove();
-      res.json({ message: " Removed" });
-    } else {
-      res.status(404);
-      throw new Error("ound");
-    }
-  });
+    const updatedUser = await user.save();
+    res.json(updatedUser);
+  } else {
+    res.status(404);
+    throw new Error("User Not Found");
+  }
+});
 
-  const updateInterest = asyncHandler(async (req, res) => {
-    const interest = await interests.findById(req.body._id);
-    if (interest) {
-      interest.review = false
-  
-      const updatedInterest = await interest.save();
-      res.json(updatedInterest)
-  
-    } else {
-      res.status(404);
-      throw new Error("User Not Found");
-    }
-  });
+const Deleteinterest = asyncHandler(async (req, res) => {
+  const interest = await interests.findById(req.body._id);
 
-  module.exports = {
-    fetchChats,
-    createGroupChat,
-    addToGroup,
-    removeFromGroup,
-    getInterestNames,
-    getAllInterests,
-    getAllUsers,
-    updateUserProfile,
-    Deleteinterest,
-    updateInterest
-  };
+  // if (interest.user.toString() !== req.user._id.toString()) {
+  //   res.status(401);
+  //   throw new Error("You can't perform this action");
+  // }
+
+  if (interest) {
+    await interest.remove();
+    res.json({ message: " Removed" });
+  } else {
+    res.status(404);
+    throw new Error("ound");
+  }
+});
+
+const updateInterest = asyncHandler(async (req, res) => {
+  const interest = await interests.findById(req.body._id);
+  if (interest) {
+    interest.review = false;
+
+    const updatedInterest = await interest.save();
+    res.json(updatedInterest);
+  } else {
+    res.status(404);
+    throw new Error("User Not Found");
+  }
+});
+
+module.exports = {
+  fetchChats,
+  createGroupChat,
+  addToGroup,
+  removeFromGroup,
+  getInterestNames,
+  getAllInterests,
+  getAllUsersInInterest,
+  updateUserProfile,
+  Deleteinterest,
+  updateInterest,
+};

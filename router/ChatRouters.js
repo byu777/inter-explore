@@ -7,7 +7,7 @@ const {
   getInterestNames,
   getAllInterests,
   Deleteinterest,
-  getAllUsers,
+  getAllUsersInInterest,
   updateUserProfile,
   updateInterest
 } = require("../api/ChatRoute");
@@ -21,7 +21,7 @@ router.route("/groupdelete").put(Deleteinterest);
 router.route("/updateInterest").post(updateInterest);
 router.route("/getInterestNames").get(getInterestNames);
 router.route("/getAllInterests").get(getAllInterests);
-router.route("/getAllUsers").get(getAllUsers);
+router.route("/getAllUsersInInterest").get(getAllUsersInInterest);
 router.route("/profile").post(updateUserProfile);
 
 

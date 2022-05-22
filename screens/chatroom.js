@@ -30,12 +30,6 @@ import * as Device from "expo-device";
 
 const image = require("../assets/images/bg2.jpg");
 
-const MembersList = ({ firstName }) => (
-  <View>
-    <Text>{firstName}</Text>
-  </View>
-)
-
 const Chatroom = ({ navigation }) => {
   const { state } = useContext(AuthContext);
   const route = useRoute();
@@ -43,11 +37,8 @@ const Chatroom = ({ navigation }) => {
 
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState();
-  // const [modalVisible, setModalVisible] = useState(false);
-
-  // setModalVisible(visible) {
-  //   setModalVisible({modalVisible: visible});
-  // }
+  const [isMemberVisible, setIsMemberVisible] = useState(false);
+  const [memberList, setMemberList] = useState([]);
 
   const fetchMessages = async () => {
     // if the 'unique id' doesnt match, its not user so exit
@@ -61,6 +52,23 @@ const Chatroom = ({ navigation }) => {
       setMessages(response.data);
     } catch (error) {}
   };
+
+  const MemberList = async () => {
+    try {
+      const response = await trackerApi.get("/api/interests/getAllUsersInInterest")
+      console.log('hello?\n', response.data.user);
+      const json = await response.json();  //--> why doesnt this work?
+      setMemberList(json.user);
+      //console.log('got the user list??', res.data);
+      // for (let name of res.data) {
+      //   setMemberList(memberList => [...memberList, name]);
+      // }
+      //setMemberList(res.data);
+      
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   useEffect(() => {
     fetchMessages();
@@ -96,34 +104,54 @@ const Chatroom = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.main_container}>
       <ImageBackground source={image} style={styles.bg_image}>
-
-      {/* <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-          setModalVisible(!modalVisible);
-        }}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>Hello World!</Text>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}>
-              <Text style={styles.textStyle}>Hide Modal</Text>
-            </Pressable>
+        
+        <Modal
+          visible={isMemberVisible}
+          transparent={true}
+          animationType="slide"
+          // onDismiss={() => {
+          //   setIsVisible(!isVisible);}}
+        >
+          <View
+            style={{ flex: 1, justifyContent: "center", alignItems: "center", flexDirection: 'column' }}
+          >
+            <View
+              style={{
+                backgroundColor: "white",
+                width: "80%",
+                paddingHorizontal: 20,
+                paddingVertical: 30,
+                borderRadius: 20,
+              }}
+            >
+              <Text>Members</Text>
+              <FlatList
+                data={memberList}
+                renderItem={({ item }) => {
+                  <View>
+                    <Text>{item.firstName}</Text>
+                    {/* <Text>{item.desc}</Text>
+                    <Text>{item.location}</Text> */}
+                  </View>
+                }}
+              />
+              <TouchableOpacity
+                
+                onPress={() => setIsMemberVisible(!isMemberVisible)}
+              >
+                <Text>Close</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </Modal>
-      <Pressable style={[styles.button, styles.buttonOpen]} onPress={() => setModalVisible(true)}>
-        <Text style={styles.textStyle}>Show Modal</Text>
-      </Pressable> */}
+        </Modal>
 
         <View style={styles.top_area}>
           <TouchableOpacity
             style={styles.top_btn_1}
-            onPress={() => setVisible(true)}
+            onPress={() => {
+              MemberList();
+              setIsMemberVisible(true);
+            }}
           >
             <Ionicons name="people" size={30} color="black"></Ionicons>
             <Text style={styles.top_btn_1_text}>Members</Text>
@@ -175,7 +203,7 @@ const Chatroom = ({ navigation }) => {
             value={newMessage}
           />
           <TouchableOpacity style={styles.send_msg} onPress={sendMessage}>
-            <Ionicons name="send-sharp" size={35} color="#d00000"></Ionicons>
+            <Ionicons name="send-sharp" size={35} color="#0e0e52"></Ionicons>
           </TouchableOpacity>
         </View>
       </ImageBackground>
@@ -209,8 +237,8 @@ const styles = StyleSheet.create({
   top_area: {
     flexDirection: "row",
     flex: 3,
-    //paddingTop: Device.brand == "Apple" ? StatusBar.currentHeight : StatusBar.currentHeight - 5,
-    paddingTop: StatusBar.currentHeight,
+    paddingTop: Device.brand == "Apple" ? StatusBar.currentHeight : 0,
+    //paddingTop: StatusBar.currentHeight,
   },
   top_btn_1: {
     flex: 3,
@@ -251,11 +279,11 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 15,
     borderWidth: 1,
-    borderColor: 'black',
-    alignItems: 'center',
-    alignContent: 'center',
-    justifyContent: 'center',
-    position: 'absolute',
+    borderColor: "black",
+    alignItems: "center",
+    alignContent: "center",
+    justifyContent: "center",
+    position: "absolute",
     bottom: 10,
     left: 10,
   },
@@ -263,18 +291,18 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     alignSelf: "flex-start",
     justifyContent: "flex-end",
-    alignContent: 'center',
-    alignItems: 'center',
+    alignContent: "center",
+    alignItems: "center",
     flex: 8,
-    color: '#000001',
+    color: "#000001",
   },
   send_msg: {
     flex: 2,
     backgroundColor: "transparent",
     justifyContent: "center",
-    alignContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'center',
+    alignContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
   },
   ChatMessages: {
     width: "100%",
