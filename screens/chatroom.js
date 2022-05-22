@@ -10,7 +10,6 @@ import {
   TouchableOpacity,
   TextInput,
   KeyboardAvoidingView,
-  Modal,
   ScrollView,
   ImageBackground,
   Dimensions,
@@ -22,6 +21,7 @@ import trackerApi from "../api/tracker";
 import { Context as AuthContext } from "./../context/AuthContext";
 import io from "socket.io-client";
 import { Ionicons } from "@expo/vector-icons";
+import { Modal, Portal, Provider } from "react-native-paper";
 
 // Current url is localhost, after deployment will change to url where application is deployed
 // Variables needed for socket.io
@@ -45,7 +45,11 @@ const Chatroom = ({ navigation }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState();
   const [isVisible, setIsVisible] = useState(false);
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState([
+    {title: "Event 1", desc: "Baseball", location: "Central park"},
+    {title: "Event 2", desc: "Baseball", location: "Central park"},
+    {title: "Event 3", desc: "Baseball", location: "Central park"}
+  ]);
   // const [modalVisible, setModalVisible] = useState(false);
 
   // setModalVisible(visible) {
@@ -67,7 +71,10 @@ const Chatroom = ({ navigation }) => {
   useEffect(() => {
     fetchMessages();
   }, [route.params._id]);
-
+  useEffect(() => {
+    getEvents();
+  }, []);
+  console.log(events);
   // useEffect to connect socket.io-client to socket.io server side
   // useEffect(() => {
   //   console.log("running");
@@ -99,14 +106,14 @@ const Chatroom = ({ navigation }) => {
     try {
       const response = await trackerApi.get("/api/events/getEventsForUser");
       console.log("Response successful! Response of events below:");
-      console.log(response.data);
-      setEvents(response.data);
+      // setEvents(response.data);
     } catch (error) {
       console.log(error);
     }
   }
 
   return (
+    <Provider>
     <SafeAreaView style={styles.main_container}>
       <ImageBackground source={image} style={styles.bg_image}>
 
@@ -152,7 +159,6 @@ const Chatroom = ({ navigation }) => {
             style={styles.top_btn_2}
             onPress={() => {
               getEvents();
-              console.log(events);
               setIsVisible(true);}}
           >
             <Ionicons name="calendar-sharp" size={30} color="#ecebf3"></Ionicons>
@@ -160,20 +166,32 @@ const Chatroom = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
+      <Portal>
         <Modal
-        visible={isVisible}    
+        visible={isVisible}  
+        contentContainerStyle={{backgroundColor: "white", padding: 20}}
         // transparent={true}
-        animationType="slide"
         // onDismiss={() => {
         //   setIsVisible(!isVisible);}}
         >
-          <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
+          {/* <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
 
-          <View style={{backgroundColor: "white", width: '80%', paddingHorizontal: 20, paddingVertical: 30, borderRadius: 20}}>
+          <View style={{backgroundColor: "white", width: '80%', paddingHorizontal: 20, paddingVertical: 30, borderRadius: 20}}> */}
 
         <Text>Inside modal</Text>
         <Text>User ID: {route.params._id}</Text>
         <Text>{route.params.InterestName}</Text>
+        <Text>{route.params.InterestName}</Text>
+        <Text>{route.params.InterestName}</Text>
+        <Text>{route.params.InterestName}</Text>
+        <Text>{route.params.InterestName}</Text>
+        <Text>{route.params.InterestName}</Text>
+        <Text>{route.params.InterestName}</Text>
+        <Text>{route.params.InterestName}</Text>
+        <Text>{route.params.InterestName}</Text>
+        <ScrollView>
+          <View onStartShouldSetResponder={true}>
+
         <FlatList
         data={events}
         keyExtractor={item => item._id}
@@ -183,12 +201,16 @@ const Chatroom = ({ navigation }) => {
           <Text>{item.desc}</Text>
           <Text>{item.location}</Text>
           </View>
+          {console.log(item);}
         }}
         />
+          </View>
+        </ScrollView>
           <Button title="close" onPress={() => setIsVisible(!isVisible)}></Button>
-          </View>
-          </View>
+          {/* </View>
+          </View> */}
         </Modal>
+        </Portal>
         {/* <FlatList
         data={events}
         extraData={events}
@@ -201,7 +223,18 @@ const Chatroom = ({ navigation }) => {
           </View>
         }}
         /> */}
-
+        {/* <FlatList
+        data={events}
+        keyExtractor={item => item._id}
+        renderItem={({item}) => {
+          <View style={{flex: 1, flexDirection: "column", backgroundColor: "green"}}>
+          <Text>{item.title}</Text>
+          <Text>{item.desc}</Text>
+          <Text>{item.location}</Text>
+          </View>
+          {console.log(item);}
+        }}
+        /> */}
         {/* container for chat messages area */}
         <View style={styles.chat_area}>
           <FlatList
@@ -245,6 +278,7 @@ const Chatroom = ({ navigation }) => {
         </View>
       </ImageBackground>
     </SafeAreaView>
+    </Provider>
   );
 };
 

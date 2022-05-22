@@ -40,6 +40,15 @@ const getEventsForUser = asyncHandler(async (req, res) => {
     let scInterest = "";
     let id = "62872068c5c74b2fab7097c3";
     console.log(id);
+    console.log(req.body.page);
+    if (req.body.page == "chatroom") {
+      //execute code to grab events from chatroom page
+      console.log("Go to chatroom");
+    }
+    else {
+      console.log("Go to events page");
+      //execute code to grab events from the events page "event"
+    }
     //any way to reference current logged in user's primary/secondary interest?
     //grabs users primary and secondary interests
      User.findById(id, function(err, docs) {
@@ -88,12 +97,14 @@ const getEventsForUser = asyncHandler(async (req, res) => {
     allEvents.push(primaryInt[0].currentEvents[0]);
     //grab the interests under the users secondary interests, then populate the currentEvents array with the actual event details
     const secondaryInt = await interests.find({InterestName: scInterest}).populate('currentEvents', 'title desc location');
+    console.log("Secondary interests: ");
     console.log(secondaryInt[0].currentEvents[0].title);
     console.log(secondaryInt[0].currentEvents[0].desc);
     console.log(secondaryInt[0].currentEvents[0].location);
     console.log(secondaryInt);
     console.log(secondaryInt[0].currentEvents);
     allEvents.push(secondaryInt[0].currentEvents[0]);
+    //state.user._id
     //returns array of events that are apart of the interest
     res.send(allEvents);
     // const eventsItemSecondary = interests.findOne({InterestName: scInterest}).populate('currentEvents', 'title desc location').exec(function(err, item) {
