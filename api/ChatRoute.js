@@ -73,7 +73,6 @@ const addToGroup = asyncHandler(async (req, res) => {
 });
 
 const removeFromGroup = asyncHandler(async (req, res) => {
-  console.log(req.body);
   const { chatId, userId } = req.body;
   const removed = await interests
     .findByIdAndUpdate(
@@ -85,8 +84,7 @@ const removeFromGroup = asyncHandler(async (req, res) => {
         new: true,
       }
     )
-    .populate("users", "-password")
-    .populate("groupAdmin", "-password");
+    .populate("user", "-password");
 
   if (!removed) {
     res.status(404);

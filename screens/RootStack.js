@@ -39,8 +39,7 @@ const RootStack = () => {
                 <Stack.Screen name="Login" component={Login} />
                 <Stack.Screen name="Signup" component={Signup} />
                 <Stack.Screen name="Tab" component={Tab} />
-                <Stack.Screen name="EditProfile" component={EditProfile} 
-                options={{headerShown: true}}/>
+                <Stack.Screen name="EditProfile" component={EditProfile}/>
                 <Stack.Screen name="Chatroom" component={Chatroom} 
                 options={{headerShown: true, title: ""}} />
                 <Stack.Screen name="MessageBoardPage" component={MessageBoardPage} />

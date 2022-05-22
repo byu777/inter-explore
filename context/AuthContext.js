@@ -164,7 +164,7 @@ async function removeFromInterests(user) {
 
       // api call to add user to group chat based on interest id and user id
       let interestID = listOfInterests[i]._id.toString();
-      const res = await trackerApi.put("/api/interests/removeFromGroup", {"chatId": interestID, "userId": userID});
+      const res = await trackerApi.put("/api/interests/groupremove", {"chatId": interestID, "userId": userID});
     }
   }
 }
@@ -221,10 +221,9 @@ const updateProfile = (user) => async (dispatch, getState) => {
     };
 
 
-    const updateUserInterests = (dispatch) => async (newUser, oldUser) => {
+    const addUserInterests = (dispatch) => async (newUser) => {
       try {
         
-        removeFromInterests({oldUser});
         addToInterests(newUser);
         await AsyncStorage.setItem('token', response.data.token);
         await dispatch({type: 'setUser', payload: response.data.user})
@@ -236,12 +235,24 @@ const updateProfile = (user) => async (dispatch, getState) => {
       } catch (err) {
 
 
-        await dispatch({type: 'add_error', payload: 'Something went wrong with updating interests'})
+        await dispatch({type: 'add_error', payload: ''})
+      }
+    };
+
+
+    const removeUserInterests = (dispatch) => async (oldUser) => {
+      try {
+        
+        removeFromInterests(oldUser);
+
+      } catch (err) {
+
+        await dispatch({type: 'add_error', payload: 'error in removing'})
       }
     };
 
 export const { Provider, Context } = createDataContext(
   authReducer,
-  { signin, signout, signup, clearErrorMessage, getInterests,updateUserInterests},
+  { signin, signout, signup, clearErrorMessage, getInterests,addUserInterests,removeUserInterests},
   { token: null, errorMessage: '', user: null, interests: null}
 );
