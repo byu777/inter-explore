@@ -38,9 +38,10 @@ const getEventsForUser = asyncHandler(async (req, res) => {
   try {
     let prInterest = "";
     let scInterest = "";
-    let id = "6286fe54ad1caf1af51d7b7f";
+    let id = "62872068c5c74b2fab7097c3";
     console.log(id);
     //any way to reference current logged in user's primary/secondary interest?
+    //grabs users primary and secondary interests
      User.findById(id, function(err, docs) {
       if (err) {
         console.log(err)
@@ -57,22 +58,59 @@ const getEventsForUser = asyncHandler(async (req, res) => {
     // scInterest = User.secondaryInterest;
     const eventList = await events.find();
     let allEvents = [];
-    const eventsItem = interests.findOne({InterestName: prInterest}).populate('currentEvents', 'title desc location').exec(function(err, item) {
-      if (err) {
-        console.log("error")
-      }
-      console.log(item);
-      // console.log(item.currentEvents[0].title);
-      // console.log(item.currentEvents[0].desc);
-      // console.log(item.currentEvents[0].location);
-      // console.log(item.currentEvents);
-      // console.log(item.currentEvents.desc);
-      // console.log(item.currentEvents.location);
-      // console.log(item.currentEvents.date);
-      res.send(item)
-    });
+    //finds the event details of the secondary interests
+    console.log("Primary Interests:");
+    // const eventsItemPrimary = interests.findOne({InterestName: prInterest}).populate('currentEvents', 'title desc location').exec(function(err, item) {
+    //   if (err) {
+    //     console.log("error")
+    //   }
+    //   console.log(item.currentEvents[0].title);
+    //   console.log(item.currentEvents[0].desc);
+    //   console.log(item.currentEvents[0].location);
+    //   console.log("Current events tied to interest below: ");
+    //   console.log(item.currentEvents);
+    //   // console.log(item.currentEvents.desc);
+    //   // console.log(item.currentEvents.location);
+    //   // console.log(item.currentEvents.date);
+    // });
+    //grab the interests under the users primary interests, then populate the currentEvents array with the actual event details
+    const primaryInt = await interests.find({InterestName: prInterest}).populate('currentEvents', 'title desc location');
+    //prints details of event in array
+    console.log(primaryInt[0].currentEvents[0].title);
+    console.log(primaryInt[0].currentEvents[0].desc);
+    console.log(primaryInt[0].currentEvents[0].location);
+    //prints JS object with selected fields in populate
+    console.log(primaryInt[0].currentEvents[0]);
+    //prints one entry in primary interest
+    console.log(primaryInt);
+    //prints array of events that can be referenced
+    console.log(primaryInt[0].currentEvents)
+    allEvents.push(primaryInt[0].currentEvents[0]);
+    //grab the interests under the users secondary interests, then populate the currentEvents array with the actual event details
+    const secondaryInt = await interests.find({InterestName: scInterest}).populate('currentEvents', 'title desc location');
+    console.log(secondaryInt[0].currentEvents[0].title);
+    console.log(secondaryInt[0].currentEvents[0].desc);
+    console.log(secondaryInt[0].currentEvents[0].location);
+    console.log(secondaryInt);
+    console.log(secondaryInt[0].currentEvents);
+    allEvents.push(secondaryInt[0].currentEvents[0]);
+    //returns array of events that are apart of the interest
+    res.send(allEvents);
+    // const eventsItemSecondary = interests.findOne({InterestName: scInterest}).populate('currentEvents', 'title desc location').exec(function(err, item) {
+    //   if (err) {
+    //     console.log("error")
+    //   }
+    //   console.log(item.currentEvents[0].title);
+    //   console.log(item.currentEvents[0].desc);
+    //   console.log(item.currentEvents[0].location);
+    //   console.log("Current events tied to interest below: ");
+    //   // results.push(item.currentEvents);
+    //   // console.log(item.currentEvents.desc);
+    //   // console.log(item.currentEvents.location);
+    //   // console.log(item.currentEvents.date);
+      
+    // });
     // console.log(eventsItem);
-    
     // check if event contains the primary or secondary interest; if so, add to 'allEvents'
     for (let i = 0; i < eventList.length; i++) {
       if (eventList[i].primaryInterest == prInterest || eventList[i].secondaryInterest == scInterest ) {

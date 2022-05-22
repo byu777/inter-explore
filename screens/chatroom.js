@@ -98,10 +98,11 @@ const Chatroom = ({ navigation }) => {
   const getEvents = async () => {
     try {
       const response = await trackerApi.get("/api/events/getEventsForUser");
+      console.log("Response successful! Response of events below:");
       console.log(response.data);
       setEvents(response.data);
     } catch (error) {
-      
+      console.log(error);
     }
   }
 
@@ -151,6 +152,7 @@ const Chatroom = ({ navigation }) => {
             style={styles.top_btn_2}
             onPress={() => {
               getEvents();
+              console.log(events);
               setIsVisible(true);}}
           >
             <Ionicons name="calendar-sharp" size={30} color="#ecebf3"></Ionicons>
@@ -160,7 +162,7 @@ const Chatroom = ({ navigation }) => {
 
         <Modal
         visible={isVisible}    
-        transparent={true}
+        // transparent={true}
         animationType="slide"
         // onDismiss={() => {
         //   setIsVisible(!isVisible);}}
@@ -170,10 +172,13 @@ const Chatroom = ({ navigation }) => {
           <View style={{backgroundColor: "white", width: '80%', paddingHorizontal: 20, paddingVertical: 30, borderRadius: 20}}>
 
         <Text>Inside modal</Text>
+        <Text>User ID: {route.params._id}</Text>
+        <Text>{route.params.InterestName}</Text>
         <FlatList
         data={events}
+        keyExtractor={item => item._id}
         renderItem={({item}) => {
-          <View>
+          <View style={{flex: 1, flexDirection: "column", backgroundColor: "green"}}>
           <Text>{item.title}</Text>
           <Text>{item.desc}</Text>
           <Text>{item.location}</Text>
@@ -184,6 +189,18 @@ const Chatroom = ({ navigation }) => {
           </View>
           </View>
         </Modal>
+        {/* <FlatList
+        data={events}
+        extraData={events}
+        keyExtractor={item => item._id}
+        renderItem={({item}) => {
+          <View style={{flex: 1, flexDirection: "column"}}>
+          <Text>{item.title}</Text>
+          <Text>{item.desc}</Text>
+          <Text>{item.location}</Text>
+          </View>
+        }}
+        /> */}
 
         {/* container for chat messages area */}
         <View style={styles.chat_area}>
