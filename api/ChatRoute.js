@@ -186,6 +186,20 @@ const getAllUsers = asyncHandler(async (req, res) => {
     }
   });
 
+  const updateInterestName = asyncHandler(async (req, res) => {
+    try {
+      const updatedInterest = await interests.updateOne({
+        InterestName: req.body.InterestNameOld
+      },
+      {InterestName: req.body.InterestNameNew})
+      res.send(updatedInterest.acknowledged);
+      res.send("Matched documents: " + updatedInterest.matchedCount);
+      res.send("Updated documents: " + updatedInterest.modifiedCount);
+    } catch (error) {
+      
+    }
+  })
+
   module.exports = {
     fetchChats,
     createGroupChat,

@@ -168,14 +168,14 @@ const Signup = ({ navigation }) => {
                   <ButtonText>Signup</ButtonText>
                 </StyledButton>
                 <ExtraView>
-                  <ExtraText>Already have an account?</ExtraText>
+                  <ExtraText>Already have an account? </ExtraText>
                     <TextLink onPress={() => navigation.navigate("Login")}>
                     <TextLinkContent>Login</TextLinkContent>
                   </TextLink>
                 </ExtraView>
                 <Line/>
                 <ExtraView>
-                  <ExtraText>Want to suggest a new interest?</ExtraText>
+                  <ExtraText>Want to suggest a new interest? </ExtraText>
                     <TextLink onPress={() => navigation.navigate("Suggestions")}>
                     <TextLinkContent>Click Here</TextLinkContent>
                   </TextLink>
