@@ -71,9 +71,6 @@ const Chatroom = ({ navigation }) => {
   useEffect(() => {
     fetchMessages();
   }, [route.params._id]);
-  useEffect(() => {
-    getEvents();
-  }, []);
   console.log(events);
   // useEffect to connect socket.io-client to socket.io server side
   // useEffect(() => {
@@ -104,9 +101,15 @@ const Chatroom = ({ navigation }) => {
 
   const getEvents = async () => {
     try {
-      const response = await trackerApi.get("/api/events/getEventsForUser");
+      console.log(state.user._id);
+      console.log("type of id: " + typeof(state.user._id));
+      const response = await trackerApi.get("/api/events/getEventsForUser",
+      {
+        id: "6286fe54ad1caf1af51d7b7f"
+    }
+      );
       console.log("Response successful! Response of events below:");
-      // setEvents(response.data);
+      setEvents(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -179,20 +182,17 @@ const Chatroom = ({ navigation }) => {
           <View style={{backgroundColor: "white", width: '80%', paddingHorizontal: 20, paddingVertical: 30, borderRadius: 20}}> */}
 
         <Text>Inside modal</Text>
-        <Text>User ID: {route.params._id}</Text>
-        <Text>{route.params.InterestName}</Text>
-        <Text>{route.params.InterestName}</Text>
-        <Text>{route.params.InterestName}</Text>
-        <Text>{route.params.InterestName}</Text>
-        <Text>{route.params.InterestName}</Text>
-        <Text>{route.params.InterestName}</Text>
-        <Text>{route.params.InterestName}</Text>
-        <Text>{route.params.InterestName}</Text>
-        <Text>{route.params.InterestName}</Text>
         <ScrollView>
-          <View onStartShouldSetResponder={true}>
+        <Text>User ID: {route.params._id}</Text>
+        {events.map((item) => 
+        <View>
+          <Text>{item.title}</Text>
+          <Text>{item.desc}</Text>
+          <Text>{item.location}</Text>
+        </View>
+        )}
 
-        <FlatList
+        {/* <FlatList
         data={events}
         keyExtractor={item => item._id}
         renderItem={({item}) => {
@@ -203,8 +203,7 @@ const Chatroom = ({ navigation }) => {
           </View>
           {console.log(item);}
         }}
-        />
-          </View>
+        /> */}
         </ScrollView>
           <Button title="close" onPress={() => setIsVisible(!isVisible)}></Button>
           {/* </View>
