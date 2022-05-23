@@ -78,6 +78,20 @@ const Adminpage = () => {
       ]);
   };
 
+  const editInterests = item => {
+    const editInterests = interests.filter(interest => interest._id != item._id);
+
+    Alert.alert('Confirm', 'Edit Interest?', [
+        {
+          text: 'Yes',
+          onPress: () => {}
+        },
+        {
+          text: 'No',
+        },
+      ]);
+  };
+
   const clearAllinterests = () => {
     Alert.alert('Confirm', 'Clear interests?', [
       {
@@ -115,7 +129,7 @@ const Adminpage = () => {
             <Icon name="delete" size={20} color="white" />
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => rejectInterests(interests)}>
+        <TouchableOpacity onPress={() => editInterests(interests)}>
           <View style={[styles.actionIcon, {backgroundColor: 'blue'}]}>
             <Icon name="edit" size={20} color="white" />
           </View>
