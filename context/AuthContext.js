@@ -166,6 +166,8 @@ async function getReviewInterests() {
     }
   }
   return interestsToReview
+}
+
 async function removeFromInterests(user) {
 
   // Variables
@@ -210,80 +212,85 @@ async function userInterests(user) {
 }
 
 const updateProfile = (user) => async (dispatch, getState) => {
-      try {
-        await dispatch({ type: 'user_update_request' });
+  try {
+    await dispatch({ type: 'user_update_request' });
 
-        const config = {
-          headers: {
-            "Content-Type": "application/json"
-          },
-        };
-        
-        const { data } = await trackerApi.post("/api/interests/profile", user, config);
+    const config = {
+      headers: {
+        "Content-Type": "application/json"
+      },
+    };
     
-        await dispatch({ type: 'setUser', payload: data });
-            // dispatch({ type: 'login', payload: data });
+    const { data } = await trackerApi.post("/api/interests/profile", user, config);
 
+    await dispatch({ type: 'setUser', payload: data });
+        // dispatch({ type: 'login', payload: data });
+
+
+    AsyncStorage.setItem("userInfo", JSON.stringify(data));
+  } catch (error) {
+    dispatch({
+      type: 'user_update_fail',
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+const addNewInterest = (dispatch) => async (InterestName, review) => {
+  try {
+    const response = await trackerApi.post('/api/interests/group', 
+    {
+        InterestName: InterestName,
+        review: review
+    })
+    await dispatch({ type: 'newInterest', payload: 'Yes'});
+    console.log(response);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
+const addUserInterests = (dispatch) => async (newUser) => {
+  try {
     
-        AsyncStorage.setItem("userInfo", JSON.stringify(data));
-      } catch (error) {
-        dispatch({
-          type: 'user_update_fail',
-          payload:
-            error.response && error.response.data.message
-              ? error.response.data.message
-              : error.message,
-        });
-      }
-    };
+    addToInterests(newUser);
+    await AsyncStorage.setItem('token', response.data.token);
+    await dispatch({type: 'setUser', payload: response.data.user})
 
-    const addNewInterest = (dispatch) => async (InterestName, review) => {
-      try {
-        const response = await trackerApi.post('/api/interests/group', 
-        {
-            InterestName: InterestName,
-            review: review
-        })
-        await dispatch({ type: 'newInterest', payload: 'Yes'});
-        console.log(response);
-      } catch (error) {
-        console.log(error);
-      }
-  };
+    // Set user interests chat groups to state
+    const chatGroups = await userInterests(response.data.user);
+    await dispatch({type: 'userInterests', payload: chatGroups});
+
+  } catch (err) {
 
 
-    const addUserInterests = (dispatch) => async (newUser) => {
-      try {
-        
-        addToInterests(newUser);
-        await AsyncStorage.setItem('token', response.data.token);
-        await dispatch({type: 'setUser', payload: response.data.user})
-  
-        // Set user interests chat groups to state
-        const chatGroups = await userInterests(response.data.user);
-        await dispatch({type: 'userInterests', payload: chatGroups});
-
-      } catch (err) {
+    await dispatch({type: 'add_error', payload: ''})
+  }
+};
 
 
-        await dispatch({type: 'add_error', payload: ''})
-      }
-    };
+const removeUserInterests = (dispatch) => async (oldUser) => {
+  try {
+    
+    removeFromInterests(oldUser);
 
+  } catch (err) {
 
-    const removeUserInterests = (dispatch) => async (oldUser) => {
-      try {
-        
-        removeFromInterests(oldUser);
-
-      } catch (err) {
-
-        await dispatch({type: 'add_error', payload: 'error in removing'})
-      }
-    };
+    await dispatch({type: 'add_error', payload: 'error in removing'})
+  }
+};
 
 export const { Provider, Context } = createDataContext(
   authReducer,
-  { signin, signout, signup, clearErrorMessage, getInterests,addUserInterests,removeUserInterests, addNewInterest},
+  { signin, signout, signup, clearErrorMessage, getInterests,addUserInterests,removeUserInterests},
   { token: null, errorMessage: '', user: null, interests: null}
-)};
+);
+
+
+
+
+    
