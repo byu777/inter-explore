@@ -24,6 +24,16 @@ import io from "socket.io-client";
 import { Ionicons } from "@expo/vector-icons";
 import * as Device from "expo-device";
 
+// fonts
+import Apploading from "expo-app-loading";
+import { useFonts } from "expo-font";
+import { Asap_400Regular } from "@expo-google-fonts/asap";
+import {
+  Montserrat_400Regular,
+  Montserrat_700Bold,
+} from "@expo-google-fonts/montserrat";
+import { Rajdhani_400Regular } from "@expo-google-fonts/rajdhani";
+
 // Current url is localhost, after deployment will change to url where application is deployed
 // Variables needed for socket.io
 // const ENDPOINT = "http://localhost:3000";
@@ -54,22 +64,12 @@ const Chatroom = ({ navigation }) => {
     } catch (error) {}
   };
 
-  // const MemberList = async () => {
-  //   try {
-  //     const response = await trackerApi.get("/api/interests/getAllUsersInInterest")
-  //     console.log('hello?\n', response.data.user);
-  //     const json = await response.json();  //--> why doesnt this work?
-  //     setMemberList(json.user);
-  //     //console.log('got the user list??', res.data);
-  //     // for (let name of res.data) {
-  //     //   setMemberList(memberList => [...memberList, name]);
-  //     // }
-  //     //setMemberList(res.data);
-
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }
+  let [fontsLoaded] = useFonts({
+    Asap_400Regular,
+    Montserrat_400Regular,
+    Montserrat_700Bold,
+    Rajdhani_400Regular,
+  });
 
   useEffect(() => {
     fetchMessages();
@@ -105,42 +105,42 @@ const Chatroom = ({ navigation }) => {
   const users = route.params.user;
   console.log("is this users?", users);
 
+  if (!fontsLoaded) {
+    return <Apploading />;
+  }
+
   return (
     <SafeAreaView style={styles.main_container}>
+      <Modal visible={isMemberVisible} transparent={true} animationType="slide">
+        <View style={styles.modal_container}>
+          <View style={styles.modalView}>
+            <Text style={styles.modal_title}>
+              Members in {route.params.InterestName}{" "}
+            </Text>
 
-<Modal
-          visible={isMemberVisible}
-          transparent={true}
-          animationType="slide"
-        >
-          <View style={styles.modal_container}>
-            <View style={styles.modalView}>
-              <Text style={styles.modal_title}>Members in {route.params.InterestName} </Text>
+            {/* Use SafeAreaView instead of ScrollView */}
+            <SafeAreaView style={styles.modal_flatlist}>
+              <FlatList
+                data={users}
+                keyExtractor={(item) => `${item._id}`}
+                renderItem={({ item }) => {
+                  <View>
+                    <Text>{item.firstName}</Text>
+                  </View>;
+                }}
+              />
+            </SafeAreaView>
 
-              {/* Use SafeAreaView instead of ScrollView */}
-              <SafeAreaView style={styles.modal_flatlist}>
-                <FlatList
-                  data={users}
-                  keyExtractor={(item) => `${item._id}`}
-                  renderItem={({ item }) => {
-                    <View>
-                      <Text>{item.firstName}</Text>
-                    </View>;
-                  }}
-                />
-              </SafeAreaView>
-
-              <TouchableOpacity
-                onPress={() => setIsMemberVisible(!isMemberVisible)}
-              >
-                <Text>Close</Text>
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity
+              onPress={() => setIsMemberVisible(!isMemberVisible)}
+            >
+              <Text>Close</Text>
+            </TouchableOpacity>
           </View>
-        </Modal>
+        </View>
+      </Modal>
       <ImageBackground source={image} style={styles.bg_image}>
         {/* MODAL */}
-        
 
         <View style={styles.top_area}>
           <TouchableOpacity
@@ -323,11 +323,11 @@ const styles = StyleSheet.create({
   modalView: {
     margin: 5,
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 5,
     padding: 5,
-    alignItems: 'center',
-    shadowColor: '#000',
+    alignItems: "center",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -338,13 +338,9 @@ const styles = StyleSheet.create({
   },
   modal_flatlist: {
     backgroundColor: "white",
-    flexDirection: 'column',
-    justifyContent: 'center',
+    flexDirection: "column",
+    justifyContent: "center",
     width: 200,
-    //flexGrow: 1,
-    //width: "90%",
-    //paddingHorizontal: 5,
-    //paddingVertical: 5,
     borderRadius: 5,
     shadowColor: "#000000",
     shadowOpacity: 0.8,
@@ -357,17 +353,12 @@ const styles = StyleSheet.create({
   },
   modal_title: {
     textAlign: "center",
-    fontFamily: "Montserrat-Regular",
+    fontFamily: "MontserratRegular",
   },
   modal_rows: {
     flexDirection: "row",
     backgroundColor: "#E6E6FB",
-    //flexGrow: 1,
     borderRadius: 10,
-    // paddingTop: 15,
-    // paddingBottom: 15,
-    // marginTop: 15,
-    // marginBottom: 15,
     height: 50,
     textAlign: "center",
     shadowColor: "#000000",
@@ -379,7 +370,6 @@ const styles = StyleSheet.create({
     },
     elevation: 5,
   },
-  
 });
 
 export default Chatroom;

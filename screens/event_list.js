@@ -13,52 +13,49 @@ import {
 } from "react-native";
 import trackerApi from "../api/tracker";
 import { Context as AuthContext } from "./../context/AuthContext";
+
+// fonts
+import Apploading from "expo-app-loading";
 import { useFonts } from "expo-font";
+import { Asap_400Regular } from "@expo-google-fonts/asap";
+import {
+  Montserrat_400Regular,
+  Montserrat_700Bold,
+} from "@expo-google-fonts/montserrat";
+import { Rajdhani_400Regular } from "@expo-google-fonts/rajdhani";
 
-// expo notifications imports
-import * as Device from "expo-device";
-import * as Notifications from "expo-notifications";
+// // expo notifications imports
+// import * as Device from "expo-device";
+// import * as Notifications from "expo-notifications";
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-  }),
-});
+// Notifications.setNotificationHandler({
+//   handleNotification: async () => ({
+//     shouldShowAlert: true,
+//     shouldPlaySound: false,
+//     shouldSetBadge: false,
+//   }),
+// });
 
 const Event = ({ title, date, time, desc, location, item }) => (
   <TouchableOpacity
     style={styles.row_container}
-    onPress={async () => {
-      await schedulePushNotification("You clicked on");
-    }}
+    // onPress={async () => {
+    //   await schedulePushNotification("You clicked on");
+    // }}
   >
     <View style={styles.date_time}>
       <View>
-        <Text style={styles.time_text}>
-          {date}
-        </Text>
+        <Text style={styles.time_text}>{date}</Text>
       </View>
 
       <View>
-        <Text style={styles.time_text}>
-          {time}
-        </Text>
+        <Text style={styles.time_text}>{time}</Text>
       </View>
     </View>
 
     <View style={styles.desc_area}>
-      <Text
-        style={styles.desc_title}
-      >
-        {title}
-      </Text>
-      <Text
-        style={styles.desc_text}
-      >
-        {location}
-      </Text>
+      <Text style={styles.desc_title}>{title}</Text>
+      <Text style={styles.desc_text}>{location}</Text>
     </View>
   </TouchableOpacity>
 );
@@ -66,78 +63,85 @@ const Event = ({ title, date, time, desc, location, item }) => (
 export default function EventList() {
   const { state } = useContext(AuthContext);
 
-  // -------------------expo notification----------------------------
-  const [expoPushToken, setExpoPushToken] = useState("");
-  //const [isSubscribed, setIsSubscribed] = useState(false);
-  const [notification, setNotification] = useState(false);
-  const notiListener = useRef();
-  const respListener = useRef();
+  let [fontsLoaded] = useFonts({
+    Asap_400Regular,
+    Montserrat_400Regular,
+    Montserrat_700Bold,
+    Rajdhani_400Regular,
+  });
 
-  useEffect(() => {
-    registerForPushNotificationsAsync().then((token) =>
-      setExpoPushToken(token)
-    );
+  // ----------------- Commented out section is the EXPO notifications --------------------
+  // const [expoPushToken, setExpoPushToken] = useState("");
+  // //const [isSubscribed, setIsSubscribed] = useState(false);
+  // const [notification, setNotification] = useState(false);
+  // const notiListener = useRef();
+  // const respListener = useRef();
 
-    notiListener.current = Notifications.addNotificationReceivedListener(
-      (notification) => {
-        setNotification(notification);
-      }
-    );
+  // useEffect(() => {
+  //   registerForPushNotificationsAsync().then((token) =>
+  //     setExpoPushToken(token)
+  //   );
 
-    respListener.current =
-      Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log(response);
-      });
+  //   notiListener.current = Notifications.addNotificationReceivedListener(
+  //     (notification) => {
+  //       setNotification(notification);
+  //     }
+  //   );
 
-    return () => {
-      Notifications.removeNotificationSubscription(notiListener.current);
-      Notifications.removeNotificationSubscription(respListener.current);
-    };
-  }, []);
+  //   respListener.current =
+  //     Notifications.addNotificationResponseReceivedListener((response) => {
+  //       console.log(response);
+  //     });
 
-  async function schedulePushNotification(item) {
-    await Notifications.scheduleNotificationAsync({
-      identifier: "upcoming-event",
-      content: {
-        title: "Event upcoming!",
-        body: "Make sure to mark this down on your calendar!",
-        data: { data: item },
-      },
-      trigger: { seconds: 2, repeats: false },
-    });
-  }
+  //   return () => {
+  //     Notifications.removeNotificationSubscription(notiListener.current);
+  //     Notifications.removeNotificationSubscription(respListener.current);
+  //   };
+  // }, []);
 
-  async function registerForPushNotificationsAsync() {
-    let token;
-    if (Device.isDevice) {
-      const { status: existingStatus } =
-        await Notifications.getPermissionsAsync();
-      let finalStatus = existingStatus;
-      if (existingStatus !== "granted") {
-        const { status } = await Notifications.requestPermissionsAsync();
-        finalStatus = status;
-      }
-      if (finalStatus !== "granted") {
-        alert("Failed to get push token for push notification!");
-        return;
-      }
-      token = (await Notifications.getExpoPushTokenAsync()).data;
-      console.log(token);
-    } else {
-      alert("Must use physical device for Push Notifications");
-    }
+  // async function schedulePushNotification(item) {
+  //   await Notifications.scheduleNotificationAsync({
+  //     identifier: "upcoming-event",
+  //     content: {
+  //       title: "Event upcoming!",
+  //       body: "Make sure to mark this down on your calendar!",
+  //       data: { data: item },
+  //     },
+  //     trigger: { seconds: 2, repeats: false },
+  //   });
+  // }
 
-    if (Platform.OS === "android") {
-      Notifications.setNotificationChannelAsync("default", {
-        name: "default",
-        importance: Notifications.AndroidImportance.MAX,
-        vibrationPattern: [0, 250, 250, 250],
-        lightColor: "#FF231F7C",
-      });
-    }
+  // async function registerForPushNotificationsAsync() {
+  //   let token;
+  //   if (Device.isDevice) {
+  //     const { status: existingStatus } =
+  //       await Notifications.getPermissionsAsync();
+  //     let finalStatus = existingStatus;
+  //     if (existingStatus !== "granted") {
+  //       const { status } = await Notifications.requestPermissionsAsync();
+  //       finalStatus = status;
+  //     }
+  //     if (finalStatus !== "granted") {
+  //       alert("Failed to get push token for push notification!");
+  //       return;
+  //     }
+  //     token = (await Notifications.getExpoPushTokenAsync()).data;
+  //     console.log(token);
+  //   } else {
+  //     alert("Must use physical device for Push Notifications");
+  //   }
 
-    return token;
-  }
+  //   if (Platform.OS === "android") {
+  //     Notifications.setNotificationChannelAsync("default", {
+  //       name: "default",
+  //       importance: Notifications.AndroidImportance.MAX,
+  //       vibrationPattern: [0, 250, 250, 250],
+  //       lightColor: "#FF231F7C",
+  //     });
+  //   }
+
+  //   return token;
+  // }
 
   const renderItem = ({ item }) => (
     <Event
@@ -183,7 +187,8 @@ export default function EventList() {
   const [events, setEvents] = useState([
     {
       title: "Basketball game",
-      location: "Lorem ipsum yoyoyoyoyoyo Lorem ipsum yoyoyoyoyoyoLorem ipsum yoyoyoyoyoyoLorem ipsum yoyoyoyoyoyoLorem ipsum yoyoyoyoyoyoLorem ipsum yoyoyoyoyoyoLorem ipsum yoyoyoyoyoyoLorem ipsum yoyoyoyoyoyoLorem ipsum yoyoyoyoyoyoLorem ipsum yoyoyoyoyoyo",
+      location:
+        "Lorem ipsum yoyoyoyoyoyo Lorem ipsum yoyoyoyoyoyoLorem ipsum yoyoyoyoyoyoLorem ipsum yoyoyoyoyoyoLorem ipsum yoyoyoyoyoyoLorem ipsum yoyoyoyoyoyoLorem ipsum yoyoyoyoyoyoLorem ipsum yoyoyoyoyoyoLorem ipsum yoyoyoyoyoyoLorem ipsum yoyoyoyoyoyo",
       date: "May 25, 2022",
       time: "6 PM",
       desc: "etc.",
@@ -263,29 +268,15 @@ export default function EventList() {
     },
   ]);
 
-  let [fontsLoaded] = useFonts({
-    "Asap-Bold": require("../assets/fonts/Asap-Bold.ttf"),
-    "Asap-Medium": require("../assets/fonts/Asap-Medium.ttf"),
-    "Asap-Regular": require("../assets/fonts/Asap-Regular.ttf"),
-    "Rajdhani-Bold": require("../assets/fonts/Rajdhani-Bold.ttf"),
-    "Rajdhani-Light": require("../assets/fonts/Rajdhani-Light.ttf"),
-    "Rajdhani-Medium": require("../assets/fonts/Rajdhani-Medium.ttf"),
-    "Rajdhani-Regular": require("../assets/fonts/Rajdhani-Regular.ttf"),
-    "Koulen-Regular": require("../assets/fonts/Koulen-Regular.ttf"),
-    "Montserrat-Black": require("../assets/fonts/Montserrat-Black.ttf"),
-    "Montserrat-Regular": require("../assets/fonts/Montserrat-Regular.ttf"),
-    "Montserrat-Bold": require("../assets/fonts/Montserrat-Bold.ttf"),
-    "SourceSansPro-Bold": require("../assets/fonts/SourceSansPro-Bold.ttf"),
-    "SourceSansPro-Light": require("../assets/fonts/SourceSansPro-Light.ttf"),
-  });
+  if (!fontsLoaded) {
+    return <Apploading />;
+  }
 
   return (
     <SafeAreaView style={styles.container}>
       {/* <Text style={{ fontSize: 10 }}>Push token: {expoPushToken} </Text> */}
-      
-      <Text style={styles.header}>
-        Upcoming Events
-      </Text>
+
+      <Text style={styles.header}>Upcoming Events</Text>
 
       {/* <View style={{ alignItems: "center", justifyContent: "center" }}>
         <Text>Title: {notification && notification.request.content.title}</Text>
@@ -309,7 +300,6 @@ export default function EventList() {
   );
 }
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -328,7 +318,7 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     shadowOffset: {
       height: 1,
-      width: 1
+      width: 1,
     },
     elevation: 10,
   },
@@ -337,10 +327,10 @@ const styles = StyleSheet.create({
     marginTop: 25,
     textAlign: "center",
     alignItems: "center",
-    fontSize: 25, 
-    //alignSelf: "flex-start", 
-    fontFamily: "Montserrat-Bold",
-    color: '#03045e',
+    fontSize: 25,
+    //alignSelf: "flex-start",
+    fontFamily: "Montserrat_400Regular",
+    color: "#03045e",
   },
   row_container: {
     flexDirection: "row",
@@ -357,19 +347,19 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     shadowOffset: {
       height: 1,
-      width: 1
+      width: 1,
     },
     elevation: 10,
   },
   time_text: {
-    textAlign: "center", 
-    color: '#150578',
-    fontFamily: 'Montserrat-Bold',
+    textAlign: "center",
+    color: "#150578",
+    fontFamily: 'Montserrat_400Regular',
     fontSize: 20,
     paddingBottom: 10,
   },
   date_time: {
-    flexDirection: 'column',
+    flexDirection: "column",
     flex: 2,
     paddingTop: 5,
   },
@@ -378,25 +368,27 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     fontSize: 24,
     width: 250,
-    textAlign: 'center',
-    justifyContent: 'space-around',
+    textAlign: "center",
+    justifyContent: "space-around",
+    alignItems: 'center',
   },
   desc_title: {
     fontSize: 25,
     flex: 1,
     flexWrap: "wrap",
-    alignSelf: 'center',
-    justifyContent: 'flex-start',
-    alignContent: 'center',
-    fontFamily: 'SourceSansPro-Regular',
-    color: '#150578',
+    alignSelf: "center",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    fontFamily: 'Montserrat_400Regular',
+    color: "#150578",
+    paddingTop: 5,
   },
   desc_text: {
     fontSize: 14,
     flex: 5,
     color: "#449dd1",
-    flexWrap: 'wrap',
-    fontFamily: 'SourceSansPro-Regular',
+    flexWrap: "wrap",
+    fontFamily: 'Rajdhani_400Regular',
     padding: 5,
     marginLeft: 5,
   },
