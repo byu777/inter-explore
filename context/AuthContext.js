@@ -133,6 +133,8 @@ const getInterests = (dispatch) => async () => {
 // interests for the user, then uses those interest Id's and the user Id's to add the user to the proper group chats
 async function addToInterests(user) {
 
+  console.log(user);
+
   // Variables
   let primary = user.primaryInterest;
   let secondary = user.secondaryInterest;
@@ -164,6 +166,26 @@ async function getReviewInterests() {
     }
   }
   return interestsToReview
+async function removeFromInterests(user) {
+
+  // Variables
+  let primary = user.primaryInterest;
+  let secondary = user.secondaryInterest;
+  let userID = user._id;
+
+  // api call to get interests
+  const response = await trackerApi.get("/api/interests/getAllInterests")
+  const listOfInterests = response.data;
+
+  // Loop through all interests to find matches.
+  for(let i = 0; i < listOfInterests.length; i++) {
+    if (listOfInterests[i].InterestName == primary || listOfInterests[i].InterestName == secondary) {
+
+      // api call to add user to group chat based on interest id and user id
+      let interestID = listOfInterests[i]._id.toString();
+      const res = await trackerApi.put("/api/interests/groupremove", {"chatId": interestID, "userId": userID});
+    }
+  }
 }
 
 async function userInterests(user) {
@@ -186,8 +208,6 @@ async function userInterests(user) {
     }
     return userInterests;
 }
-
-
 
 const updateProfile = (user) => async (dispatch, getState) => {
       try {
@@ -232,8 +252,38 @@ const updateProfile = (user) => async (dispatch, getState) => {
   };
 
 
+    const addUserInterests = (dispatch) => async (newUser) => {
+      try {
+        
+        addToInterests(newUser);
+        await AsyncStorage.setItem('token', response.data.token);
+        await dispatch({type: 'setUser', payload: response.data.user})
+  
+        // Set user interests chat groups to state
+        const chatGroups = await userInterests(response.data.user);
+        await dispatch({type: 'userInterests', payload: chatGroups});
+
+      } catch (err) {
+
+
+        await dispatch({type: 'add_error', payload: ''})
+      }
+    };
+
+
+    const removeUserInterests = (dispatch) => async (oldUser) => {
+      try {
+        
+        removeFromInterests(oldUser);
+
+      } catch (err) {
+
+        await dispatch({type: 'add_error', payload: 'error in removing'})
+      }
+    };
+
 export const { Provider, Context } = createDataContext(
   authReducer,
-  { signin, signout, signup, clearErrorMessage, getInterests, addNewInterest},
-  { token: null, errorMessage: '', user: null, interests: null, newInterest: '', reviewInterests: []}
-);
+  { signin, signout, signup, clearErrorMessage, getInterests,addUserInterests,removeUserInterests, addNewInterest},
+  { token: null, errorMessage: '', user: null, interests: null}
+)};

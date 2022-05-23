@@ -16,7 +16,7 @@ import trackerApi from "../api/tracker";
 
 export default function Profile({navigation}) {
 
-  const {state,getInterests} = useContext(AuthContext);
+  const {state,getInterests,removeUserInterests} = useContext(AuthContext);
 
   const [image, setImage] = useState(null);
   const [name, setName] = useState(null);
@@ -33,9 +33,15 @@ export default function Profile({navigation}) {
     setEmail(state.user.email)
     setImage(state.user.pic)
     navigation.addListener("focus", () =>setLoading(!loading))
-    getInterests()
   
   }, [navigation,loading])
+
+  const goToEditProfile = () => {
+    console.log("go to edit profile")
+    console.log(state.user)
+    removeUserInterests(state.user);
+    navigation.navigate("EditProfile");
+  }
 
   const uploadPhoto = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -57,7 +63,7 @@ export default function Profile({navigation}) {
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.titleBar}>
           <Ionicons name="ios-arrow-back" size={24} color="#52575D"></Ionicons>
-          <TouchableOpacity onPress={() => navigation.navigate("EditProfile")}>
+          <TouchableOpacity onPress={() => goToEditProfile()}>
           <Ionicons
             name="pencil-outline"
             size={24}

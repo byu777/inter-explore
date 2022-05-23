@@ -26,7 +26,7 @@ import trackerApi from "../api/tracker";
 
 const EditProfileScreen = ({ navigation }) => {
 
-  const {state, getInterests} = useContext(AuthContext);
+  const {state, getInterests, addUserInterests} = useContext(AuthContext);
 
   const newUser = state.user;
 
@@ -36,8 +36,9 @@ const EditProfileScreen = ({ navigation }) => {
     newUser.email = values.email
     newUser.primaryInterest = values.primaryInterest
     newUser.secondaryInterest = values.secondaryInterest
-    console.log(newUser)
+    console.log(state.user)
     await trackerApi.post("/api/interests/profile", newUser);
+    addUserInterests(newUser);
   }catch(err){
 
     console.log(err)
@@ -53,10 +54,10 @@ const EditProfileScreen = ({ navigation }) => {
           <PageTitle>Inter-Explore</PageTitle>
           <Formik
             initialValues={{
-              email: "",
-              firstName: "",
-              primaryInterest: "",
-              secondaryInterest: "",
+              email: state.user.email,
+              firstName: state.user.firstName,
+              primaryInterest: state.user.primaryInterest,
+              secondaryInterest: state.user.secondaryInterest,
               pic:state.user.pic
             }}
             onSubmit={(values) => {
@@ -77,14 +78,16 @@ const EditProfileScreen = ({ navigation }) => {
               <StyledFormArea>
                 <MyTextInput
                   label="Name"
-                  placeholder={''}
+                  placeholder={state.user.firstName}
+                  placeholderTextColor="#666666"
                   onChangeText={handleChange("firstName")}
                   onBlur={handleBlur("firstName")}
                   values={values.name}
                 />
                 <MyTextInput
                   label="Email Address"
-                  placeholder={''}
+                  placeholder={state.user.email}
+                  placeholderTextColor="#666666"
                   onChangeText={handleChange("email")}
                   onBlur={handleBlur("email")}
                   values={values.email}
@@ -95,7 +98,7 @@ const EditProfileScreen = ({ navigation }) => {
                   onSelect={(selectedItem) => {
                     values.primaryInterest = selectedItem;
                   }}
-                  defaultButtonText={'Select Primary Interest'}
+                  defaultButtonText={state.user.primaryInterest}
                   buttonTextAfterSelection={(selectedItem) => {
                     return selectedItem;
                   }}
@@ -117,7 +120,7 @@ const EditProfileScreen = ({ navigation }) => {
                   onSelect={(selectedItem) => {
                     values.secondaryInterest = selectedItem;
                   }}
-                  defaultButtonText={'Select Secondary Interest'}
+                  defaultButtonText={state.user.secondaryInterest}
                   buttonTextAfterSelection={(selectedItem) => {
                     return selectedItem;
                   }}
