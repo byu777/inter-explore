@@ -11,12 +11,11 @@ import {
 
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Context as AuthContext } from "./../context/AuthContext";
-import { useFonts } from "expo-font";
 
-const Room = ({ title, navigation, chat }) => (
+const Room = ({ title, navigation, chat, img }) => (
   <View style={mb_styles.row_container}>
     <Ionicons
-      name={"basketball"}
+      name={img}
       size={55}
       color="#2323D1"
       style={mb_styles.left_icon}
@@ -58,7 +57,7 @@ export default function MessageBoardPage({ navigation }) {
   });
 
   const renderItem = ({ item }) => (
-    <Room title={item.InterestName} navigation={navigation} chat={item} />
+    <Room title={item.InterestName} navigation={navigation} chat={item} img={item.icon_string} />
   );
 
   return (
