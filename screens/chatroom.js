@@ -48,7 +48,6 @@ const Chatroom = ({ navigation }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState();
   const [isMemberVisible, setIsMemberVisible] = useState(false);
-  //const memberList = route.params.user;
 
   const fetchMessages = async () => {
     // if the 'unique id' doesnt match, its not user so exit
@@ -102,19 +101,21 @@ const Chatroom = ({ navigation }) => {
   };
 
   const users = route.params.user;
-  console.log("is this users?", users);
+  //console.log("is this users?", users);
 
   if (!fontsLoaded) {
     return <Apploading />;
   }
 
   return (
-    <Provider>
-      <SafeAreaView style={styles.main_container}>
-        <Portal>
+    <SafeAreaView style={styles.main_container}>
+      <ImageBackground source={image} style={styles.bg_image}>
+        {/* MODAL */}
+
           <Modal
             visible={isMemberVisible}
             contentContainerStyle={styles.modal_container}
+            transparent={true}
           >
             <Text style={styles.modal_title}>
               Members in {route.params.InterestName}{" "}
@@ -123,8 +124,8 @@ const Chatroom = ({ navigation }) => {
             <ScrollView>
               {/* <Text>User ID: {route.params._id}</Text> */}
               {users.map((item) => (
-                <View>
-                  <Text>{item.firstName}</Text>
+                <View style={styles.each_modal_member}>
+                  <Text style={styles.each_modal_text}> {item.firstName} </Text>
                 </View>
               ))}
             </ScrollView>
@@ -134,102 +135,73 @@ const Chatroom = ({ navigation }) => {
             >
               <Text>Close</Text>
             </TouchableOpacity>
-            {/* <View style={styles.modal_container}>
-            <View style={styles.modalView}>
-              <Text style={styles.modal_title}>
-                Members in {route.params.InterestName}{" "}
-              </Text>
 
-              
-              <SafeAreaView style={styles.modal_flatlist}>
-                <FlatList
-                  data={users}
-                  keyExtractor={(item) => `${item._id}`}
-                  renderItem={({ item }) => {
-                    <View>
-                      <Text>{item.firstName}</Text>
-                    </View>;
-                  }}
-                />
-              </SafeAreaView>
-
-              <TouchableOpacity
-                onPress={() => setIsMemberVisible(!isMemberVisible)}
-              >
-                <Text>Close</Text>
-              </TouchableOpacity>
-            </View>
-          </View> */}
           </Modal>
-        </Portal>
 
-        <ImageBackground source={image} style={styles.bg_image}>
-          {/* MODAL */}
 
-          <View style={styles.top_area}>
-            <TouchableOpacity
-              style={styles.top_btn_1}
-              onPress={() => {
-                setIsMemberVisible(true);
-              }}
-            >
-              <Ionicons name="people" size={30} color="black"></Ionicons>
-              <Text style={styles.top_btn_1_text}>Members</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.top_btn_2}
-              onPress={() => navigation.navigate("CreateEvent")}
-            >
-              <Ionicons name="today-sharp" size={30} color="black"></Ionicons>
-              <Text style={styles.top_btn_2_text}>Make Event</Text>
-            </TouchableOpacity>
-          </View>
+        <View style={styles.top_area}>
+          <TouchableOpacity
+            style={styles.top_btn_1}
+            onPress={() => {
+              setIsMemberVisible(true);
+            }}
+          >
+            <Ionicons name="people" size={30} color="black"></Ionicons>
+            <Text style={styles.top_btn_1_text}>Members</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.top_btn_2}
+            onPress={() => navigation.navigate("CreateEvent")}
+          >
+            <Ionicons name="today-sharp" size={30} color="black"></Ionicons>
+            <Text style={styles.top_btn_2_text}>Make Event</Text>
+          </TouchableOpacity>
+        </View>
 
-          {/* container for chat messages area */}
-          <View style={styles.chat_area}>
-            <FlatList
-              data={messages}
-              style={styles.ChatMessages}
-              renderItem={({ item }) => (
-                <View
-                  style={{
-                    alignSelf: `${
-                      item.sender._id === state.user._id
-                        ? "flex-end"
-                        : "flex-start"
-                    }`,
-                    backgroundColor: `${
-                      item.sender._id === state.user._id ? "#c7d6d5" : "#6d7275"
-                    }`,
-                    borderRadius: 20,
-                    borderWidth: 1.5,
-                    borderColor: "black",
-                    maxWidth: Dimensions.get("window").width * 0.75,
-                    margin: 3,
-                    flex: 1,
-                    elevation: 5,
-                  }}
-                >
-                  <Text style={styles.chatMessagesText}>{item.content[0]}</Text>
-                </View>
-              )}
-            />
-          </View>
+        {/* container for chat messages area */}
+        <View style={styles.chat_area}>
+          <FlatList
+            data={messages}
+            style={styles.ChatMessages}
+            renderItem={({ item }) => (
+              <View
+                style={{
+                  alignSelf: `${
+                    item.sender._id === state.user._id
+                      ? "flex-end"
+                      : "flex-start"
+                  }`,
+                  backgroundColor: `${
+                    item.sender._id === state.user._id ? "#c7d6d5" : "#6d7275"
+                  }`,
+                  borderRadius: 20,
+                  borderWidth: 1.5,
+                  borderColor: "black",
+                  maxWidth: Dimensions.get("window").width * 0.75,
+                  margin: 3,
+                  flex: 1,
+                  elevation: 5,
+                }}
+              >
+                <Text style={styles.chatMessagesText}>{item.content[0]}</Text>
+              </View>
+            )}
+          />
+        </View>
 
-          <View style={styles.sendMessageArea}>
-            <TextInput
-              style={styles.typeMessage}
-              placeholder="Message..."
-              onChangeText={onChangeMessageHandler}
-              value={newMessage}
-            />
-            <TouchableOpacity style={styles.send_msg} onPress={sendMessage}>
-              <Ionicons name="send-sharp" size={30} color="#0e0e52"></Ionicons>
-            </TouchableOpacity>
-          </View>
-        </ImageBackground>
-      </SafeAreaView>
-    </Provider>
+        <View style={styles.sendMessageArea}>
+          <TextInput
+            style={styles.typeMessage}
+            placeholder="Message..."
+            onChangeText={onChangeMessageHandler}
+            value={newMessage}
+          />
+          <TouchableOpacity style={styles.send_msg} onPress={sendMessage}>
+            <Ionicons name="send-sharp" size={30} color="#0e0e52"></Ionicons>
+          </TouchableOpacity>
+        </View>
+      </ImageBackground>
+    </SafeAreaView>
   );
 };
 
@@ -340,10 +312,19 @@ const styles = StyleSheet.create({
   },
   modal_container: {
     flex: 1,
+    flexGrow: 1,
+    flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
+    alignSelf: "center",
+    backgroundColor: "white",
+    borderRadius: 10,
+    borderWidth: 1,
+    borderStyle: "solid",
+    elevation: 20,
     margin: 5,
-    width: 450,
+    width: "90%",
+    height: 200,
   },
   modalView: {
     margin: 5,
@@ -361,24 +342,36 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
-  modal_flatlist: {
-    backgroundColor: "white",
-    flexDirection: "column",
-    justifyContent: "center",
-    width: 200,
-    borderRadius: 5,
-    shadowColor: "#000000",
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    shadowOffset: {
-      height: 1,
-      width: 1,
-    },
-    elevation: 7,
+  // modal_flatlist: {
+  //   backgroundColor: "white",
+  //   flexDirection: "column",
+  //   justifyContent: "center",
+  //   width: 200,
+  //   borderRadius: 5,
+  //   shadowColor: "#000000",
+  //   shadowOpacity: 0.8,
+  //   shadowRadius: 2,
+  //   shadowOffset: {
+  //     height: 1,
+  //     width: 1,
+  //   },
+  //   elevation: 7,
+  // },
+  each_modal_member: {
+    paddingVertical: 10,
+  },
+  each_modal_text: {
+    textAlign: "center",
+    fontFamily: "Rajdhani_400Regular",
+    fontSize: 18,
   },
   modal_title: {
     textAlign: "center",
     fontFamily: "Montserrat_400Regular",
+    fontWeight: "300",
+    marginVertical: 20,
+    paddingVertical: 15,
+    fontSize: 22,
   },
   modal_rows: {
     flexDirection: "row",
