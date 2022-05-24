@@ -33,7 +33,6 @@ import {
 } from "@expo-google-fonts/montserrat";
 import { Rajdhani_400Regular } from "@expo-google-fonts/rajdhani";
 
-
 // Current url is localhost, after deployment will change to url where application is deployed
 // Variables needed for socket.io
 // const ENDPOINT = "http://localhost:3000";
@@ -57,9 +56,9 @@ const Chatroom = ({ navigation }) => {
   const [isMemberVisible, setIsMemberVisible] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [events, setEvents] = useState([
-    { title: "Event 1", desc: "Description here", location: "Location here" },
-    { title: "Event 2", desc: "Description here", location: "Location here" },
-    { title: "Event 3", desc: "Description here", location: "Location here" },
+    // { title: "Event 1", desc: "Description here", location: "Location here" },
+    // { title: "Event 2", desc: "Description here", location: "Location here" },
+    // { title: "Event 3", desc: "Description here", location: "Location here" },
   ]);
   const userId = state.user._id;
 
@@ -130,12 +129,22 @@ const Chatroom = ({ navigation }) => {
       });
       if (response.data.response == "undefined") {
         setEvents([
-          { title: "Unable to fetch title", desc: "n/a", location: "n/a" },
+          { title: "Unable to fetch events! Please try again.", desc: "", location: "" },
         ]);
       } else {
-        console.log(response.data);
-        console.log("Response successful! Response of events below:");
-        setEvents(response.data);
+        if (response.data.length == 0) {
+          setEvents([
+            {
+              title: "No events scheduled! Create one to interact with others.",
+              desc: "",
+              location: "",
+            },
+          ]);
+        } else {
+          console.log(response.data);
+          console.log("Response successful! Response of events below:");
+          setEvents(response.data);
+        }
       }
     } catch (error) {
       console.log(error);
@@ -184,7 +193,6 @@ const Chatroom = ({ navigation }) => {
         </Modal>
 
         <View style={styles.top_area}>
-
           <TouchableOpacity
             style={styles.top_btn_2}
             onPress={() => navigation.navigate("CreateEvent")}
@@ -194,46 +202,46 @@ const Chatroom = ({ navigation }) => {
           </TouchableOpacity>
 
           <TouchableOpacity
-              style={styles.top_btn_2}
-              onPress={() => {
-                console.log(userId);
-                getEvents();
-                setIsVisible(true);
-              }}
-            >
-              <Ionicons
-                name="calendar-sharp"
-                size={30}
-                color="#ecebf3"
-              ></Ionicons>
-              <Text style={styles.top_btn_2_text}>Event List</Text>
-            </TouchableOpacity>
-          </View>
+            style={styles.top_btn_2}
+            onPress={() => {
+              console.log(userId);
+              getEvents();
+              setIsVisible(true);
+            }}
+          >
+            <Ionicons
+              name="calendar-sharp"
+              size={30}
+              color="#ecebf3"
+            ></Ionicons>
+            <Text style={styles.top_btn_2_text}>Event List</Text>
+          </TouchableOpacity>
+        </View>
 
-          <Portal>
-            {/* Modal here is used from react-native-paper */}
-            <Modal
-              visible={isVisible}
-              contentContainerStyle={{ backgroundColor: "white", padding: 20 }}
+        <Portal>
+          {/* Modal here is used from react-native-paper */}
+          <Modal
+            visible={isVisible}
+            contentContainerStyle={styles.modal_container}
+          >
+            <Text style={styles.modal_title}>Upcoming Events</Text>
+            <ScrollView>
+              {events.map((item) => (
+                <View style={styles.modal_rows}>
+                  <Text style={styles.each_modal_text}>{item.title}</Text>
+                  <Text style={styles.each_modal_text}>{item.desc}</Text>
+                  <Text style={styles.each_modal_text}>{item.location}</Text>
+                </View>
+              ))}
+            </ScrollView>
+            <TouchableOpacity
+              style={styles.modal_close_btn}
+              onPress={() => setIsVisible(!isVisible)}
             >
-              <Text>Inside modal</Text>
-              <ScrollView>
-                <Text>User ID: {state.user._id}</Text>
-                {events.map((item) => (
-                  <View style={{ borderColor: "black", borderWidth: 10 }}>
-                    <Text>{item.title}</Text>
-                    <Text>{item.desc}</Text>
-                    <Text>{item.location}</Text>
-                  </View>
-                ))}
-              </ScrollView>
-              <Button
-                title="close"
-                onPress={() => setIsVisible(!isVisible)}
-              ></Button>
-            </Modal>
-          </Portal>
-        
+              <Text>Close</Text>
+            </TouchableOpacity>
+          </Modal>
+        </Portal>
 
         {/* container for chat messages area */}
         <View style={styles.chat_area}>
