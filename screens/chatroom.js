@@ -34,7 +34,7 @@ const MembersList = ({ firstName }) => (
   <View>
     <Text>{firstName}</Text>
   </View>
-)
+);
 
 const Chatroom = ({ navigation }) => {
   const { state } = useContext(AuthContext);
@@ -46,15 +46,11 @@ const Chatroom = ({ navigation }) => {
   const [newMessage, setNewMessage] = useState();
   const [isVisible, setIsVisible] = useState(false);
   const [events, setEvents] = useState([
-    {title: "Event 1", desc: "Baseball", location: "Central park"},
-    {title: "Event 2", desc: "Baseball", location: "Central park"},
-    {title: "Event 3", desc: "Baseball", location: "Central park"}
+    { title: "Event 1", desc: "Description here", location: "Location here" },
+    { title: "Event 2", desc: "Description here", location: "Location here" },
+    { title: "Event 3", desc: "Description here", location: "Location here" },
   ]);
-  // const [modalVisible, setModalVisible] = useState(false);
-
-  // setModalVisible(visible) {
-  //   setModalVisible({modalVisible: visible});
-  // }
+  const userId = state.user._id;
 
   const fetchMessages = async () => {
     // if the 'unique id' doesnt match, its not user so exit
@@ -102,181 +98,127 @@ const Chatroom = ({ navigation }) => {
   const getEvents = async () => {
     try {
       console.log(state.user._id);
-      console.log("type of id: " + typeof(state.user._id));
-      const response = await trackerApi.get("/api/events/getEventsForUser",
-      {
-        id: "6286fe54ad1caf1af51d7b7f"
-    }
-      );
-      console.log("Response successful! Response of events below:");
-      setEvents(response.data);
+      console.log(route.params.InterestName);
+      console.log("type of id: " + typeof state.user._id);
+      const response = await trackerApi.post("/api/events/getEventsForUser", {
+        id: state.user._id,
+        primaryInterest: route.params.InterestName,
+        secondaryInterest: state.user._id,
+        room: "chatroom",
+      });
+      if (response.data.response == "undefined") {
+        setEvents([
+          { title: "Unable to fetch title", desc: "n/a", location: "n/a" },
+        ]);
+      } else {
+        console.log(response.data);
+        console.log("Response successful! Response of events below:");
+        setEvents(response.data);
+      }
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   return (
     <Provider>
-    <SafeAreaView style={styles.main_container}>
-      <ImageBackground source={image} style={styles.bg_image}>
-
-      {/* <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-          setModalVisible(!modalVisible);
-        }}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>Hello World!</Text>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}>
-              <Text style={styles.textStyle}>Hide Modal</Text>
-            </Pressable>
+      <SafeAreaView style={styles.main_container}>
+        <ImageBackground source={image} style={styles.bg_image}>
+          <View style={styles.top_area}>
+            <TouchableOpacity style={styles.top_btn_1}>
+              <Ionicons name="people" size={30} color="#ecebf3"></Ionicons>
+              <Text style={styles.top_btn_1_text}>Members</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.top_btn_2}
+              onPress={() => navigation.navigate("CreateEvent")}
+            >
+              <Ionicons name="today-sharp" size={30} color="#ecebf3"></Ionicons>
+              <Text style={styles.top_btn_2_text}>Make Event</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.top_btn_2}
+              onPress={() => {
+                console.log(userId);
+                getEvents();
+                setIsVisible(true);
+              }}
+            >
+              <Ionicons
+                name="calendar-sharp"
+                size={30}
+                color="#ecebf3"
+              ></Ionicons>
+              <Text style={styles.top_btn_2_text}>Event List</Text>
+            </TouchableOpacity>
           </View>
-        </View>
-      </Modal>
-      <Pressable style={[styles.button, styles.buttonOpen]} onPress={() => setModalVisible(true)}>
-        <Text style={styles.textStyle}>Show Modal</Text>
-      </Pressable> */}
 
-        <View style={styles.top_area}>
-          <TouchableOpacity
-            style={styles.top_btn_1}
-            // onPress={() => setVisible(true)}
-          >
-            <Ionicons name="people" size={30} color="#ecebf3"></Ionicons>
-            <Text style={styles.top_btn_1_text}>Members</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.top_btn_2}
-            onPress={() => navigation.navigate("CreateEvent")}
-          >
-            <Ionicons name="today-sharp" size={30} color="#ecebf3"></Ionicons>
-            <Text style={styles.top_btn_2_text}>Make Event</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.top_btn_2}
-            onPress={() => {
-              getEvents();
-              setIsVisible(true);}}
-          >
-            <Ionicons name="calendar-sharp" size={30} color="#ecebf3"></Ionicons>
-            <Text style={styles.top_btn_2_text}>Event List</Text>
-          </TouchableOpacity>
-        </View>
-
-      <Portal>
-        <Modal
-        visible={isVisible}  
-        contentContainerStyle={{backgroundColor: "white", padding: 20}}
-        // transparent={true}
-        // onDismiss={() => {
-        //   setIsVisible(!isVisible);}}
-        >
-          {/* <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
-
-          <View style={{backgroundColor: "white", width: '80%', paddingHorizontal: 20, paddingVertical: 30, borderRadius: 20}}> */}
-
-        <Text>Inside modal</Text>
-        <ScrollView>
-        <Text>User ID: {route.params._id}</Text>
-        {events.map((item) => 
-        <View>
-          <Text>{item.title}</Text>
-          <Text>{item.desc}</Text>
-          <Text>{item.location}</Text>
-        </View>
-        )}
-
-        {/* <FlatList
-        data={events}
-        keyExtractor={item => item._id}
-        renderItem={({item}) => {
-          <View style={{flex: 1, flexDirection: "column", backgroundColor: "green"}}>
-          <Text>{item.title}</Text>
-          <Text>{item.desc}</Text>
-          <Text>{item.location}</Text>
+          <Portal>
+            {/* Modal here is used from react-native-paper */}
+            <Modal
+              visible={isVisible}
+              contentContainerStyle={{ backgroundColor: "white", padding: 20 }}
+            >
+              <Text>Inside modal</Text>
+              <ScrollView>
+                <Text>User ID: {state.user._id}</Text>
+                {events.map((item) => (
+                  <View style={{ borderColor: "black", borderWidth: 10 }}>
+                    <Text>{item.title}</Text>
+                    <Text>{item.desc}</Text>
+                    <Text>{item.location}</Text>
+                  </View>
+                ))}
+              </ScrollView>
+              <Button
+                title="close"
+                onPress={() => setIsVisible(!isVisible)}
+              ></Button>
+            </Modal>
+          </Portal>
+          {/* container for chat messages area */}
+          <View style={styles.chat_area}>
+            <FlatList
+              data={messages}
+              style={styles.ChatMessages}
+              renderItem={({ item }) => (
+                <View
+                  style={{
+                    alignSelf: `${
+                      item.sender._id === state.user._id
+                        ? "flex-end"
+                        : "flex-start"
+                    }`,
+                    backgroundColor: `${
+                      item.sender._id === state.user._id ? "#c7d6d5" : "#6d7275"
+                    }`,
+                    borderRadius: 20,
+                    borderWidth: 1.5,
+                    borderColor: "black",
+                    maxWidth: Dimensions.get("window").width * 0.75,
+                    margin: 3,
+                    flex: 1,
+                  }}
+                >
+                  <Text style={styles.chatMessagesText}>{item.content[0]}</Text>
+                </View>
+              )}
+            />
           </View>
-          {console.log(item);}
-        }}
-        /> */}
-        </ScrollView>
-          <Button title="close" onPress={() => setIsVisible(!isVisible)}></Button>
-          {/* </View>
-          </View> */}
-        </Modal>
-        </Portal>
-        {/* <FlatList
-        data={events}
-        extraData={events}
-        keyExtractor={item => item._id}
-        renderItem={({item}) => {
-          <View style={{flex: 1, flexDirection: "column"}}>
-          <Text>{item.title}</Text>
-          <Text>{item.desc}</Text>
-          <Text>{item.location}</Text>
-          </View>
-        }}
-        /> */}
-        {/* <FlatList
-        data={events}
-        keyExtractor={item => item._id}
-        renderItem={({item}) => {
-          <View style={{flex: 1, flexDirection: "column", backgroundColor: "green"}}>
-          <Text>{item.title}</Text>
-          <Text>{item.desc}</Text>
-          <Text>{item.location}</Text>
-          </View>
-          {console.log(item);}
-        }}
-        /> */}
-        {/* container for chat messages area */}
-        <View style={styles.chat_area}>
-          <FlatList
-            data={messages}
-            style={styles.ChatMessages}
-            renderItem={({ item }) => (
-              <View
-                style={{
-                  alignSelf: `${
-                    item.sender._id === state.user._id
-                      ? "flex-end"
-                      : "flex-start"
-                  }`,
-                  backgroundColor: `${
-                    item.sender._id === state.user._id ? "#c7d6d5" : "#6d7275"
-                  }`,
-                  borderRadius: 20,
-                  borderWidth: 1.5,
-                  borderColor: "black",
-                  maxWidth: Dimensions.get("window").width * 0.75,
-                  margin: 3,
-                  flex: 1,
-                }}
-              >
-                <Text style={styles.chatMessagesText}>{item.content[0]}</Text>
-              </View>
-            )}
-          />
-        </View>
 
-        <View style={styles.sendMessageArea}>
-          <TextInput
-            style={styles.typeMessage}
-            placeholder="Message..."
-            onChangeText={onChangeMessageHandler}
-            value={newMessage}
-          />
-          <TouchableOpacity style={styles.send_msg} onPress={sendMessage}>
-            <Ionicons name="send-sharp" size={35} color="#d00000"></Ionicons>
-          </TouchableOpacity>
-        </View>
-      </ImageBackground>
-    </SafeAreaView>
+          <View style={styles.sendMessageArea}>
+            <TextInput
+              style={styles.typeMessage}
+              placeholder="Message..."
+              onChangeText={onChangeMessageHandler}
+              value={newMessage}
+            />
+            <TouchableOpacity style={styles.send_msg} onPress={sendMessage}>
+              <Ionicons name="send-sharp" size={35} color="#d00000"></Ionicons>
+            </TouchableOpacity>
+          </View>
+        </ImageBackground>
+      </SafeAreaView>
     </Provider>
   );
 };
@@ -287,16 +229,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#90e0ef",
     flexDirection: "column",
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 600
+    justifyContent: "center",
+    alignItems: "center",
+    width: 600,
   },
   bg_image: {
     flex: 1,
     resizeMode: "cover",
     justifyContent: "center",
     opacity: 0.7,
-    width: 600
+    width: 600,
   },
 
   chat_area: {
@@ -306,14 +248,14 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     margin: 10,
     flex: 8,
-    width: 600
+    width: 600,
   },
 
   top_area: {
     flexDirection: "row",
     flex: 2,
     paddingTop: StatusBar.currentHeight,
-    width: 200
+    width: 200,
   },
   top_btn_1: {
     flex: 3,
@@ -354,11 +296,11 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 15,
     borderWidth: 1,
-    borderColor: 'black',
-    alignItems: 'center',
-    alignContent: 'center',
-    justifyContent: 'center',
-    position: 'absolute',
+    borderColor: "black",
+    alignItems: "center",
+    alignContent: "center",
+    justifyContent: "center",
+    position: "absolute",
     bottom: 10,
     left: 10,
   },
@@ -366,18 +308,18 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     alignSelf: "flex-start",
     justifyContent: "flex-end",
-    alignContent: 'center',
-    alignItems: 'center',
+    alignContent: "center",
+    alignItems: "center",
     flex: 8,
-    color: '#000001',
+    color: "#000001",
   },
   send_msg: {
     flex: 2,
     backgroundColor: "transparent",
     justifyContent: "center",
-    alignContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'center',
+    alignContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
   },
   ChatMessages: {
     width: "100%",

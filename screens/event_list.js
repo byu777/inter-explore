@@ -26,7 +26,7 @@ Notifications.setNotificationHandler({
   }),
 });
 
-const Event = ({ title, date, time, desc, location, item }) => (
+const Event = ({ title, date, time, desc, location }) => (
   <TouchableOpacity
     style={styles.row_container}
     onPress={async () => {
@@ -35,24 +35,16 @@ const Event = ({ title, date, time, desc, location, item }) => (
   >
     <View style={styles.date_time}>
       <View>
-        <Text style={styles.time_text}>
-          {date}
-        </Text>
+        <Text style={styles.time_text}>{date}</Text>
       </View>
 
       <View>
-        <Text style={styles.time_text}>
-          {time}
-        </Text>
+        <Text style={styles.time_text}>{time}</Text>
       </View>
     </View>
 
     <View style={styles.desc_area}>
-      <Text
-        style={styles.desc_text}
-      >
-        {title}
-      </Text>
+      <Text style={styles.desc_text}>{title}</Text>
       <Text
         style={{
           fontSize: 14,
@@ -60,6 +52,14 @@ const Event = ({ title, date, time, desc, location, item }) => (
         }}
       >
         {location}
+      </Text>
+      <Text
+        style={{
+          fontSize: 14,
+          color: "#db5f4d",
+        }}
+      >
+        {desc}
       </Text>
     </View>
   </TouchableOpacity>
@@ -90,7 +90,7 @@ export default function EventList() {
       Notifications.addNotificationResponseReceivedListener((response) => {
         console.log(response);
       });
-
+    fetchEventList();
     return () => {
       Notifications.removeNotificationSubscription(notiListener.current);
       Notifications.removeNotificationSubscription(respListener.current);
@@ -157,113 +157,114 @@ export default function EventList() {
 
   // >>>>>>>>>>>>>>> event list back-end   >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-  const fetchEventList = () => {
-    // get all users
-    const listUsers = trackerApi.get("/api/interests/getAllUsers");
-
-    //users that have the primary/secondary interest
-    const relevantUsers = [];
-    for (let i = 0; i < listUsers.length; i++) {
-      const interest1 = listUsers[i].primaryInterest;
-      const interest2 = listUsers[i].secondaryInterest;
-      if (
-        interest1 == state.user.primaryInterest ||
-        interest2 == state.user.secondaryInterest
-      ) {
-        relevantUsers.push(listUsers[i]);
-      }
+  const fetchEventList = async () => {
+    //Get all events from user's primary and secondary interests and set to state
+    const listEvents = await trackerApi.post("/api/events/getEventsForUser", {
+      id: state.user._id,
+      primaryInterest: state.user.primaryInterest,
+      secondaryInterest: state.user.secondaryInterest,
+      room: "events",
+    });
+    if (listEvents.data.response == "undefined") {
+      setEventList([
+        {
+          title: "Unable to fetch event",
+          location: "n/a",
+          date: "n/a",
+          time: "n/a",
+          desc: "n/a",
+        },
+      ]);
+    } else {
+      setEventList(listEvents.data);
     }
-
-    //get all events
-    const listEvents = trackerApi.get("/api/interests/getEventsForUser");
-    setEventList(listEvents);
   };
 
   // >>>>>>>>>>>>>>> END event list back-end   >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
   // dummy data ---> can use setEvents() to replace this list with events retrieved from back-end
-  const [events, setEvents] = useState([
-    {
-      title: "Basketball game",
-      location: "asd",
-      date: "May 25, 2022",
-      time: "6 PM",
-      desc: "etc.",
-      key: 1,
-    },
-    {
-      title: "Tennis",
-      location: "asd",
-      date: "May 25, 2022",
-      time: "6 PM",
-      desc: "etc.",
-      key: 2,
-    },
-    {
-      title: "Counter Strike",
-      location: "asd",
-      date: "May 25, 2022",
-      time: "6 PM",
-      desc: "etc.",
-      key: 3,
-    },
-    {
-      title: "LoL",
-      location: "asd",
-      date: "May 25, 2022",
-      time: "6 PM",
-      desc: "etc.",
-      key: 4,
-    },
-    {
-      title: "Church meeting",
-      location: "asd",
-      date: "May 25, 2022",
-      time: "6 PM",
-      desc: "etc.",
-      key: 5,
-    },
-    {
-      title: "Beer Pong",
-      location: "asd",
-      date: "May 25, 2022",
-      time: "6 PM",
-      desc: "etc.",
-      key: 6,
-    },
-    {
-      title: "Volleyball",
-      location: "asd",
-      date: "May 25, 2022",
-      time: "6 PM",
-      desc: "etc.",
-      key: 7,
-    },
-    {
-      title: "Concert",
-      location: "asd",
-      date: "May 25, 2022",
-      time: "6 PM",
-      desc: "etc.",
-      key: 8,
-    },
-    {
-      title: "Movie",
-      location: "asd",
-      date: "May 25, 2022",
-      time: "6 PM",
-      desc: "etc.",
-      key: 9,
-    },
-    {
-      title: "Bowling",
-      location: "asd",
-      date: "May 25, 2022",
-      time: "6 PM",
-      desc: "etc.",
-      key: 10,
-    },
-  ]);
+  // const [events, setEvents] = useState([
+  //   {
+  //     title: "Basketball game",
+  //     location: "asd",
+  //     date: "May 25, 2022",
+  //     time: "6 PM",
+  //     desc: "etc.",
+  //     key: 1,
+  //   },
+  //   {
+  //     title: "Tennis",
+  //     location: "asd",
+  //     date: "May 25, 2022",
+  //     time: "6 PM",
+  //     desc: "etc.",
+  //     key: 2,
+  //   },
+  //   {
+  //     title: "Counter Strike",
+  //     location: "asd",
+  //     date: "May 25, 2022",
+  //     time: "6 PM",
+  //     desc: "etc.",
+  //     key: 3,
+  //   },
+  //   {
+  //     title: "LoL",
+  //     location: "asd",
+  //     date: "May 25, 2022",
+  //     time: "6 PM",
+  //     desc: "etc.",
+  //     key: 4,
+  //   },
+  //   {
+  //     title: "Church meeting",
+  //     location: "asd",
+  //     date: "May 25, 2022",
+  //     time: "6 PM",
+  //     desc: "etc.",
+  //     key: 5,
+  //   },
+  //   {
+  //     title: "Beer Pong",
+  //     location: "asd",
+  //     date: "May 25, 2022",
+  //     time: "6 PM",
+  //     desc: "etc.",
+  //     key: 6,
+  //   },
+  //   {
+  //     title: "Volleyball",
+  //     location: "asd",
+  //     date: "May 25, 2022",
+  //     time: "6 PM",
+  //     desc: "etc.",
+  //     key: 7,
+  //   },
+  //   {
+  //     title: "Concert",
+  //     location: "asd",
+  //     date: "May 25, 2022",
+  //     time: "6 PM",
+  //     desc: "etc.",
+  //     key: 8,
+  //   },
+  //   {
+  //     title: "Movie",
+  //     location: "asd",
+  //     date: "May 25, 2022",
+  //     time: "6 PM",
+  //     desc: "etc.",
+  //     key: 9,
+  //   },
+  //   {
+  //     title: "Bowling",
+  //     location: "asd",
+  //     date: "May 25, 2022",
+  //     time: "6 PM",
+  //     desc: "etc.",
+  //     key: 10,
+  //   },
+  // ]);
 
   let [fontsLoaded] = useFonts({
     "Asap-Bold": require("../assets/fonts/Asap-Bold.ttf"),
@@ -289,9 +290,7 @@ export default function EventList() {
           Welcome back, {state.user.firstName}
         </Text>
       </View> */}
-      <Text style={styles.header}>
-        Upcoming Events
-      </Text>
+      <Text style={styles.header}>Upcoming Events</Text>
 
       {/* <View style={{ alignItems: "center", justifyContent: "center" }}>
         <Text>Title: {notification && notification.request.content.title}</Text>
@@ -304,8 +303,8 @@ export default function EventList() {
 
       <FlatList
         style={styles.event_container}
-        keyExtractor={(item) => item.key}
-        data={events}
+        keyExtractor={(item) => item._id}
+        data={eventList}
         renderItem={renderItem}
       />
       {/* {expoPushToken && (
@@ -335,10 +334,10 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     textAlign: "center",
     alignItems: "center",
-    fontSize: 20, 
-    alignSelf: "flex-start", 
+    fontSize: 20,
+    alignSelf: "flex-start",
     fontFamily: "Montserrat-Bold",
-    color: '#03045e',
+    color: "#03045e",
   },
   row_container: {
     flexDirection: "row",
@@ -347,14 +346,14 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   time_text: {
-    textAlign: "center", 
-    fontSize: 16, 
-    color: '#d62828',
-    fontFamily: 'Koulen-Regular',
+    textAlign: "center",
+    fontSize: 16,
+    color: "#d62828",
+    fontFamily: "Koulen-Regular",
     fontSize: 20,
   },
   date_time: {
-    flexDirection: 'column',
+    flexDirection: "column",
     flex: 2,
   },
   desc_area: {
@@ -363,17 +362,17 @@ const styles = StyleSheet.create({
     fontSize: 24,
     width: 250,
     flexWrap: "wrap",
-    textAlign: 'center',
-    justifyContent: 'space-around',
+    textAlign: "center",
+    justifyContent: "space-around",
   },
   desc_text: {
     fontSize: 25,
     flexWrap: "wrap",
-    textAlign: 'center',
-    justifyContent: 'center',
-    alignSelf: 'center',
-    alignItems: 'center',
-    alignContent: 'center',
-    fontFamily: 'SourceSansPro-Bold',
+    textAlign: "center",
+    justifyContent: "center",
+    alignSelf: "center",
+    alignItems: "center",
+    alignContent: "center",
+    fontFamily: "SourceSansPro-Bold",
   },
 });
