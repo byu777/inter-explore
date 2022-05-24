@@ -112,32 +112,37 @@ const Chatroom = ({ navigation }) => {
       <ImageBackground source={image} style={styles.bg_image}>
         {/* MODAL */}
 
-          <Modal
-            visible={isMemberVisible}
-            contentContainerStyle={styles.modal_container}
-            transparent={true}
-          >
-            <Text style={styles.modal_title}>
-              Members in {route.params.InterestName}{" "}
-            </Text>
+        <Modal
+          visible={isMemberVisible}
+          contentContainerStyle={styles.modal_container}
+          transparent={true}
+        >
+          <Text style={styles.modal_title}>
+            Members in {route.params.InterestName}{" "}
+          </Text>
 
-            <ScrollView>
-              {/* <Text>User ID: {route.params._id}</Text> */}
-              {users.map((item) => (
-                <View style={styles.each_modal_member}>
-                  <Text style={styles.each_modal_text}> {item.firstName} </Text>
+          <ScrollView>
+            {/* <Text>User ID: {route.params._id}</Text> */}
+            {users.map((item) => (
+              <View style={styles.modal_rows}>
+                <View style={styles.profileImage}>
+                  <Image
+                    source={{ uri: item.pic }}
+                    style={styles.img_size}
+                  ></Image>
                 </View>
-              ))}
-            </ScrollView>
+                <Text style={styles.each_modal_text}> {item.firstName} </Text>
+              </View>
+            ))}
+          </ScrollView>
 
-            <TouchableOpacity
-              onPress={() => setIsMemberVisible(!isMemberVisible)}
-            >
-              <Text>Close</Text>
-            </TouchableOpacity>
-
-          </Modal>
-
+          <TouchableOpacity
+            style={styles.modal_close_btn}
+            onPress={() => setIsMemberVisible(!isMemberVisible)}
+          >
+            <Text>Close</Text>
+          </TouchableOpacity>
+        </Modal>
 
         <View style={styles.top_area}>
           <TouchableOpacity
@@ -325,23 +330,25 @@ const styles = StyleSheet.create({
     margin: 5,
     width: "90%",
     height: 200,
+    marginTop: 50,
+    marginBottom: 150,
   },
-  modalView: {
-    margin: 5,
-    flex: 1,
-    backgroundColor: "white",
-    borderRadius: 5,
-    padding: 5,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
+  // modalView: {
+  //   margin: 5,
+  //   flex: 1,
+  //   backgroundColor: "white",
+  //   borderRadius: 5,
+  //   padding: 5,
+  //   alignItems: "center",
+  //   shadowColor: "#000",
+  //   shadowOffset: {
+  //     width: 0,
+  //     height: 2,
+  //   },
+  //   shadowOpacity: 0.25,
+  //   shadowRadius: 4,
+  //   elevation: 5,
+  // },
   // modal_flatlist: {
   //   backgroundColor: "white",
   //   flexDirection: "column",
@@ -357,9 +364,7 @@ const styles = StyleSheet.create({
   //   },
   //   elevation: 7,
   // },
-  each_modal_member: {
-    paddingVertical: 10,
-  },
+
   each_modal_text: {
     textAlign: "center",
     fontFamily: "Rajdhani_400Regular",
@@ -387,6 +392,18 @@ const styles = StyleSheet.create({
       width: 1,
     },
     elevation: 5,
+  },
+  img_size: {
+    width: 50,
+    height: 50,
+  },
+  profileImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 100,
+  },
+  modal_close_btn: {
+    marginBottom: 100,
   },
 });
 
