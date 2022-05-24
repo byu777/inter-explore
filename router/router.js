@@ -3,6 +3,7 @@ require('./models/Users');
 require('./models/Message');
 require('./models/interestGroup');
 require('./models/Events');
+require('../router/models/Suggestion');
 const express = require('express');
 
 const mongoose = require('mongoose');

@@ -14,7 +14,7 @@ import {
   ImageBackground,
   Dimensions,
   StatusBar,
-  Alert,
+  Button,
 } from "react-native";
 import trackerApi from "../api/tracker";
 import { Modal, Portal, Provider } from "react-native-paper";
@@ -32,6 +32,7 @@ import {
   Montserrat_700Bold,
 } from "@expo-google-fonts/montserrat";
 import { Rajdhani_400Regular } from "@expo-google-fonts/rajdhani";
+import { Modal, Portal, Provider } from "react-native-paper";
 
 // Current url is localhost, after deployment will change to url where application is deployed
 // Variables needed for socket.io
@@ -39,6 +40,12 @@ import { Rajdhani_400Regular } from "@expo-google-fonts/rajdhani";
 // var socket, selectedChatCompare;
 
 const image = require("../assets/images/bg2.jpg");
+
+const MembersList = ({ firstName }) => (
+  <View>
+    <Text>{firstName}</Text>
+  </View>
+);
 
 const Chatroom = ({ navigation }) => {
   const { state } = useContext(AuthContext);
@@ -48,6 +55,13 @@ const Chatroom = ({ navigation }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState();
   const [isMemberVisible, setIsMemberVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [events, setEvents] = useState([
+    { title: "Event 1", desc: "Description here", location: "Location here" },
+    { title: "Event 2", desc: "Description here", location: "Location here" },
+    { title: "Event 3", desc: "Description here", location: "Location here" },
+  ]);
+  const userId = state.user._id;
 
   const fetchMessages = async () => {
     // if the 'unique id' doesnt match, its not user so exit
@@ -72,7 +86,7 @@ const Chatroom = ({ navigation }) => {
   useEffect(() => {
     fetchMessages();
   }, [route.params._id]);
-
+  console.log(events);
   // useEffect to connect socket.io-client to socket.io server side
   // useEffect(() => {
   //   console.log("running");
@@ -102,6 +116,31 @@ const Chatroom = ({ navigation }) => {
 
   const users = route.params.user;
   //console.log("is this users?", users);
+
+  const getEvents = async () => {
+    try {
+      console.log(state.user._id);
+      console.log(route.params.InterestName);
+      console.log("type of id: " + typeof state.user._id);
+      const response = await trackerApi.post("/api/events/getEventsForUser", {
+        id: state.user._id,
+        primaryInterest: route.params.InterestName,
+        secondaryInterest: state.user._id,
+        room: "chatroom",
+      });
+      if (response.data.response == "undefined") {
+        setEvents([
+          { title: "Unable to fetch title", desc: "n/a", location: "n/a" },
+        ]);
+      } else {
+        console.log(response.data);
+        console.log("Response successful! Response of events below:");
+        setEvents(response.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   if (!fontsLoaded) {
     return <Apploading />;
@@ -161,7 +200,48 @@ const Chatroom = ({ navigation }) => {
             <Ionicons name="today-sharp" size={30} color="black"></Ionicons>
             <Text style={styles.top_btn_2_text}>Make Event</Text>
           </TouchableOpacity>
-        </View>
+
+          <TouchableOpacity
+              style={styles.top_btn_2}
+              onPress={() => {
+                console.log(userId);
+                getEvents();
+                setIsVisible(true);
+              }}
+            >
+              <Ionicons
+                name="calendar-sharp"
+                size={30}
+                color="#ecebf3"
+              ></Ionicons>
+              <Text style={styles.top_btn_2_text}>Event List</Text>
+            </TouchableOpacity>
+          </View>
+
+          <Portal>
+            {/* Modal here is used from react-native-paper */}
+            <Modal
+              visible={isVisible}
+              contentContainerStyle={{ backgroundColor: "white", padding: 20 }}
+            >
+              <Text>Inside modal</Text>
+              <ScrollView>
+                <Text>User ID: {state.user._id}</Text>
+                {events.map((item) => (
+                  <View style={{ borderColor: "black", borderWidth: 10 }}>
+                    <Text>{item.title}</Text>
+                    <Text>{item.desc}</Text>
+                    <Text>{item.location}</Text>
+                  </View>
+                ))}
+              </ScrollView>
+              <Button
+                title="close"
+                onPress={() => setIsVisible(!isVisible)}
+              ></Button>
+            </Modal>
+          </Portal>
+        
 
         {/* container for chat messages area */}
         <View style={styles.chat_area}>

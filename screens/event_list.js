@@ -36,7 +36,7 @@ import { Rajdhani_400Regular } from "@expo-google-fonts/rajdhani";
 //   }),
 // });
 
-const Event = ({ title, date, time, desc, location, item }) => (
+const Event = ({ title, date, time, desc, location }) => (
   <TouchableOpacity
     style={styles.row_container}
     // onPress={async () => {
@@ -69,6 +69,46 @@ export default function EventList() {
     Montserrat_700Bold,
     Rajdhani_400Regular,
   });
+  // -------------------expo notification----------------------------
+  const [expoPushToken, setExpoPushToken] = useState("");
+  //const [isSubscribed, setIsSubscribed] = useState(false);
+  const [notification, setNotification] = useState(false);
+  const notiListener = useRef();
+  const respListener = useRef();
+
+  useEffect(() => {
+    registerForPushNotificationsAsync().then((token) =>
+      setExpoPushToken(token)
+    );
+
+    notiListener.current = Notifications.addNotificationReceivedListener(
+      (notification) => {
+        setNotification(notification);
+      }
+    );
+
+    respListener.current =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        console.log(response);
+      });
+    fetchEventList();
+    return () => {
+      Notifications.removeNotificationSubscription(notiListener.current);
+      Notifications.removeNotificationSubscription(respListener.current);
+    };
+  }, []);
+
+  async function schedulePushNotification(item) {
+    await Notifications.scheduleNotificationAsync({
+      identifier: "upcoming-event",
+      content: {
+        title: "Event upcoming!",
+        body: "Make sure to mark this down on your calendar!",
+        data: { data: item },
+      },
+      trigger: { seconds: 2, repeats: false },
+    });
+  }
 
   // ----------------- Commented out section is the EXPO notifications --------------------
   // const [expoPushToken, setExpoPushToken] = useState("");
@@ -159,26 +199,27 @@ export default function EventList() {
 
   // >>>>>>>>>>>>>>> event list back-end   >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-  const fetchEventList = () => {
-    // get all users
-    const listUsers = trackerApi.get("/api/interests/getAllUsers");
-
-    //users that have the primary/secondary interest
-    const relevantUsers = [];
-    for (let i = 0; i < listUsers.length; i++) {
-      const interest1 = listUsers[i].primaryInterest;
-      const interest2 = listUsers[i].secondaryInterest;
-      if (
-        interest1 == state.user.primaryInterest ||
-        interest2 == state.user.secondaryInterest
-      ) {
-        relevantUsers.push(listUsers[i]);
-      }
+  const fetchEventList = async () => {
+    //Get all events from user's primary and secondary interests and set to state
+    const listEvents = await trackerApi.post("/api/events/getEventsForUser", {
+      id: state.user._id,
+      primaryInterest: state.user.primaryInterest,
+      secondaryInterest: state.user.secondaryInterest,
+      room: "events",
+    });
+    if (listEvents.data.response == "undefined") {
+      setEventList([
+        {
+          title: "Unable to fetch event",
+          location: "n/a",
+          date: "n/a",
+          time: "n/a",
+          desc: "n/a",
+        },
+      ]);
+    } else {
+      setEventList(listEvents.data);
     }
-
-    //get all events
-    const listEvents = trackerApi.get("/api/interests/getEventsForUser");
-    setEventList(listEvents);
   };
 
   // >>>>>>>>>>>>>>> END event list back-end   >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -274,8 +315,12 @@ export default function EventList() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* <Text style={{ fontSize: 10 }}>Push token: {expoPushToken} </Text> */}
-
+      <Text style={{ fontSize: 10 }}>Push token: {expoPushToken} </Text>
+      {/* <View style={styles.header}>
+        <Text style={{ fontSize: 20, flexWrap: "wrap" }}>
+          Welcome back, {state.user.firstName}
+        </Text>
+      </View> */}
       <Text style={styles.header}>Upcoming Events</Text>
 
       {/* <View style={{ alignItems: "center", justifyContent: "center" }}>
@@ -289,8 +334,8 @@ export default function EventList() {
 
       <FlatList
         style={styles.event_container}
-        keyExtractor={(item) => item.key}
-        data={events}
+        keyExtractor={(item) => item._id}
+        data={eventList}
         renderItem={renderItem}
       />
       {/* {expoPushToken && (

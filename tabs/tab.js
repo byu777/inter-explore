@@ -3,7 +3,10 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Profile from "../screens/Profile";
 import MessageBoardPage from "../screens/messageboard";
 import EventList from "../screens/event_list";
-import Adminpage from "../screens/adminrequest";
+import AdminSuggestions from "../screens/admin_suggestions";
+import { useNavigation } from '@react-navigation/native';
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import EditProfile from "../screens/EditProfile";
 
 import { StyleSheet, Text, View, Image } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";

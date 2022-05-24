@@ -17,6 +17,6 @@ const router = express.Router();
 // The router has to complete all the functions listed below
 router.route("/createEvent").post(createEvent);
 router.route("/createEventadd").post(addToEvent);
-router.route("/getEventsForUser").get(getEventsForUser);
+router.route("/getEventsForUser").post(getEventsForUser);
 
 module.exports = router; 

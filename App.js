@@ -5,7 +5,8 @@ import Adminpage from "./screens/adminrequest";
 
 export default function App() {
   return (
-    <RootStack/>
+    <EventListModal/>
+    // <EventList/>
     //EditProfile/>
   );
 }
