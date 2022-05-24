@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import { useRoute } from "@react-navigation/native";
 import {
   StyleSheet,
   Text,
@@ -16,6 +17,7 @@ import trackerApi from "../api/tracker";
 let fullHeight = Dimensions.get("window").height;
 
 export default function MakeEventPage({ navigation }) {
+  const route = useRoute();
   const [title, setTitle] = useState(null);
   const [location, setLocation] = useState(null);
   const [date, setDate] = useState(null);
@@ -54,7 +56,6 @@ export default function MakeEventPage({ navigation }) {
   };
 
   const onSubmitFormHandler = async (event) => {
-    console.log("press the button");
     // if the input is valid (title, desc, etc...) create a response and POST it using the proper route
     if (isValidForm()) {
       try {
@@ -63,7 +64,10 @@ export default function MakeEventPage({ navigation }) {
           location,
           desc,
         });
-        console.log(response);
+        console.log("new event id")
+        console.log(response.data._id);
+        console.log("interest id")
+        console.log(route.params._id)
       } catch (error) {
         console.log(error);
       }
