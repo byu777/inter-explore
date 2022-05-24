@@ -10,15 +10,14 @@ import {
   TouchableOpacity,
   TextInput,
   KeyboardAvoidingView,
-  Modal,
   ScrollView,
   ImageBackground,
   Dimensions,
-  Pressable,
   StatusBar,
   Alert,
 } from "react-native";
 import trackerApi from "../api/tracker";
+import { Modal, Portal, Provider } from "react-native-paper";
 import { Context as AuthContext } from "./../context/AuthContext";
 import io from "socket.io-client";
 import { Ionicons } from "@expo/vector-icons";
@@ -49,7 +48,7 @@ const Chatroom = ({ navigation }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState();
   const [isMemberVisible, setIsMemberVisible] = useState(false);
-  const memberList = route.params.user;
+  //const memberList = route.params.user;
 
   const fetchMessages = async () => {
     // if the 'unique id' doesnt match, its not user so exit
@@ -110,101 +109,127 @@ const Chatroom = ({ navigation }) => {
   }
 
   return (
-    <SafeAreaView style={styles.main_container}>
-      <Modal visible={isMemberVisible} transparent={true} animationType="slide">
-        <View style={styles.modal_container}>
-          <View style={styles.modalView}>
+    <Provider>
+      <SafeAreaView style={styles.main_container}>
+        <Portal>
+          <Modal
+            visible={isMemberVisible}
+            contentContainerStyle={styles.modal_container}
+          >
             <Text style={styles.modal_title}>
               Members in {route.params.InterestName}{" "}
             </Text>
 
-            {/* Use SafeAreaView instead of ScrollView */}
-            <SafeAreaView style={styles.modal_flatlist}>
-              <FlatList
-                data={users}
-                keyExtractor={(item) => `${item._id}`}
-                renderItem={({ item }) => {
-                  <View>
-                    <Text>{item.firstName}</Text>
-                  </View>;
-                }}
-              />
-            </SafeAreaView>
+            <ScrollView>
+              {/* <Text>User ID: {route.params._id}</Text> */}
+              {users.map((item) => (
+                <View>
+                  <Text>{item.firstName}</Text>
+                </View>
+              ))}
+            </ScrollView>
 
             <TouchableOpacity
               onPress={() => setIsMemberVisible(!isMemberVisible)}
             >
               <Text>Close</Text>
             </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-      <ImageBackground source={image} style={styles.bg_image}>
-        {/* MODAL */}
+            {/* <View style={styles.modal_container}>
+            <View style={styles.modalView}>
+              <Text style={styles.modal_title}>
+                Members in {route.params.InterestName}{" "}
+              </Text>
 
-        <View style={styles.top_area}>
-          <TouchableOpacity
-            style={styles.top_btn_1}
-            onPress={() => {
-              setIsMemberVisible(true);
-            }}
-          >
-            <Ionicons name="people" size={30} color="black"></Ionicons>
-            <Text style={styles.top_btn_1_text}>Members</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.top_btn_2}
-            onPress={() => navigation.navigate("CreateEvent")}
-          >
-            <Ionicons name="today-sharp" size={30} color="black"></Ionicons>
-            <Text style={styles.top_btn_2_text}>Make Event</Text>
-          </TouchableOpacity>
-        </View>
+              
+              <SafeAreaView style={styles.modal_flatlist}>
+                <FlatList
+                  data={users}
+                  keyExtractor={(item) => `${item._id}`}
+                  renderItem={({ item }) => {
+                    <View>
+                      <Text>{item.firstName}</Text>
+                    </View>;
+                  }}
+                />
+              </SafeAreaView>
 
-        {/* container for chat messages area */}
-        <View style={styles.chat_area}>
-          <FlatList
-            data={messages}
-            style={styles.ChatMessages}
-            renderItem={({ item }) => (
-              <View
-                style={{
-                  alignSelf: `${
-                    item.sender._id === state.user._id
-                      ? "flex-end"
-                      : "flex-start"
-                  }`,
-                  backgroundColor: `${
-                    item.sender._id === state.user._id ? "#c7d6d5" : "#6d7275"
-                  }`,
-                  borderRadius: 20,
-                  borderWidth: 1.5,
-                  borderColor: "black",
-                  maxWidth: Dimensions.get("window").width * 0.75,
-                  margin: 3,
-                  flex: 1,
-                  elevation: 5,
-                }}
+              <TouchableOpacity
+                onPress={() => setIsMemberVisible(!isMemberVisible)}
               >
-                <Text style={styles.chatMessagesText}>{item.content[0]}</Text>
-              </View>
-            )}
-          />
-        </View>
+                <Text>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </View> */}
+          </Modal>
+        </Portal>
 
-        <View style={styles.sendMessageArea}>
-          <TextInput
-            style={styles.typeMessage}
-            placeholder="Message..."
-            onChangeText={onChangeMessageHandler}
-            value={newMessage}
-          />
-          <TouchableOpacity style={styles.send_msg} onPress={sendMessage}>
-            <Ionicons name="send-sharp" size={30} color="#0e0e52"></Ionicons>
-          </TouchableOpacity>
-        </View>
-      </ImageBackground>
-    </SafeAreaView>
+        <ImageBackground source={image} style={styles.bg_image}>
+          {/* MODAL */}
+
+          <View style={styles.top_area}>
+            <TouchableOpacity
+              style={styles.top_btn_1}
+              onPress={() => {
+                setIsMemberVisible(true);
+              }}
+            >
+              <Ionicons name="people" size={30} color="black"></Ionicons>
+              <Text style={styles.top_btn_1_text}>Members</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.top_btn_2}
+              onPress={() => navigation.navigate("CreateEvent")}
+            >
+              <Ionicons name="today-sharp" size={30} color="black"></Ionicons>
+              <Text style={styles.top_btn_2_text}>Make Event</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* container for chat messages area */}
+          <View style={styles.chat_area}>
+            <FlatList
+              data={messages}
+              style={styles.ChatMessages}
+              renderItem={({ item }) => (
+                <View
+                  style={{
+                    alignSelf: `${
+                      item.sender._id === state.user._id
+                        ? "flex-end"
+                        : "flex-start"
+                    }`,
+                    backgroundColor: `${
+                      item.sender._id === state.user._id ? "#c7d6d5" : "#6d7275"
+                    }`,
+                    borderRadius: 20,
+                    borderWidth: 1.5,
+                    borderColor: "black",
+                    maxWidth: Dimensions.get("window").width * 0.75,
+                    margin: 3,
+                    flex: 1,
+                    elevation: 5,
+                  }}
+                >
+                  <Text style={styles.chatMessagesText}>{item.content[0]}</Text>
+                </View>
+              )}
+            />
+          </View>
+
+          <View style={styles.sendMessageArea}>
+            <TextInput
+              style={styles.typeMessage}
+              placeholder="Message..."
+              onChangeText={onChangeMessageHandler}
+              value={newMessage}
+            />
+            <TouchableOpacity style={styles.send_msg} onPress={sendMessage}>
+              <Ionicons name="send-sharp" size={30} color="#0e0e52"></Ionicons>
+            </TouchableOpacity>
+          </View>
+        </ImageBackground>
+      </SafeAreaView>
+    </Provider>
   );
 };
 
@@ -353,7 +378,7 @@ const styles = StyleSheet.create({
   },
   modal_title: {
     textAlign: "center",
-    fontFamily: "MontserratRegular",
+    fontFamily: "Montserrat_400Regular",
   },
   modal_rows: {
     flexDirection: "row",
