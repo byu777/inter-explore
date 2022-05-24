@@ -123,14 +123,16 @@ export default function EventList() {
 
   return (
      <SafeAreaView style={styles.container}>
-      <Text style={styles.header}>Upcoming Events</Text>
+      {/* <Text style={styles.header}>Upcoming Events</Text> */}
 
-      <FlatList
+      <Text style={styles.header}>Work in Progress</Text>
+      {/* <FlatList
         style={styles.event_container}
         keyExtractor={(item) => item._id}
         data={eventList}
+        
         renderItem={renderItem}
-      />
+      /> */}
     </SafeAreaView>
   );
 }

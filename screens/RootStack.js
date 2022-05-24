@@ -17,7 +17,7 @@ import Suggestions from './Suggestions';
 
 // Context
 import { Provider as AuthProvider} from './../context/AuthContext';
-import { Provider as EventProvider } from '../context/EventContext';
+
 
 const Stack = createNativeStackNavigator();
 
