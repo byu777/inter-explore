@@ -62,6 +62,8 @@ const Event = ({ title, date, time, desc, location }) => (
 
 export default function EventList() {
   const { state } = useContext(AuthContext);
+  const [eventList, setEventList] = useState([]);
+
 
   let [fontsLoaded] = useFonts({
     Asap_400Regular,
@@ -69,6 +71,10 @@ export default function EventList() {
     Montserrat_700Bold,
     Rajdhani_400Regular,
   });
+
+  useEffect(() => {
+    fetchEventList();
+  }, [state.user._id])
   // -------------------expo notification----------------------------
   const [expoPushToken, setExpoPushToken] = useState("");
   //const [isSubscribed, setIsSubscribed] = useState(false);
@@ -88,31 +94,34 @@ export default function EventList() {
 
   // ------------------------ end of Expo notif -----------------------------
 
-  const [eventList, setEventList] = useState("");
 
   // >>>>>>>>>>>>>>> event list back-end   >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
   const fetchEventList = async () => {
-    //Get all events from user's primary and secondary interests and set to state
-    const listEvents = await trackerApi.post("/api/events/getEventsForUser", {
-      id: state.user._id,
-      primaryInterest: state.user.primaryInterest,
-      secondaryInterest: state.user.secondaryInterest,
-      room: "events",
-    });
-    if (listEvents.data.response == "undefined") {
-      setEventList([
-        {
-          title: "Unable to fetch event",
-          location: "n/a",
-          date: "n/a",
-          time: "n/a",
-          desc: "n/a",
-        },
-      ]);
-    } else {
-      setEventList(listEvents.data);
+    try {
+      const listEvents = await trackerApi.post("/api/events/getEventsForUser", {
+        id: state.user._id,
+        primaryInterest: state.user.primaryInterest,
+        secondaryInterest: state.user.secondaryInterest,
+        room: "events",
+      });
+      if (listEvents.data.response == "undefined") {
+        setEventList([
+          {
+            title: "No events available.",
+            location: "",
+            date: "",
+            time: "",
+            desc: "",
+          },
+        ]);
+      } else {
+        setEventList(listEvents.data);
+      }
+    } catch (error) {
+      console.log(error);
     }
+    
   };
 
 
@@ -130,9 +139,17 @@ export default function EventList() {
         style={styles.event_container}
         keyExtractor={(item) => item._id}
         data={eventList}
-        
         renderItem={renderItem}
       /> */}
+      <ScrollView>
+      {eventList.map((item) => (
+          <View>
+            <Text>{item.title}</Text>
+            <Text>{item.desc}</Text>
+            <Text>{item.location}</Text>
+          </View>
+      ))}
+      </ScrollView>
     </SafeAreaView>
   );
 }

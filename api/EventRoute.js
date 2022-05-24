@@ -65,70 +65,55 @@ const getEventsForUser = asyncHandler(async (req, res) => {
        */
        const primaryInt = await interests
        .find({ InterestName: primaryInterest })
-       .populate("currentEvents")
+       .populate("currentEvents", "title desc location")
        .then(function(doc) {
-         console.log(doc);
+         console.log(doc[0].currentEvents);
+         console.log("length: " + doc[0].currentEvents.length)
          let allEvents = [];
-         if (doc.length == 0) {
+         if (doc[0].currentEvents.length == 0) {
            res.send({response: "undefined"});
          }
          else {
-           console.log(doc[0].currentEvents[0].title);
-           console.log(doc[0].currentEvents[0].desc);
-           console.log(doc[0].currentEvents[0].location);
-           console.log(doc[0].currentEvents);
-       allEvents.push(doc[0].currentEvents[0]);
+          for (let item = 0; item < doc[0].currentEvents.length; item++) {
+            allEvents.push(doc[0].currentEvents[item]);
+          }
+          //  console.log(doc[0].currentEvents[0].title);
+          //  console.log(doc[0].currentEvents[0].desc);
+          //  console.log(doc[0].currentEvents[0].location);
+          //  console.log(doc[0].currentEvents);
+       allEvents.push(doc[0].currentEvents);
            console.log("all events below: ");
-           console.log(allEvents);
+          //  console.log(allEvents);
            const secondaryInt = interests
        .find({ InterestName: secondaryInterest })
        .populate("currentEvents", "title desc location")
        .then(function(doc) {
-         console.log(doc);
-         console.log(doc[0].currentEvents[0].title);
-         console.log(doc[0].currentEvents[0].desc);
-         console.log(doc[0].currentEvents[0].location);
+         console.log(secondaryInterest + " events: ");
          console.log(doc[0].currentEvents);
-         allEvents.push(doc[0].currentEvents[0]);
-         res.send(allEvents);
+         console.log("Length of events doc: " + doc[0].currentEvents.length);
+         
+         if (doc[0].currentEvents.length == 0) {
+          // allEvents.push(doc[0].currentEvents[0]);
+          console.log(allEvents);
+          res.send(allEvents);
+         } 
+         else {
+          for (let item = 0; item < doc[0].currentEvents.length; item++) {
+            allEvents.push(doc[0].currentEvents[item]);
+          }
+           res.send(allEvents);
+         }
+        //  console.log(doc[0].currentEvents[0].title);
+        //  console.log(doc[0].currentEvents[0].desc);
+        //  console.log(doc[0].currentEvents[0].location);
+        //  console.log(doc[0].currentEvents);
+         
        })
          }
        })
        ;
     }
-    //any way to reference current logged in user's primary/secondary interest?
-    //grabs users primary and secondary interests
-    // User.findById(id, function (err, docs) {
-    //   if (err) {
-    //     console.log(err);
-    //   } else {
-    //     console.log(docs);
-    //     prInterest = docs.primaryInterest;
-    //     console.log(docs.primaryInterest);
-    //     scInterest = docs.secondaryInterest;
-    //     console.log(docs.secondaryInterest);
-    //   }
-    // });
-    // const eventList = await events.find();
-    // //finds the event details of the secondary interests
-    // console.log("Primary Interests:");
 
-    // //grab the interests under the users primary interests, then populate the currentEvents array with the actual event details
-  
-    //grab the interests under the users secondary interests, then populate the currentEvents array with the actual event details
-    
-    //returns array of events that are apart of the interest
-    
-    // console.log(eventsItem);
-    // check if event contains the primary or secondary interest; if so, add to 'allEvents'
-    // for (let i = 0; i < eventList.length; i++) {
-    //   if (
-    //     eventList[i].primaryInterest == prInterest ||
-    //     eventList[i].secondaryInterest == scInterest
-    //   ) {
-    //     allEvents += eventList[i];
-    //   }
-    // }
   } catch (error) {
     console.log(error);
   }
