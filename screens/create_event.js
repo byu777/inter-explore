@@ -68,7 +68,7 @@ export default function MakeEventPage({ navigation }) {
         console.log(error);
       }
     } else {
-      alert("Please fill in all fields before scheduling!")
+      alert("Please fill in all fields before scheduling!");
     }
   };
   return (
@@ -85,35 +85,32 @@ export default function MakeEventPage({ navigation }) {
         >
           {title}
         </TextInput>
-
       </View>
 
       <Text style={styles.title_text_style}>Location</Text>
       <View style={styles.location}>
-      <TextInput
-            style={styles.textInput_style}
-            placeholder="Location..."
-            placeholderTextColor="#6E6D71"
-            onChangeText={onChangeLocationHandler}
-            mode="outlined"
-          >
-            {location}
-          </TextInput>
-
+        <TextInput
+          style={styles.textInput_style}
+          placeholder="Location..."
+          placeholderTextColor="#6E6D71"
+          onChangeText={onChangeLocationHandler}
+          mode="outlined"
+        >
+          {location}
+        </TextInput>
       </View>
       <Text style={styles.title_text_style}>Description</Text>
       <View style={styles.description}>
-      <TextInput
-            style={styles.textInput_style}
-            placeholder="Description of event..."
-            placeholderTextColor="#6E6D71"
-            onChangeText={onChangeDescriptionHandler}
-            mode="outlined"
-            multiline={true}
-          >
-            {desc}
-          </TextInput>
-
+        <TextInput
+          style={styles.textInput_style}
+          placeholder="Description of event..."
+          placeholderTextColor="#6E6D71"
+          onChangeText={onChangeDescriptionHandler}
+          mode="outlined"
+          multiline={true}
+        >
+          {desc}
+        </TextInput>
       </View>
 
       <Text style={styles.title_text_style}>Date</Text>
@@ -127,26 +124,9 @@ export default function MakeEventPage({ navigation }) {
 
       <Text style={styles.bottom_text}>Click "Schedule" once you're done!</Text>
       <View style={styles.buttons}>
-        <Pressable
-          style={styles.cancel_btn}
-          onPress={() => navigation.navigate("Chatroom")}
-        >
-          <Text style={styles.btn_textstyle}>Cancel</Text>
-        </Pressable>
-
         <Pressable style={styles.sched_btn} onPress={onSubmitFormHandler}>
           <Text style={styles.btn_textstyle}>Schedule</Text>
         </Pressable>
-        {/* <Button
-          title="Cancel"
-          style={styles.btn_cancel}
-          onPress={() => navigation.navigate("Chatroom")}
-        />
-        <Button
-          title="Schedule"
-          style={styles.btn_schedule}
-          onPress={onSubmitFormHandler}
-        /> */}
       </View>
     </SafeAreaView>
   );
@@ -192,11 +172,10 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   date: {
-
     height: 100,
     flexGrow: 1,
-    justifyContent: 'space-around',
-    alignContent: 'space-around',
+    justifyContent: "space-around",
+    alignContent: "space-around",
     borderRadius: 3,
     paddingTop: 10,
     paddingBottom: 10,
@@ -212,7 +191,6 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   description: {
-
     flexGrow: 1,
     borderRadius: 3,
     paddingTop: 10,
@@ -246,7 +224,7 @@ const styles = StyleSheet.create({
   bottom_text: {
     color: "#0e0e52",
     justifyContent: "center",
-    textAlign: 'center',
+    textAlign: "center",
     paddingTop: 5,
     marginLeft: 15,
     marginRight: 10,
@@ -268,17 +246,6 @@ const styles = StyleSheet.create({
     marginTop: 25,
     fontSize: 30,
     color: "#0e0e52",
-  },
-
-  cancel_btn: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 4,
-    elevation: 3,
-    backgroundColor: "#150578",
-    margin: 10,
   },
   sched_btn: {
     alignItems: "center",

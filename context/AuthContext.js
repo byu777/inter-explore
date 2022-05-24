@@ -123,7 +123,8 @@ const signout = (dispatch) => async () => {
 const getInterests = (dispatch) => async () => {
       try {
         const response = await trackerApi.get("/api/interests/getInterestNames");
-        await dispatch({type: 'interests', payload: response.data})
+        let sortedInterests = response.data.sort();
+        await dispatch({type: 'interests', payload: sortedInterests})
       } catch (err) {
         console.log(err);
       }
@@ -244,7 +245,7 @@ const addNewInterest = (dispatch) => async (InterestName, review) => {
     const response = await trackerApi.post('/api/interests/group', 
     {
         InterestName: InterestName,
-        review: review
+        review: review,
     })
     await dispatch({ type: 'newInterest', payload: 'Yes'});
     console.log(response);
@@ -286,7 +287,7 @@ const removeUserInterests = (dispatch) => async (oldUser) => {
 
 export const { Provider, Context } = createDataContext(
   authReducer,
-  { signin, signout, signup, clearErrorMessage, getInterests,addUserInterests,removeUserInterests},
+  { signin, signout, signup, clearErrorMessage, getInterests,addUserInterests,removeUserInterests, addNewInterest},
   { token: null, errorMessage: '', user: null, interests: null}
 );
 
