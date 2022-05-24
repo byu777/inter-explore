@@ -195,7 +195,7 @@ const Chatroom = ({ navigation }) => {
         <View style={styles.top_area}>
           <TouchableOpacity
             style={styles.top_btn_2}
-            onPress={() => navigation.navigate("CreateEvent")}
+            onPress={() => navigation.navigate("CreateEvent", route.params)}
           >
             <Ionicons name="today-sharp" size={30} color="black"></Ionicons>
             <Text style={styles.top_btn_2_text}>Make Event</Text>
