@@ -32,7 +32,7 @@ import {
   Montserrat_700Bold,
 } from "@expo-google-fonts/montserrat";
 import { Rajdhani_400Regular } from "@expo-google-fonts/rajdhani";
-import { Modal, Portal, Provider } from "react-native-paper";
+
 
 // Current url is localhost, after deployment will change to url where application is deployed
 // Variables needed for socket.io

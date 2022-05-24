@@ -1,12 +1,11 @@
 import RootStack from "./screens/RootStack";
-import React, {useState} from 'react';
-import MakeEventPage from "./screens/create_event";
-import Adminpage from "./screens/adminrequest";
+import React from 'react';
+import { Provider } from "react-native-paper";
 
 export default function App() {
   return (
-    <EventListModal/>
-    // <EventList/>
-    //EditProfile/>
+    <Provider>
+    <RootStack/>
+    </Provider>
   );
 }

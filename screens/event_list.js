@@ -76,27 +76,27 @@ export default function EventList() {
   const notiListener = useRef();
   const respListener = useRef();
 
-  useEffect(() => {
-    registerForPushNotificationsAsync().then((token) =>
-      setExpoPushToken(token)
-    );
+  // useEffect(() => {
+  //   registerForPushNotificationsAsync().then((token) =>
+  //     setExpoPushToken(token)
+  //   );
 
-    notiListener.current = Notifications.addNotificationReceivedListener(
-      (notification) => {
-        setNotification(notification);
-      }
-    );
+  //   notiListener.current = Notifications.addNotificationReceivedListener(
+  //     (notification) => {
+  //       setNotification(notification);
+  //     }
+  //   );
 
-    respListener.current =
-      Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log(response);
-      });
-    fetchEventList();
-    return () => {
-      Notifications.removeNotificationSubscription(notiListener.current);
-      Notifications.removeNotificationSubscription(respListener.current);
-    };
-  }, []);
+  //   respListener.current =
+  //     Notifications.addNotificationResponseReceivedListener((response) => {
+  //       console.log(response);
+  //     });
+  //   fetchEventList();
+  //   return () => {
+  //     Notifications.removeNotificationSubscription(notiListener.current);
+  //     Notifications.removeNotificationSubscription(respListener.current);
+  //   };
+  // }, []);
 
   async function schedulePushNotification(item) {
     await Notifications.scheduleNotificationAsync({
