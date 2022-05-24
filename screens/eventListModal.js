@@ -28,62 +28,7 @@ export default function EventListModal() {
   const [loaded] = useFonts({
     Asap: require("../assets/fonts/Asap-Bold.ttf"),
   });
-  const DATA = [
-    {
-      id: "1",
-      title: "First Item - test",
-      time: "16:00",
-      location: "Time square",
-    },
-    {
-      id: "2",
-      title: "Second Item",
-      time: "16:00",
-      location: "Dundas",
-    },
-    {
-      id: "3",
-      title: "Third Item",
-      time: "16:00",
-      location: "Art gallery",
-    },
-    {
-      id: "4",
-      title: "Fourth",
-      time: "16:00",
-      location: "Time square",
-    },
-    {
-      id: "5",
-      title: "Fifth",
-      time: "16:00",
-      location: "Dundas",
-    },
-    {
-      id: "6",
-      title: "Sixth",
-      time: "16:00",
-      location: "Art gallery",
-    },
-    {
-      id: "7",
-      title: "Seventh",
-      time: "16:00",
-      location: "Time square",
-    },
-    {
-      id: "8",
-      title: "Eigth",
-      time: "16:00",
-      location: "Dundas",
-    },
-    {
-      id: "9",
-      title: "Ninth",
-      time: "16:00",
-      location: "Art gallery",
-    },
-  ];
+
   const [eventsData, setEventsData] = useState([]);
 
   //   const fetchData = () => {

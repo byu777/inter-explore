@@ -76,113 +76,6 @@ export default function EventList() {
   const notiListener = useRef();
   const respListener = useRef();
 
-  // useEffect(() => {
-  //   registerForPushNotificationsAsync().then((token) =>
-  //     setExpoPushToken(token)
-  //   );
-
-  //   notiListener.current = Notifications.addNotificationReceivedListener(
-  //     (notification) => {
-  //       setNotification(notification);
-  //     }
-  //   );
-
-  //   respListener.current =
-  //     Notifications.addNotificationResponseReceivedListener((response) => {
-  //       console.log(response);
-  //     });
-  //   fetchEventList();
-  //   return () => {
-  //     Notifications.removeNotificationSubscription(notiListener.current);
-  //     Notifications.removeNotificationSubscription(respListener.current);
-  //   };
-  // }, []);
-
-  async function schedulePushNotification(item) {
-    await Notifications.scheduleNotificationAsync({
-      identifier: "upcoming-event",
-      content: {
-        title: "Event upcoming!",
-        body: "Make sure to mark this down on your calendar!",
-        data: { data: item },
-      },
-      trigger: { seconds: 2, repeats: false },
-    });
-  }
-
-  // ----------------- Commented out section is the EXPO notifications --------------------
-  // const [expoPushToken, setExpoPushToken] = useState("");
-  // //const [isSubscribed, setIsSubscribed] = useState(false);
-  // const [notification, setNotification] = useState(false);
-  // const notiListener = useRef();
-  // const respListener = useRef();
-
-  // useEffect(() => {
-  //   registerForPushNotificationsAsync().then((token) =>
-  //     setExpoPushToken(token)
-  //   );
-
-  //   notiListener.current = Notifications.addNotificationReceivedListener(
-  //     (notification) => {
-  //       setNotification(notification);
-  //     }
-  //   );
-
-  //   respListener.current =
-  //     Notifications.addNotificationResponseReceivedListener((response) => {
-  //       console.log(response);
-  //     });
-
-  //   return () => {
-  //     Notifications.removeNotificationSubscription(notiListener.current);
-  //     Notifications.removeNotificationSubscription(respListener.current);
-  //   };
-  // }, []);
-
-  // async function schedulePushNotification(item) {
-  //   await Notifications.scheduleNotificationAsync({
-  //     identifier: "upcoming-event",
-  //     content: {
-  //       title: "Event upcoming!",
-  //       body: "Make sure to mark this down on your calendar!",
-  //       data: { data: item },
-  //     },
-  //     trigger: { seconds: 2, repeats: false },
-  //   });
-  // }
-
-  // async function registerForPushNotificationsAsync() {
-  //   let token;
-  //   if (Device.isDevice) {
-  //     const { status: existingStatus } =
-  //       await Notifications.getPermissionsAsync();
-  //     let finalStatus = existingStatus;
-  //     if (existingStatus !== "granted") {
-  //       const { status } = await Notifications.requestPermissionsAsync();
-  //       finalStatus = status;
-  //     }
-  //     if (finalStatus !== "granted") {
-  //       alert("Failed to get push token for push notification!");
-  //       return;
-  //     }
-  //     token = (await Notifications.getExpoPushTokenAsync()).data;
-  //     console.log(token);
-  //   } else {
-  //     alert("Must use physical device for Push Notifications");
-  //   }
-
-  //   if (Platform.OS === "android") {
-  //     Notifications.setNotificationChannelAsync("default", {
-  //       name: "default",
-  //       importance: Notifications.AndroidImportance.MAX,
-  //       vibrationPattern: [0, 250, 250, 250],
-  //       lightColor: "#FF231F7C",
-  //     });
-  //   }
-
-  //   return token;
-  // }
-
   const renderItem = ({ item }) => (
     <Event
       title={item.title}
@@ -222,115 +115,15 @@ export default function EventList() {
     }
   };
 
-  // >>>>>>>>>>>>>>> END event list back-end   >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-  // dummy data ---> can use setEvents() to replace this list with events retrieved from back-end
-  const [events, setEvents] = useState([
-    {
-      title: "Basketball game",
-      location:
-        "Lorem ipsum yoyoyoyoyoyo Lorem ipsum yoyoyoyoyoyoLorem ipsum yoyoyoyoyoyoLorem ipsum yoyoyoyoyoyoLorem ipsum yoyoyoyoyoyoLorem ipsum yoyoyoyoyoyoLorem ipsum yoyoyoyoyoyoLorem ipsum yoyoyoyoyoyoLorem ipsum yoyoyoyoyoyoLorem ipsum yoyoyoyoyoyo",
-      date: "May 25, 2022",
-      time: "6 PM",
-      desc: "etc.",
-      key: 1,
-    },
-    {
-      title: "Tennis",
-      location: "asd",
-      date: "May 25, 2022",
-      time: "6 PM",
-      desc: "etc.",
-      key: 2,
-    },
-    {
-      title: "Counter Strike",
-      location: "asd",
-      date: "May 25, 2022",
-      time: "6 PM",
-      desc: "etc.",
-      key: 3,
-    },
-    {
-      title: "LoL",
-      location: "asd",
-      date: "May 25, 2022",
-      time: "6 PM",
-      desc: "etc.",
-      key: 4,
-    },
-    {
-      title: "Church meeting",
-      location: "asd",
-      date: "May 25, 2022",
-      time: "6 PM",
-      desc: "etc.",
-      key: 5,
-    },
-    {
-      title: "Beer Pong",
-      location: "asd",
-      date: "May 25, 2022",
-      time: "6 PM",
-      desc: "etc.",
-      key: 6,
-    },
-    {
-      title: "Volleyball",
-      location: "asd",
-      date: "May 25, 2022",
-      time: "6 PM",
-      desc: "etc.",
-      key: 7,
-    },
-    {
-      title: "Concert",
-      location: "asd",
-      date: "May 25, 2022",
-      time: "6 PM",
-      desc: "etc.",
-      key: 8,
-    },
-    {
-      title: "Movie",
-      location: "asd",
-      date: "May 25, 2022",
-      time: "6 PM",
-      desc: "etc.",
-      key: 9,
-    },
-    {
-      title: "Bowling",
-      location: "asd",
-      date: "May 25, 2022",
-      time: "6 PM",
-      desc: "etc.",
-      key: 10,
-    },
-  ]);
 
   if (!fontsLoaded) {
     return <Apploading />;
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={{ fontSize: 10 }}>Push token: {expoPushToken} </Text>
-      {/* <View style={styles.header}>
-        <Text style={{ fontSize: 20, flexWrap: "wrap" }}>
-          Welcome back, {state.user.firstName}
-        </Text>
-      </View> */}
+     <SafeAreaView style={styles.container}>
       <Text style={styles.header}>Upcoming Events</Text>
-
-      {/* <View style={{ alignItems: "center", justifyContent: "center" }}>
-        <Text>Title: {notification && notification.request.content.title}</Text>
-        <Text>Body: {notification && notification.request.content.body}</Text>
-        <Text>
-          Data:
-          {notification && JSON.stringify(notification.request.content.data)}
-        </Text>
-      </View> */}
 
       <FlatList
         style={styles.event_container}
@@ -338,9 +131,6 @@ export default function EventList() {
         data={eventList}
         renderItem={renderItem}
       />
-      {/* {expoPushToken && (
-        
-      )} */}
     </SafeAreaView>
   );
 }

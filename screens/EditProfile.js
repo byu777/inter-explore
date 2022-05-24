@@ -27,7 +27,9 @@ import trackerApi from "../api/tracker";
 const EditProfileScreen = ({ navigation }) => {
 
   const {state, getInterests, addUserInterests} = useContext(AuthContext);
-
+  useEffect(() => {
+    getInterests()
+  }, []);
   const newUser = state.user;
 
   const submitHandler = async(values) => {

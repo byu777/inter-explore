@@ -41,11 +41,11 @@ import { Rajdhani_400Regular } from "@expo-google-fonts/rajdhani";
 
 const image = require("../assets/images/bg2.jpg");
 
-const MembersList = ({ firstName }) => (
-  <View>
-    <Text>{firstName}</Text>
-  </View>
-);
+// const MembersList = ({ firstName }) => (
+//   <View>
+//     <Text>{firstName}</Text>
+//   </View>
+// );
 
 const Chatroom = ({ navigation }) => {
   const { state } = useContext(AuthContext);
@@ -184,15 +184,7 @@ const Chatroom = ({ navigation }) => {
         </Modal>
 
         <View style={styles.top_area}>
-          <TouchableOpacity
-            style={styles.top_btn_1}
-            onPress={() => {
-              setIsMemberVisible(true);
-            }}
-          >
-            <Ionicons name="people" size={30} color="black"></Ionicons>
-            <Text style={styles.top_btn_1_text}>Members</Text>
-          </TouchableOpacity>
+
           <TouchableOpacity
             style={styles.top_btn_2}
             onPress={() => navigation.navigate("CreateEvent")}
