@@ -10,19 +10,28 @@ import {
   TouchableOpacity,
   TextInput,
   KeyboardAvoidingView,
-  Modal,
   ScrollView,
   ImageBackground,
   Dimensions,
-  Pressable,
   StatusBar,
   Alert,
 } from "react-native";
 import trackerApi from "../api/tracker";
+import { Modal, Portal, Provider } from "react-native-paper";
 import { Context as AuthContext } from "./../context/AuthContext";
 import io from "socket.io-client";
 import { Ionicons } from "@expo/vector-icons";
 import * as Device from "expo-device";
+
+// fonts
+import Apploading from "expo-app-loading";
+import { useFonts } from "expo-font";
+import { Asap_400Regular } from "@expo-google-fonts/asap";
+import {
+  Montserrat_400Regular,
+  Montserrat_700Bold,
+} from "@expo-google-fonts/montserrat";
+import { Rajdhani_400Regular } from "@expo-google-fonts/rajdhani";
 
 // Current url is localhost, after deployment will change to url where application is deployed
 // Variables needed for socket.io
@@ -39,7 +48,6 @@ const Chatroom = ({ navigation }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState();
   const [isMemberVisible, setIsMemberVisible] = useState(false);
-  const memberList = route.params.user;
 
   const fetchMessages = async () => {
     // if the 'unique id' doesnt match, its not user so exit
@@ -54,22 +62,12 @@ const Chatroom = ({ navigation }) => {
     } catch (error) {}
   };
 
-  // const MemberList = async () => {
-  //   try {
-  //     const response = await trackerApi.get("/api/interests/getAllUsersInInterest")
-  //     console.log('hello?\n', response.data.user);
-  //     const json = await response.json();  //--> why doesnt this work?
-  //     setMemberList(json.user);
-  //     //console.log('got the user list??', res.data);
-  //     // for (let name of res.data) {
-  //     //   setMemberList(memberList => [...memberList, name]);
-  //     // }
-  //     //setMemberList(res.data);
-
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }
+  let [fontsLoaded] = useFonts({
+    Asap_400Regular,
+    Montserrat_400Regular,
+    Montserrat_700Bold,
+    Rajdhani_400Regular,
+  });
 
   useEffect(() => {
     fetchMessages();
@@ -103,44 +101,48 @@ const Chatroom = ({ navigation }) => {
   };
 
   const users = route.params.user;
-  console.log("is this users?", users);
+  //console.log("is this users?", users);
+
+  if (!fontsLoaded) {
+    return <Apploading />;
+  }
 
   return (
     <SafeAreaView style={styles.main_container}>
-
-<Modal
-          visible={isMemberVisible}
-          transparent={true}
-          animationType="slide"
-        >
-          <View style={styles.modal_container}>
-            <View style={styles.modalView}>
-              <Text style={styles.modal_title}>Members in {route.params.InterestName} </Text>
-
-              {/* Use SafeAreaView instead of ScrollView */}
-              <SafeAreaView style={styles.modal_flatlist}>
-                <FlatList
-                  data={users}
-                  keyExtractor={(item) => `${item._id}`}
-                  renderItem={({ item }) => {
-                    <View>
-                      <Text>{item.firstName}</Text>
-                    </View>;
-                  }}
-                />
-              </SafeAreaView>
-
-              <TouchableOpacity
-                onPress={() => setIsMemberVisible(!isMemberVisible)}
-              >
-                <Text>Close</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
       <ImageBackground source={image} style={styles.bg_image}>
         {/* MODAL */}
-        
+
+        <Modal
+          visible={isMemberVisible}
+          contentContainerStyle={styles.modal_container}
+          transparent={true}
+        >
+          <Text style={styles.modal_title}>
+            Members in {route.params.InterestName}{" "}
+          </Text>
+
+          <ScrollView>
+            {/* <Text>User ID: {route.params._id}</Text> */}
+            {users.map((item) => (
+              <View style={styles.modal_rows}>
+                <View style={styles.profileImage}>
+                  <Image
+                    source={{ uri: item.pic }}
+                    style={styles.img_size}
+                  ></Image>
+                </View>
+                <Text style={styles.each_modal_text}> {item.firstName} </Text>
+              </View>
+            ))}
+          </ScrollView>
+
+          <TouchableOpacity
+            style={styles.modal_close_btn}
+            onPress={() => setIsMemberVisible(!isMemberVisible)}
+          >
+            <Text>Close</Text>
+          </TouchableOpacity>
+        </Modal>
 
         <View style={styles.top_area}>
           <TouchableOpacity
@@ -315,59 +317,71 @@ const styles = StyleSheet.create({
   },
   modal_container: {
     flex: 1,
+    flexGrow: 1,
+    flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    margin: 5,
-    width: 450,
-  },
-  modalView: {
-    margin: 5,
-    flex: 1,
-    backgroundColor: 'white',
-    borderRadius: 5,
-    padding: 5,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  modal_flatlist: {
+    alignSelf: "center",
     backgroundColor: "white",
-    flexDirection: 'column',
-    justifyContent: 'center',
-    width: 200,
-    //flexGrow: 1,
-    //width: "90%",
-    //paddingHorizontal: 5,
-    //paddingVertical: 5,
-    borderRadius: 5,
-    shadowColor: "#000000",
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    shadowOffset: {
-      height: 1,
-      width: 1,
-    },
-    elevation: 7,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderStyle: "solid",
+    elevation: 20,
+    margin: 5,
+    width: "90%",
+    height: 200,
+    marginTop: 50,
+    marginBottom: 150,
+  },
+  // modalView: {
+  //   margin: 5,
+  //   flex: 1,
+  //   backgroundColor: "white",
+  //   borderRadius: 5,
+  //   padding: 5,
+  //   alignItems: "center",
+  //   shadowColor: "#000",
+  //   shadowOffset: {
+  //     width: 0,
+  //     height: 2,
+  //   },
+  //   shadowOpacity: 0.25,
+  //   shadowRadius: 4,
+  //   elevation: 5,
+  // },
+  // modal_flatlist: {
+  //   backgroundColor: "white",
+  //   flexDirection: "column",
+  //   justifyContent: "center",
+  //   width: 200,
+  //   borderRadius: 5,
+  //   shadowColor: "#000000",
+  //   shadowOpacity: 0.8,
+  //   shadowRadius: 2,
+  //   shadowOffset: {
+  //     height: 1,
+  //     width: 1,
+  //   },
+  //   elevation: 7,
+  // },
+
+  each_modal_text: {
+    textAlign: "center",
+    fontFamily: "Rajdhani_400Regular",
+    fontSize: 18,
   },
   modal_title: {
     textAlign: "center",
-    fontFamily: "Montserrat-Regular",
+    fontFamily: "Montserrat_400Regular",
+    fontWeight: "300",
+    marginVertical: 20,
+    paddingVertical: 15,
+    fontSize: 22,
   },
   modal_rows: {
     flexDirection: "row",
     backgroundColor: "#E6E6FB",
-    //flexGrow: 1,
     borderRadius: 10,
-    // paddingTop: 15,
-    // paddingBottom: 15,
-    // marginTop: 15,
-    // marginBottom: 15,
     height: 50,
     textAlign: "center",
     shadowColor: "#000000",
@@ -379,7 +393,18 @@ const styles = StyleSheet.create({
     },
     elevation: 5,
   },
-  
+  img_size: {
+    width: 50,
+    height: 50,
+  },
+  profileImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 100,
+  },
+  modal_close_btn: {
+    marginBottom: 100,
+  },
 });
 
 export default Chatroom;

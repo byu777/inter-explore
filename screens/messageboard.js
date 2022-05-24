@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,14 +9,23 @@ import {
   FlatList,
 } from "react-native";
 
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { Context as AuthContext } from "./../context/AuthContext";
-import { useFonts } from "expo-font";
 
-const Room = ({ title, navigation, chat }) => (
+// fonts
+import Apploading from "expo-app-loading";
+import { useFonts } from "expo-font";
+import { Asap_400Regular } from "@expo-google-fonts/asap";
+import {
+  Montserrat_400Regular,
+  Montserrat_700Bold,
+} from "@expo-google-fonts/montserrat";
+import { Rajdhani_400Regular } from "@expo-google-fonts/rajdhani";
+
+const Room = ({ title, navigation, chat, img }) => (
   <View style={mb_styles.row_container}>
     <Ionicons
-      name={"basketball"}
+      name={img}
       size={55}
       color="#2323D1"
       style={mb_styles.left_icon}
@@ -43,23 +52,24 @@ export default function MessageBoardPage({ navigation }) {
   }, []);
 
   let [fontsLoaded] = useFonts({
-    "Asap-Bold": require("../assets/fonts/Asap-Bold.ttf"),
-    "Asap-Medium": require("../assets/fonts/Asap-Medium.ttf"),
-    "Asap-Regular": require("../assets/fonts/Asap-Regular.ttf"),
-    "Rajdhani-Bold": require("../assets/fonts/Rajdhani-Bold.ttf"),
-    "Rajdhani-Light": require("../assets/fonts/Rajdhani-Light.ttf"),
-    "Rajdhani-Medium": require("../assets/fonts/Rajdhani-Medium.ttf"),
-    "Rajdhani-Regular": require("../assets/fonts/Rajdhani-Regular.ttf"),
-    "Koulen-Regular": require("../assets/fonts/Koulen-Regular.ttf"),
-    "Montserrat-Black": require("../assets/fonts/Montserrat-Black.ttf"),
-    "Montserrat-Regular": require("../assets/fonts/Montserrat-Regular.ttf"),
-    "SourceSansPro-Bold": require("../assets/fonts/SourceSansPro-Bold.ttf"),
-    "SourceSansPro-Light": require("../assets/fonts/SourceSansPro-Light.ttf"),
+    Asap_400Regular,
+    Montserrat_400Regular,
+    Montserrat_700Bold,
+    Rajdhani_400Regular,
   });
 
   const renderItem = ({ item }) => (
-    <Room title={item.InterestName} navigation={navigation} chat={item} />
+    <Room
+      title={item.InterestName}
+      navigation={navigation}
+      chat={item}
+      img={item.icon_string}
+    />
   );
+
+  if (!fontsLoaded) {
+    return <Apploading />;
+  }
 
   return (
     <SafeAreaView style={mb_styles.container}>
@@ -71,7 +81,7 @@ export default function MessageBoardPage({ navigation }) {
         <Text style={{ color: "#8E8D91" }}>Chatrooms...</Text>
       </View>
       <FlatList
-      justifyContent='center'
+        justifyContent="center"
         style={mb_styles.mb_chat_container}
         keyExtractor={(item) => item.key}
         data={state.chatGroups}
@@ -82,8 +92,6 @@ export default function MessageBoardPage({ navigation }) {
 }
 
 // ***------------------------------- STYLING ---------------------------------*********************
-
-let fullWidth = Dimensions.get("window").width;
 
 const mb_styles = StyleSheet.create({
   container: {
@@ -96,8 +104,8 @@ const mb_styles = StyleSheet.create({
     marginTop: 10,
     paddingBottom: 30,
     color: "white",
-    textAlign: 'center',
-    fontFamily: 'Montserrat-Regular',
+    textAlign: "center",
+    fontFamily: "Asap_400Regular",
   },
   mb_chat_container: {
     flexDirection: "column",
@@ -111,7 +119,7 @@ const mb_styles = StyleSheet.create({
     shadowRadius: 2,
     shadowOffset: {
       height: 1,
-      width: 1
+      width: 1,
     },
     elevation: 10,
   },
@@ -128,9 +136,9 @@ const mb_styles = StyleSheet.create({
   notice: {
     marginLeft: 15,
     alignItems: "flex-start",
-    //fontFamily: "Asap-Regular",
+    fontFamily: "Asap_400Regular",
     fontSize: 20,
-    color: '#C1C1C3',
+    color: "#C1C1C3",
   },
   row_container: {
     flexDirection: "row",
@@ -147,7 +155,7 @@ const mb_styles = StyleSheet.create({
     shadowRadius: 2,
     shadowOffset: {
       height: 1,
-      width: 1
+      width: 1,
     },
     elevation: 5,
   },
@@ -158,7 +166,7 @@ const mb_styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "center",
     textAlign: "center",
-    fontFamily: "Rajdhani-Regular",
+    fontFamily: "Rajdhani_400Regular",
     fontSize: 20,
     padding: 5,
     position: "relative",
@@ -167,10 +175,10 @@ const mb_styles = StyleSheet.create({
   welcome_title: {
     fontSize: 28,
     flexWrap: "wrap",
-    //fontFamily: "Asap-Regular",
-    color: '#1D0FB6',
+    fontFamily: "Montserrat_700Bold",
+    color: "#1D0FB6",
     fontWeight: "bold",
-    textAlign: 'center',
+    textAlign: "center",
   },
 });
 

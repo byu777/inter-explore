@@ -22,14 +22,19 @@ const InterestSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Message",
     },
-    review:{
+    review: {
       type: Boolean,
       require: true,
       default: false,
-  }
+    },
+    icon_string: {
+      type: String,
+      require: false,
+      default: "help",
+    }
   },
   {
     timestamps: true,
   }
 );
-module.exports = mongoose.model('interests', InterestSchema);
+module.exports = mongoose.model("interests", InterestSchema);

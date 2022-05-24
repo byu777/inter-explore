@@ -1,14 +1,8 @@
 import React, { useState, useContext, useEffect } from "react";
-import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Profile from "../screens/Profile";
 import MessageBoardPage from "../screens/messageboard";
-import Chatroom from "../screens/chatroom";
-import MakeEventPage from "../screens/create_event";
 import EventList from "../screens/event_list";
-import { useNavigation } from '@react-navigation/native';
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import EditProfile from "../screens/EditProfile";
 import Adminpage from "../screens/adminrequest";
 
 import { StyleSheet, Text, View, Image } from "react-native";
@@ -29,22 +23,19 @@ const Tabs = () => {
         tabBarStyle: {backgroundColor: '#1D0FB6'},
         tabBarActiveTintColor: 'white',
         tabBarInactiveTintColor: '#9B92F6',
+        style: {
+          position: "absolute",
+          bottom: 25,
+          left: 20,
+          right: 20,
+          elevation: 0,
+          backgroundColor: '#00bcd4',
+          borderRadius: 15,
+          height: 90,
+          ...tabStyles.shadow,
+        },
       }}
         id='our_tab'
-        tabBarOptions={{
-          showLabel: false,
-          style: {
-            position: "absolute",
-            bottom: 25,
-            left: 20,
-            right: 20,
-            elevation: 0,
-            backgroundColor: '#00bcd4',
-            borderRadius: 15,
-            height: 90,
-            ...tabStyles.shadow,
-          },
-        }}
       >
         <Tab.Screen
           name="Home"
