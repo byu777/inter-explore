@@ -9,15 +9,13 @@ import {
   FlatList,
   TouchableOpacity,
   TextInput,
-  KeyboardAvoidingView,
   ScrollView,
   ImageBackground,
   Dimensions,
   StatusBar,
-  Button,
 } from "react-native";
 import trackerApi from "../api/tracker";
-import { Modal, Portal, Provider } from "react-native-paper";
+import { Modal, Portal } from "react-native-paper";
 import { Context as AuthContext } from "./../context/AuthContext";
 import io from "socket.io-client";
 import { Ionicons } from "@expo/vector-icons";
@@ -186,7 +184,15 @@ const Chatroom = ({ navigation }) => {
               style={styles.modal_close_btn}
               onPress={() => setIsMemberVisible(!isMemberVisible)}
             >
-              <Text style={{ textAlign: 'center', color: 'white', fontFamily: 'Montserrat_400Regular'}}>Close</Text>
+              <Text
+                style={{
+                  textAlign: "center",
+                  color: "white",
+                  fontFamily: "Montserrat_400Regular",
+                }}
+              >
+                Close
+              </Text>
             </TouchableOpacity>
           </Modal>
         </Portal>
@@ -215,11 +221,7 @@ const Chatroom = ({ navigation }) => {
               setIsVisible(true);
             }}
           >
-            <Ionicons
-              name="calendar-sharp"
-              size={30}
-              color="black"
-            ></Ionicons>
+            <Ionicons name="calendar-sharp" size={30} color="black"></Ionicons>
             <Text style={styles.top_btn_2_text}>Event List</Text>
           </TouchableOpacity>
         </View>
@@ -445,9 +447,9 @@ const styles = StyleSheet.create({
       width: 1,
     },
     elevation: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignContent: 'center',
+    justifyContent: "center",
+    alignItems: "center",
+    alignContent: "center",
   },
   img_size: {
     width: 50,
@@ -471,9 +473,9 @@ const styles = StyleSheet.create({
     height: 50,
     width: 80,
     marginBottom: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignContent: 'center',
+    justifyContent: "center",
+    alignItems: "center",
+    alignContent: "center",
   },
   eventTitle: {
     textAlign: "left",

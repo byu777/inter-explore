@@ -50,7 +50,7 @@ const getEventsForUser = asyncHandler(async (req, res) => {
     console.log(primaryInterest);
     console.log(secondaryInterest);
     console.log("ID: " + id);
-    console.log("chatroom page: " + room);
+    console.log("Room: " + room);
     if (room == "chatroom") {
       console.log("Routed into chatroom events modal.");
       const events = await interests
@@ -70,6 +70,7 @@ const getEventsForUser = asyncHandler(async (req, res) => {
         .find({ InterestName: primaryInterest })
         .populate("currentEvents", "title desc location")
         .then(function (doc) {
+          console.log(primaryInterest + " events: ");
           console.log(doc[0].currentEvents);
           let allEvents = [];
           if (doc[0].currentEvents.length == 0) {
@@ -78,7 +79,6 @@ const getEventsForUser = asyncHandler(async (req, res) => {
             for (let item = 0; item < doc[0].currentEvents.length; item++) {
               allEvents.push(doc[0].currentEvents[item]);
             }
-            console.log("all events below: ");
             const secondaryInt = interests
               .find({ InterestName: secondaryInterest })
               .populate("currentEvents", "title desc location")

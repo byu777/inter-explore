@@ -3,12 +3,8 @@ import {
   StyleSheet,
   Text,
   View,
-  FlatList,
-  Button,
   TouchableOpacity,
-  Platform,
   SafeAreaView,
-  Dimensions,
   ScrollView,
 } from "react-native";
 import trackerApi from "../api/tracker";
@@ -36,29 +32,10 @@ import { Rajdhani_400Regular } from "@expo-google-fonts/rajdhani";
 //   }),
 // });
 
-const Event = ({ title, date, time, desc, location }) => (
-  <TouchableOpacity
-    style={styles.row_container}
-    // onPress={async () => {
-    //   await schedulePushNotification("You clicked on");
-    // }}
-  >
-    <View style={styles.date_time}>
-      <View>
-        <Text style={styles.time_text}>{date}</Text>
-      </View>
-
-      <View>
-        <Text style={styles.time_text}>{time}</Text>
-      </View>
-    </View>
-
-    <View style={styles.desc_area}>
-      <Text style={styles.desc_title}>{title}</Text>
-      <Text style={styles.desc_text}>{location}</Text>
-    </View>
-  </TouchableOpacity>
-);
+// Part of notification handler
+// onPress={async () => {
+//   await schedulePushNotification("You clicked on");
+// }}
 
 export default function EventList() {
   const { state } = useContext(AuthContext);
@@ -80,16 +57,6 @@ export default function EventList() {
   const [notification, setNotification] = useState(false);
   const notiListener = useRef();
   const respListener = useRef();
-
-  const renderItem = ({ item }) => (
-    <Event
-      title={item.title}
-      location={item.location}
-      date={item.date}
-      time={item.time}
-      desc={item.desc}
-    />
-  );
 
   // ------------------------ end of Expo notif -----------------------------
 
