@@ -19,7 +19,7 @@ import {
 import trackerApi from "../api/tracker";
 import { Modal, Portal, Provider } from "react-native-paper";
 import { Context as AuthContext } from "./../context/AuthContext";
-import io from "socket.io-client";
+
 import { Ionicons } from "@expo/vector-icons";
 import * as Device from "expo-device";
 
@@ -33,18 +33,10 @@ import {
 } from "@expo-google-fonts/montserrat";
 import { Rajdhani_400Regular } from "@expo-google-fonts/rajdhani";
 
-// Current url is localhost, after deployment will change to url where application is deployed
-// Variables needed for socket.io
-// const ENDPOINT = "http://localhost:3000";
-// var socket, selectedChatCompare;
 
 const image = require("../assets/images/bg2.jpg");
 
-// const MembersList = ({ firstName }) => (
-//   <View>
-//     <Text>{firstName}</Text>
-//   </View>
-// );
+
 
 const Chatroom = ({ navigation }) => {
   const { state } = useContext(AuthContext);
@@ -82,11 +74,6 @@ const Chatroom = ({ navigation }) => {
     fetchMessages();
   }, [route.params._id]);
   console.log(events);
-  // useEffect to connect socket.io-client to socket.io server side
-  // useEffect(() => {
-  //   console.log("running");
-  //   socket = io(ENDPOINT);
-  // }, [])
 
   const sendMessage = async () => {
     if (newMessage != null || newMessage != "") {
