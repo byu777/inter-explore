@@ -253,6 +253,18 @@ const updateProfile = (user) => async (dispatch, getState) => {
   }
 };
 
+// Updates the chat groups variable after profile interests are edited
+const editProfileGetChats = (dispatch) => {
+  return async (newUser) => {
+    try {
+        const chatGroups = await userInterests(newUser);
+        await dispatch({type: 'userInterests', payload: chatGroups});
+      } catch (err) {
+        console.log(err)
+    }
+  };
+};
+
 const addNewInterest = (dispatch) => async (InterestName, review) => {
   try {
     const response = await trackerApi.post('/api/interests/group', 
@@ -300,7 +312,7 @@ const removeUserInterests = (dispatch) => async (oldUser) => {
 
 export const { Provider, Context } = createDataContext(
   authReducer,
-  { signin, signout, signup, clearErrorMessage, getInterests,addUserInterests,removeUserInterests, addNewInterest},
+  { signin, signout, signup, clearErrorMessage, getInterests,addUserInterests,removeUserInterests, addNewInterest, editProfileGetChats},
   { token: null, errorMessage: '', user: null, interests: null}
 );
 

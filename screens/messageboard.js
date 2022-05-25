@@ -47,7 +47,12 @@ export default function MessageBoardPage({ navigation }) {
   const { state, signout } = useContext(AuthContext);
   const [name, setName] = useState("");
 
-  {state.token ? null : navigation.navigate("Login")}
+  {state.token == null ? navigation.navigate("Login") : null}
+
+  function handleLogout() {
+    {navigation.navigate("Login")}
+    signout();
+  }
 
   useEffect(() => {
     setName(state.user.firstName);
@@ -90,7 +95,7 @@ export default function MessageBoardPage({ navigation }) {
         renderItem={renderItem}
       />
       {/* <TouchableOpacity style={mb_styles.logutButton} onPress={() => signout()} > */}
-      <TouchableOpacity style={mb_styles.logutButton} onPress={() => {navigation.navigate("Login")}} >
+      <TouchableOpacity style={mb_styles.logutButton} onPress={() => handleLogout()} >
         <Text style={mb_styles.logoutText}>Logout</Text>
       </TouchableOpacity>
     </SafeAreaView>

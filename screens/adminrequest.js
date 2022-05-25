@@ -81,7 +81,7 @@ const Adminpage = () => {
   const editInterests = item => {
     const editInterests = interests.filter(interest => interest._id != item._id);
 
-    Alert.alert('Confirm', 'Edit Interest?', [
+    Alert.alert('Confirm', 'Edit interest is not hooked up yet', [
         {
           text: 'Yes',
           onPress: () => {}

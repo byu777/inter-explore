@@ -25,7 +25,7 @@ import trackerApi from "../api/tracker";
 
 const EditProfileScreen = ({ navigation }) => {
 
-  const {state, getInterests, addUserInterests} = useContext(AuthContext);
+  const {state, getInterests, addUserInterests, editProfileGetChats} = useContext(AuthContext);
   useEffect(() => {
     getInterests()
   }, []);
@@ -40,6 +40,7 @@ const EditProfileScreen = ({ navigation }) => {
     console.log(state.user)
     await trackerApi.post("/api/interests/profile", newUser);
     addUserInterests(newUser);
+    editProfileGetChats(newUser);
   }catch(err){
 
     console.log(err)
