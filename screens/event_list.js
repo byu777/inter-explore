@@ -127,14 +127,14 @@ export default function EventList() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.header}>Upcoming events in your interests</Text>
+      <Text style={styles.header}>Upcoming events</Text>
 
       <ScrollView>
         {eventList.map((item) => (
-          <View>
-            <Text>{item.title}</Text>
-            <Text>{item.desc}</Text>
-            <Text>{item.location}</Text>
+          <View style={styles.row_container}>
+            <Text style={styles.desc_title}>{item.title}</Text>
+            <Text style={styles.desc_location}>{item.location}</Text>
+            <Text style={styles.desc_text}>{item.desc}</Text>
           </View>
         ))}
       </ScrollView>
@@ -170,15 +170,15 @@ const styles = StyleSheet.create({
     textAlign: "center",
     alignItems: "center",
     fontSize: 25,
-    //alignSelf: "flex-start",
     fontFamily: "Montserrat_400Regular",
     color: "#03045e",
   },
   row_container: {
-    flexDirection: "row",
+    flexDirection: "column",
     backgroundColor: "#E6E6FB",
     borderRadius: 10,
     paddingTop: 15,
+    paddingLeft: 10,
     paddingBottom: 15,
     marginTop: 15,
     marginBottom: 15,
@@ -214,11 +214,17 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
   },
+  desc_location: {
+    fontSize: 20,
+    flex: 1,
+    textAlign: "left",
+    fontFamily: "Montserrat_400Regular",
+  },
   desc_title: {
     fontSize: 25,
     flex: 1,
     flexWrap: "wrap",
-    alignSelf: "center",
+    textAlign: "left",
     justifyContent: "flex-start",
     alignItems: "center",
     fontFamily: "Montserrat_400Regular",
@@ -232,6 +238,5 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     fontFamily: "Rajdhani_400Regular",
     padding: 5,
-    marginLeft: 5,
   },
 });
