@@ -55,11 +55,7 @@ const Chatroom = ({ navigation }) => {
   const [newMessage, setNewMessage] = useState();
   const [isMemberVisible, setIsMemberVisible] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [events, setEvents] = useState([
-    // { title: "Event 1", desc: "Description here", location: "Location here" },
-    // { title: "Event 2", desc: "Description here", location: "Location here" },
-    // { title: "Event 3", desc: "Description here", location: "Location here" },
-  ]);
+  const [events, setEvents] = useState([]);
   const userId = state.user._id;
 
   const fetchMessages = async () => {
@@ -114,7 +110,6 @@ const Chatroom = ({ navigation }) => {
   };
 
   const users = route.params.user;
-  //console.log("is this users?", users);
 
   const getEvents = async () => {
     try {
@@ -129,7 +124,11 @@ const Chatroom = ({ navigation }) => {
       });
       if (response.data.response == "undefined") {
         setEvents([
-          { title: "Unable to fetch events! Please try again.", desc: "", location: "" },
+          {
+            title: "Unable to fetch events! Please try again.",
+            desc: "",
+            location: "",
+          },
         ]);
       } else {
         if (response.data.length == 0) {
@@ -160,39 +159,46 @@ const Chatroom = ({ navigation }) => {
       <ImageBackground source={image} style={styles.bg_image}>
         {/* MODAL */}
 
-        <Modal
-          visible={isMemberVisible}
-          contentContainerStyle={styles.modal_container}
-          transparent={true}
-        >
-          <Text style={styles.modal_title}>
-            Members in {route.params.InterestName}{" "}
-          </Text>
-
-          <ScrollView>
-            {/* <Text>User ID: {route.params._id}</Text> */}
-            {users.map((item) => (
-              <View style={styles.modal_rows}>
-                <View style={styles.profileImage}>
-                  <Image
-                    source={{ uri: item.pic }}
-                    style={styles.img_size}
-                  ></Image>
-                </View>
-                <Text style={styles.each_modal_text}> {item.firstName} </Text>
-              </View>
-            ))}
-          </ScrollView>
-
-          <TouchableOpacity
-            style={styles.modal_close_btn}
-            onPress={() => setIsMemberVisible(!isMemberVisible)}
+        <Portal>
+          <Modal
+            visible={isMemberVisible}
+            contentContainerStyle={styles.modal_container}
           >
-            <Text>Close</Text>
-          </TouchableOpacity>
-        </Modal>
+            <Text style={styles.modal_title}>
+              Members in {route.params.InterestName}{" "}
+            </Text>
+
+            <ScrollView>
+              {users.map((item) => (
+                <View style={styles.modal_rows}>
+                  <View style={styles.profileImage}>
+                    <Image
+                      source={{ uri: item.pic }}
+                      style={styles.img_size}
+                    ></Image>
+                  </View>
+                  <Text style={styles.each_modal_text}> {item.firstName} </Text>
+                </View>
+              ))}
+            </ScrollView>
+
+            <TouchableOpacity
+              style={styles.modal_close_btn}
+              onPress={() => setIsMemberVisible(!isMemberVisible)}
+            >
+              <Text>Close</Text>
+            </TouchableOpacity>
+          </Modal>
+        </Portal>
 
         <View style={styles.top_area}>
+          <TouchableOpacity
+            style={styles.top_btn_2}
+            onPress={() => setIsMemberVisible(true)}
+          >
+            <Ionicons name="today-sharp" size={30} color="black"></Ionicons>
+            <Text style={styles.top_btn_2_text}>Members</Text>
+          </TouchableOpacity>
           <TouchableOpacity
             style={styles.top_btn_2}
             onPress={() => navigation.navigate("CreateEvent", route.params)}
@@ -228,9 +234,9 @@ const Chatroom = ({ navigation }) => {
             <ScrollView>
               {events.map((item) => (
                 <View style={styles.modal_rows}>
-                  <Text style={styles.each_modal_text}>{item.title}</Text>
-                  <Text style={styles.each_modal_text}>{item.desc}</Text>
-                  <Text style={styles.each_modal_text}>{item.location}</Text>
+                  <Text style={styles.eventTitle}>{item.title}</Text>
+                  <Text style={styles.eventDescription}>{item.desc}</Text>
+                  <Text style={styles.eventLocation}>{item.location}</Text>
                 </View>
               ))}
             </ScrollView>
@@ -459,10 +465,12 @@ const styles = StyleSheet.create({
     fontSize: 22,
   },
   modal_rows: {
-    flexDirection: "row",
+    flexDirection: "column",
     backgroundColor: "#E6E6FB",
     borderRadius: 10,
-    height: 50,
+    padding: 10,
+    margin: 10,
+    height: 90,
     textAlign: "center",
     shadowColor: "#000000",
     shadowOpacity: 0.8,
@@ -483,7 +491,36 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
   modal_close_btn: {
-    marginBottom: 100,
+    borderRadius: 10,
+    backgroundColor: "#E6E6FB",
+    shadowColor: "#000000",
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    shadowOffset: {
+      height: 1,
+      width: 1,
+    },
+    elevation: 10,
+    flex: 1,
+    width: 100,
+    padding: 20,
+    marginBottom: 10,
+  },
+  eventTitle: {
+    textAlign: "left",
+    fontFamily: "Rajdhani_400Regular",
+    fontSize: 20,
+    color: "#150578",
+  },
+  eventDescription: {
+    textAlign: "left",
+    fontFamily: "Rajdhani_400Regular",
+    fontSize: 18,
+  },
+  eventLocation: {
+    textAlign: "left",
+    fontFamily: "Rajdhani_400Regular",
+    fontSize: 18,
   },
 });
 
