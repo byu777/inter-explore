@@ -202,14 +202,14 @@ const Chatroom = ({ navigation }) => {
             style={styles.top_btn_2}
             onPress={() => setIsMemberVisible(true)}
           >
-            <Ionicons name="today-sharp" size={30} color="black"></Ionicons>
+            <Ionicons name="people" size={30} color="black"></Ionicons>
             <Text style={styles.top_btn_2_text}>Members</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.top_btn_2}
             onPress={() => navigation.navigate("CreateEvent", route.params)}
           >
-            <Ionicons name="today-sharp" size={30} color="black"></Ionicons>
+            <Ionicons name="ios-create-outline" size={30} color="black"></Ionicons>
             <Text style={styles.top_btn_2_text}>Make Event</Text>
           </TouchableOpacity>
 
@@ -433,8 +433,10 @@ const styles = StyleSheet.create({
   },
   modal_rows: {
     flexDirection: "row",
-    backgroundColor: "#caf0f8",
+    backgroundColor: "white",
     borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#023e8a',
     padding: 10,
     margin: 10,
     height: 60,
@@ -447,7 +449,7 @@ const styles = StyleSheet.create({
       width: 1,
     },
     elevation: 5,
-    justifyContent: "center",
+    justifyContent: "flex-start",
     alignItems: "center",
     alignContent: "center",
   },
