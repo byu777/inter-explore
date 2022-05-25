@@ -55,9 +55,10 @@ const getEventsForUser = asyncHandler(async (req, res) => {
       console.log("Routed into chatroom events modal.");
       const events = await interests
         .find({ InterestName: primaryInterest })
-        .populate("currentEvents", "title desc location")
+        .populate({ path: "currentEvents", populate: { path: "user" } })
         .then(function (doc) {
           console.log(doc);
+          console.log(doc[0].currentEvents);
           if (doc.length == 0) {
             res.send({ response: "undefined" });
           } else {
@@ -65,40 +66,21 @@ const getEventsForUser = asyncHandler(async (req, res) => {
           }
         });
     } else {
+      // needs event info, plus the people who are apart of it
       console.log("Routed into events tab.");
-      const primaryInt = await interests
-        .find({ InterestName: primaryInterest })
-        .populate("currentEvents", "title desc location")
+      const userEvents = await events
+        .find({
+          user: {
+            $in: [id],
+          },
+        })
+        .populate('user', 'firstName pic')
         .then(function (doc) {
-          console.log(primaryInterest + " events: ");
-          console.log(doc[0].currentEvents);
-          let allEvents = [];
-          if (doc[0].currentEvents.length == 0) {
+          console.log(doc);
+          if (doc.length == 0) {
             res.send({ response: "undefined" });
           } else {
-            for (let item = 0; item < doc[0].currentEvents.length; item++) {
-              allEvents.push(doc[0].currentEvents[item]);
-            }
-            const secondaryInt = interests
-              .find({ InterestName: secondaryInterest })
-              .populate("currentEvents", "title desc location")
-              .then(function (doc) {
-                console.log(secondaryInterest + " events: ");
-                console.log(doc[0].currentEvents);
-                if (doc[0].currentEvents.length == 0) {
-                  console.log(allEvents);
-                  res.send(allEvents);
-                } else {
-                  for (
-                    let item = 0;
-                    item < doc[0].currentEvents.length;
-                    item++
-                  ) {
-                    allEvents.push(doc[0].currentEvents[item]);
-                  }
-                  res.send(allEvents);
-                }
-              });
+            res.send(doc);
           }
         });
     }
@@ -131,10 +113,10 @@ const addToEvent = asyncHandler(async (req, res) => {
   // check if the requester is admin
 
   const added = await events
-    .findByIdAndUpdate(
-      eventID,
+    .updateOne(
+      { _id: eventID },
       {
-        $push: { user: userId },
+        $push: { user: [userId] },
       },
       {
         new: true,
@@ -147,6 +129,23 @@ const addToEvent = asyncHandler(async (req, res) => {
     throw new Error("Chat Not Found");
   } else {
     res.json(added);
+  }
+});
+
+const removeFromEvent = asyncHandler(async (req, res) => {
+  const { eventID, userID } = req.body;
+
+  const removedUser = await events.updateOne(
+    { _id: eventID },
+    { $pull: { user: userID } },
+    { new: true }
+  );
+
+  if (!removedUser) {
+    res.status(404);
+    throw new Error("Unable to remove user from event");
+  } else {
+    res.json(removedUser);
   }
 });
 
@@ -186,4 +185,5 @@ module.exports = {
   addToEvent,
   getEventsForUser,
   addEventToInterest,
+  removeFromEvent,
 };

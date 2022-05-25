@@ -9,7 +9,8 @@ const {
     createEvent,
     addToEvent,
     getEventsForUser,
-    addEventToInterest
+    addEventToInterest,
+    removeFromEvent
   } = require("../api/EventRoute");
 
 //create a routing handler
@@ -20,5 +21,6 @@ router.route("/createEvent").post(createEvent);
 router.route("/createEventadd").post(addToEvent);
 router.route("/getEventsForUser").post(getEventsForUser);
 router.route("/addEventToInterest").put(addEventToInterest);
+router.route("/removeFromEvent").put(removeFromEvent);
 
 module.exports = router; 

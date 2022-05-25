@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
+  Alert,
 } from "react-native";
 import trackerApi from "../api/tracker";
 import { Context as AuthContext } from "./../context/AuthContext";
@@ -19,6 +20,7 @@ import {
   Montserrat_700Bold,
 } from "@expo-google-fonts/montserrat";
 import { Rajdhani_400Regular } from "@expo-google-fonts/rajdhani";
+import { Button } from "react-native-paper";
 
 // // expo notifications imports
 // import * as Device from "expo-device";
@@ -50,7 +52,7 @@ export default function EventList() {
 
   useEffect(() => {
     fetchEventList();
-  }, []);
+  }, [state.user._id]);
   // -------------------expo notification----------------------------
   const [expoPushToken, setExpoPushToken] = useState("");
   //const [isSubscribed, setIsSubscribed] = useState(false);
@@ -88,6 +90,29 @@ export default function EventList() {
     }
   };
 
+  const removeFromEvent = async (id) => {
+    try {
+      const leaveEvent = await trackerApi.put("/api/events/removeFromEvent", {
+        eventID: id,
+        userID: state.user._id,
+      });
+      if (leaveEvent.status == 404) {
+        Alert.alert(
+          "Removal from event",
+          "Unable to leave this event. Please try again."
+        );
+      } else {
+        console.log(leaveEvent.data);
+        const remainingEvents = eventList.filter(item => item._id != id);
+        console.log(remainingEvents);
+        setEventList(remainingEvents);
+        Alert.alert("Removed from event", "You have successfully left the event");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   if (!fontsLoaded) {
     return <Apploading />;
   }
@@ -102,6 +127,30 @@ export default function EventList() {
             <Text style={styles.desc_title}>{item.title}</Text>
             <Text style={styles.desc_location}>{item.location}</Text>
             <Text style={styles.desc_text}>{item.desc}</Text>
+            <Button
+              icon={"close"}
+              onPress={() => {
+                console.log(item._id);
+                console.log("User ID: " + state.user._id);
+                removeFromEvent(item._id);
+              }}
+            >
+              Leave
+            </Button>
+            <Button
+              icon={"account"}
+              // pass into modal to view
+              onPress={() => {
+                console.log(state.user._id);
+                console.log("People part of this event");
+                for (let person = 0; person < item.user.length; person++) {
+                  console.log(item.user[person].firstName)
+                }
+                // console.log(item.user[0].firstName);
+              }}
+            >
+              Members
+            </Button>
           </View>
         ))}
       </ScrollView>

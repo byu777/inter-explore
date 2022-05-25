@@ -13,9 +13,10 @@ import {
   ImageBackground,
   Dimensions,
   StatusBar,
+  Alert,
 } from "react-native";
 import trackerApi from "../api/tracker";
-import { Modal, Portal } from "react-native-paper";
+import { Button, Modal, Portal } from "react-native-paper";
 import { Context as AuthContext } from "./../context/AuthContext";
 
 import { Ionicons } from "@expo/vector-icons";
@@ -88,6 +89,14 @@ const Chatroom = ({ navigation }) => {
         console.log(error);
       }
     }
+  };
+
+  const addUserToEvent = async (id) => {
+    const addedUser = await trackerApi.post("/api/events/createEventadd", {
+      eventID: id,
+      userId: state.user._id,
+    });
+    console.log(addedUser.data);
   };
 
   const onChangeMessageHandler = (message) => {
@@ -226,6 +235,35 @@ const Chatroom = ({ navigation }) => {
                   <Text style={styles.eventTitle}>{item.title}</Text>
                   <Text style={styles.eventDescription}>{item.desc}</Text>
                   <Text style={styles.eventLocation}>{item.location}</Text>
+                  {/* Display users that are part of that event - new endpoint required*/}
+                  <TouchableOpacity
+                    onPress={() => {
+                      console.log(item._id);
+                      if (item.user.length == 0) {
+                        console.log("no users in event");
+                      }else {
+                        for (let person = 0; person < item.user.length; person++) {
+                          console.log(item.user[person].firstName)
+                        }
+                      }
+                    }}
+                  >
+                    <Text>Members</Text>
+                  </TouchableOpacity>
+                  <Button
+                    icon={"check"}
+                    mode="contained"
+                    onPress={() => {
+                      //Adds user ID to the list of users in that array - COMPLETE
+                      console.log("User ID: " + state.user._id);
+                      console.log("Event ID: " + item._id);
+                      addUserToEvent(item._id);
+                      Alert.alert(
+                        "Added to event!",
+                        "You have been successfully added to this event!"
+                      );
+                    }}
+                  ></Button>
                 </View>
               ))}
             </ScrollView>
