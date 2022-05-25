@@ -44,8 +44,10 @@ const Room = ({ title, navigation, chat, img }) => (
 // --------------------------- Message Board page -----------------------------
 
 export default function MessageBoardPage({ navigation }) {
-  const { state } = useContext(AuthContext);
+  const { state, signout } = useContext(AuthContext);
   const [name, setName] = useState("");
+
+  {state.token ? null : navigation.navigate("Login")}
 
   useEffect(() => {
     setName(state.user.firstName);
@@ -87,6 +89,10 @@ export default function MessageBoardPage({ navigation }) {
         data={state.chatGroups}
         renderItem={renderItem}
       />
+      {/* <TouchableOpacity style={mb_styles.logutButton} onPress={() => signout()} > */}
+      <TouchableOpacity style={mb_styles.logutButton} onPress={() => {navigation.navigate("Login")}} >
+        <Text style={mb_styles.logoutText}>Logout</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -180,6 +186,20 @@ const mb_styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
-});
+  logutButton: {
+    padding: 15,
+    backgroundColor: "#1D0FB6",
+    justifyContent: 'center',
+    borderRadius: 15,
+    marginBottom: 5,
+    height: 50,
+    alignItems: 'center',
+    width: "40%",
+    alignSelf: 'center', 
 
-// export default MessageBoardPage;
+  }, 
+  logoutText: {
+    color: '#ffffff',
+    fontSize: 16
+  }
+});

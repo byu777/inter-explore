@@ -12,7 +12,7 @@ const authReducer = (state, action) => {
     case 'setUser':
       return {...state, user: action.payload};
     case 'signOut':
-      return {token: null, errorMessage: '', user: null, interests: null, chatGroups: null};
+      return {token: null, errorMessage: ''};
     case 'clear_error_message':
       return {...state, errorMessage: ''};
     case 'interests':
@@ -196,19 +196,32 @@ async function userInterests(user) {
     // Variables
     let primary = user.primaryInterest;
     let secondary = user.secondaryInterest;
+    let admin = user.isAdmin;
     const userInterests = [];
 
     // api call to get interests
     const response = await trackerApi.get("/api/interests/", user._id);
     const listOfInterests = response.data;
-
-    for(let i = 0; i < listOfInterests.length; i++) {
-      
-      if (listOfInterests[i].InterestName == primary || listOfInterests[i].InterestName == secondary) {
-        // api call to add user to group chat based on interest id and user id
+    if(admin) {
+      for(let i = 0; i < listOfInterests.length; i++) {
         userInterests.push(listOfInterests[i]);
       }
+    } else {
+      for(let i = 0; i < listOfInterests.length; i++) {
+      
+        if (listOfInterests[i].InterestName == primary || listOfInterests[i].InterestName == secondary) {
+          // api call to add user to group chat based on interest id and user id
+          userInterests.push(listOfInterests[i]);
+        }
+      }
     }
+    // for(let i = 0; i < listOfInterests.length; i++) {
+      
+    //   if (listOfInterests[i].InterestName == primary || listOfInterests[i].InterestName == secondary) {
+    //     // api call to add user to group chat based on interest id and user id
+    //     userInterests.push(listOfInterests[i]);
+    //   }
+    // }
     return userInterests;
 }
 

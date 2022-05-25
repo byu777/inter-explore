@@ -16,7 +16,10 @@ const Tab = createBottomTabNavigator();
 
 const Tabs = () => {
   const {state} = useContext(AuthContext);
-  let admin = state.user.isAdmin
+  let admin;
+  if (typeof(state.user) != "undefined") {
+    admin = state.user.isAdmin
+  }
   return (
       <Tab.Navigator
       screenOptions={{
