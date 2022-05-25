@@ -35,7 +35,7 @@ const createEvent = asyncHandler(async (req, res) => {
 });
 
 const getEventsForUser = asyncHandler(async (req, res) => {
-  const { id, primaryInterest, secondaryInterest, room} = req.body;
+  const { id, primaryInterest, secondaryInterest, room } = req.body;
   try {
     console.log(primaryInterest);
     console.log(secondaryInterest);
@@ -44,57 +44,54 @@ const getEventsForUser = asyncHandler(async (req, res) => {
     if (room == "chatroom") {
       //execute code to grab events from chatroom page
       console.log("Go to chatroom");
-      const events = await interests.find({InterestName: primaryInterest})
-      .populate("currentEvents", "title desc location")
-      .then(function(doc) {
-        console.log(doc);
-        if (doc.length == 0) {
-          res.send({response: "undefined"})
-        }
-        else {
-          res.send(doc[0].currentEvents);
-        }
-      })
-    }
-    else {
+      const events = await interests
+        .find({ InterestName: primaryInterest })
+        .populate("currentEvents", "title desc location")
+        .then(function (doc) {
+          console.log(doc);
+          if (doc.length == 0) {
+            res.send({ response: "undefined" });
+          } else {
+            res.send(doc[0].currentEvents);
+          }
+        });
+    } else {
       console.log("Go to events page");
       //execute code to grab events from the events page "event"
       /**
-       * With primary/secondary interest and id, go to primary then secondary interest, grab 
-       * current events array, populate, and match user ID inside user array 
+       * With primary/secondary interest and id, go to primary then secondary interest, grab
+       * current events array, populate, and match user ID inside user array
        */
-       const primaryInt = await interests
-       .find({ InterestName: primaryInterest })
-       .populate("currentEvents")
-       .then(function(doc) {
-         console.log(doc);
-         let allEvents = [];
-         if (doc.length == 0) {
-           res.send({response: "undefined"});
-         }
-         else {
-           console.log(doc[0].currentEvents[0].title);
-           console.log(doc[0].currentEvents[0].desc);
-           console.log(doc[0].currentEvents[0].location);
-           console.log(doc[0].currentEvents);
-       allEvents.push(doc[0].currentEvents[0]);
-           console.log("all events below: ");
-           console.log(allEvents);
-           const secondaryInt = interests
-       .find({ InterestName: secondaryInterest })
-       .populate("currentEvents", "title desc location")
-       .then(function(doc) {
-         console.log(doc);
-         console.log(doc[0].currentEvents[0].title);
-         console.log(doc[0].currentEvents[0].desc);
-         console.log(doc[0].currentEvents[0].location);
-         console.log(doc[0].currentEvents);
-         allEvents.push(doc[0].currentEvents[0]);
-         res.send(allEvents);
-       })
-         }
-       })
-       ;
+      const primaryInt = await interests
+        .find({ InterestName: primaryInterest })
+        .populate("currentEvents")
+        .then(function (doc) {
+          console.log(doc);
+          let allEvents = [];
+          if (doc.length == 0) {
+            res.send({ response: "undefined" });
+          } else {
+            console.log(doc[0].currentEvents[0].title);
+            console.log(doc[0].currentEvents[0].desc);
+            console.log(doc[0].currentEvents[0].location);
+            console.log(doc[0].currentEvents);
+            allEvents.push(doc[0].currentEvents[0]);
+            console.log("all events below: ");
+            console.log(allEvents);
+            const secondaryInt = interests
+              .find({ InterestName: secondaryInterest })
+              .populate("currentEvents", "title desc location")
+              .then(function (doc) {
+                console.log(doc);
+                console.log(doc[0].currentEvents[0].title);
+                console.log(doc[0].currentEvents[0].desc);
+                console.log(doc[0].currentEvents[0].location);
+                console.log(doc[0].currentEvents);
+                allEvents.push(doc[0].currentEvents[0]);
+                res.send(allEvents);
+              });
+          }
+        });
     }
     //any way to reference current logged in user's primary/secondary interest?
     //grabs users primary and secondary interests
@@ -114,11 +111,11 @@ const getEventsForUser = asyncHandler(async (req, res) => {
     // console.log("Primary Interests:");
 
     // //grab the interests under the users primary interests, then populate the currentEvents array with the actual event details
-  
+
     //grab the interests under the users secondary interests, then populate the currentEvents array with the actual event details
-    
+
     //returns array of events that are apart of the interest
-    
+
     // console.log(eventsItem);
     // check if event contains the primary or secondary interest; if so, add to 'allEvents'
     // for (let i = 0; i < eventList.length; i++) {

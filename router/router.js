@@ -9,6 +9,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const authentication = require('./authentication');
+const dotenv = require('dotenv')
+dotenv.config();
 
 //defines all the 'Routers' that execute all routes for each feature
 //ie. the Events feature will use an EventRouter that executes all the routes associated with events, EventRoute
@@ -32,7 +34,8 @@ app.use('/api/Messages',Messages);
 app.use('/api/interests',interests); // 'interests' is the path from ChatRouters.js
 app.use('/api/events', events);
 
-const mongoUri = 'mongodb+srv://user:123@cluster0.1ozdh.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+//const mongoUri = 'mongodb+srv://user:123@cluster0.1ozdh.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+const mongoUri = process.env.MONGODB_URI
 
 //Connect to our database
 mongoose.connect(mongoUri,
@@ -69,12 +72,12 @@ app.get('/', message,(req,res) => {
 res.send('your email: $ { req.user.email}');
 });
 
-
 app.post("/response", (req, res) => {
     eventData(req.body);
     res.render("success", {title: req.body.title});
 });
 
+const PORT = process.env.PORT || 3000
 const server = app.listen(3000,()=>{
     console.log('Listening on port 3000');
 });
