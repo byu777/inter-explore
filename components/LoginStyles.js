@@ -28,6 +28,8 @@ export const StyledContainer = styled.View`
 export const InnerContainer = styled.View`
     flex: 1;
     width: 100%;
+    // width: 200px;
+    // height: 200px;
     align-items: center;
 `
 
@@ -38,8 +40,9 @@ export const WelcomeContainer = styled(InnerContainer)`
 `
 
 export const PageLogo = styled.Image`
-    width: 200px;
-    height: 200px;
+    width: 190px;
+    height: 190px;
+    border-radius: 100px;
 `
 
 export const Avatar = styled.Image`

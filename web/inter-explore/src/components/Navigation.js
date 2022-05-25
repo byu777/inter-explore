@@ -1,7 +1,7 @@
 import React from "react";
 import {Nav,Navbar,Container,Button,NavDropdown} from 'react-bootstrap'    
 import {LinkContainer} from 'react-router-bootstrap'
-import loginImg from "../assets/logo/40w/Icon40.png";
+import loginImg from "../assets/logo/logo5.png";
 function Navigation() {
     return (
         <Navbar bg="light" expand="lg">

@@ -59,15 +59,22 @@ export default function MakeEventPage({ navigation }) {
     // if the input is valid (title, desc, etc...) create a response and POST it using the proper route
     if (isValidForm()) {
       try {
+        //Sends details of event to make the event entry in the events collection
         const response = await trackerApi.post("/api/events/createEvent", {
           title,
           location,
           desc,
         });
-        console.log("new event id")
+        console.log("new event id");
         console.log(response.data._id);
-        console.log("interest id")
-        console.log(route.params._id)
+        console.log("interest id");
+        console.log(route.params._id);
+        //Sends the eventID from the created event object, along with the interestID to add it to the events list in the specified interest.
+        const event = await trackerApi.put("/api/events/addEventToInterest", {
+          eventID: response.data._id,
+          interestID: route.params._id,
+        });
+        console.log(event.data);
       } catch (error) {
         console.log(error);
       }

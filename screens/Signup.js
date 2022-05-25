@@ -54,7 +54,7 @@ const Signup = ({ navigation }) => {
       <StyledContainer>
         <StatusBar style="dark" />
         <InnerContainer>
-          <PageTitle>Inter-Explore</PageTitle>
+          <PageTitle>InterExplore</PageTitle>
           <SubTitle>Account Signup</SubTitle>
           <Formik
             initialValues={{

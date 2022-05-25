@@ -34,16 +34,25 @@ const createEvent = asyncHandler(async (req, res) => {
   }
 });
 
+/**
+ * Retrieves the events for the logged in user.
+ *
+ * If the room the function is
+ * requested from is in the chatroom, it will load all the events from that interest (interest stored in ``primaryInterest`` only).
+ *
+ * If requested from events page, will load all the events from both ``primaryInterest`` and ``secondaryInterest``.
+ *
+ * If no data is available, a response of undefined will be sent, setting the data on front end to not found.
+ */
 const getEventsForUser = asyncHandler(async (req, res) => {
   const { id, primaryInterest, secondaryInterest, room } = req.body;
   try {
     console.log(primaryInterest);
     console.log(secondaryInterest);
     console.log("ID: " + id);
-    console.log("chatroom page: " + room);
+    console.log("Room: " + room);
     if (room == "chatroom") {
-      //execute code to grab events from chatroom page
-      console.log("Go to chatroom");
+      console.log("Routed into chatroom events modal.");
       const events = await interests
         .find({ InterestName: primaryInterest })
         .populate("currentEvents", "title desc location")
@@ -56,76 +65,43 @@ const getEventsForUser = asyncHandler(async (req, res) => {
           }
         });
     } else {
-      console.log("Go to events page");
-      //execute code to grab events from the events page "event"
-      /**
-       * With primary/secondary interest and id, go to primary then secondary interest, grab
-       * current events array, populate, and match user ID inside user array
-       */
+      console.log("Routed into events tab.");
       const primaryInt = await interests
         .find({ InterestName: primaryInterest })
-        .populate("currentEvents")
+        .populate("currentEvents", "title desc location")
         .then(function (doc) {
-          console.log(doc);
+          console.log(primaryInterest + " events: ");
+          console.log(doc[0].currentEvents);
           let allEvents = [];
-          if (doc.length == 0) {
+          if (doc[0].currentEvents.length == 0) {
             res.send({ response: "undefined" });
           } else {
-            console.log(doc[0].currentEvents[0].title);
-            console.log(doc[0].currentEvents[0].desc);
-            console.log(doc[0].currentEvents[0].location);
-            console.log(doc[0].currentEvents);
-            allEvents.push(doc[0].currentEvents[0]);
-            console.log("all events below: ");
-            console.log(allEvents);
+            for (let item = 0; item < doc[0].currentEvents.length; item++) {
+              allEvents.push(doc[0].currentEvents[item]);
+            }
             const secondaryInt = interests
               .find({ InterestName: secondaryInterest })
               .populate("currentEvents", "title desc location")
               .then(function (doc) {
-                console.log(doc);
-                console.log(doc[0].currentEvents[0].title);
-                console.log(doc[0].currentEvents[0].desc);
-                console.log(doc[0].currentEvents[0].location);
+                console.log(secondaryInterest + " events: ");
                 console.log(doc[0].currentEvents);
-                allEvents.push(doc[0].currentEvents[0]);
-                res.send(allEvents);
+                if (doc[0].currentEvents.length == 0) {
+                  console.log(allEvents);
+                  res.send(allEvents);
+                } else {
+                  for (
+                    let item = 0;
+                    item < doc[0].currentEvents.length;
+                    item++
+                  ) {
+                    allEvents.push(doc[0].currentEvents[item]);
+                  }
+                  res.send(allEvents);
+                }
               });
           }
         });
     }
-    //any way to reference current logged in user's primary/secondary interest?
-    //grabs users primary and secondary interests
-    // User.findById(id, function (err, docs) {
-    //   if (err) {
-    //     console.log(err);
-    //   } else {
-    //     console.log(docs);
-    //     prInterest = docs.primaryInterest;
-    //     console.log(docs.primaryInterest);
-    //     scInterest = docs.secondaryInterest;
-    //     console.log(docs.secondaryInterest);
-    //   }
-    // });
-    // const eventList = await events.find();
-    // //finds the event details of the secondary interests
-    // console.log("Primary Interests:");
-
-    // //grab the interests under the users primary interests, then populate the currentEvents array with the actual event details
-
-    //grab the interests under the users secondary interests, then populate the currentEvents array with the actual event details
-
-    //returns array of events that are apart of the interest
-
-    // console.log(eventsItem);
-    // check if event contains the primary or secondary interest; if so, add to 'allEvents'
-    // for (let i = 0; i < eventList.length; i++) {
-    //   if (
-    //     eventList[i].primaryInterest == prInterest ||
-    //     eventList[i].secondaryInterest == scInterest
-    //   ) {
-    //     allEvents += eventList[i];
-    //   }
-    // }
   } catch (error) {
     console.log(error);
   }
@@ -174,6 +150,33 @@ const addToEvent = asyncHandler(async (req, res) => {
   }
 });
 
+/**
+ * Adds the event created to array of event IDs in the interest referenced by the ``interestID``.
+ * Returns the updated array as a JSON.
+ */
+const addEventToInterest = asyncHandler(async (req, res) => {
+  const { eventID, interestID } = req.body;
+  console.log(eventID);
+  console.log(interestID);
+
+  const added = await interests.updateOne(
+    { _id: interestID },
+    {
+      $push: { currentEvents: [eventID] },
+    },
+    {
+      new: true,
+    }
+  );
+
+  if (!added) {
+    res.status(404);
+    throw new Error("Chat Not Found");
+  } else {
+    res.json(added);
+  }
+});
+
 //'module.exports' is the instruction that tells Node.js to export functions/objects
 // so other files can use this exported code
 // Basically, when another file runs 'EventRoute.js', it will export and be able to use this
@@ -182,4 +185,5 @@ module.exports = {
   createEvent,
   addToEvent,
   getEventsForUser,
+  addEventToInterest,
 };

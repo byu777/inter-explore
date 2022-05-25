@@ -3,12 +3,8 @@ import {
   StyleSheet,
   Text,
   View,
-  FlatList,
-  Button,
   TouchableOpacity,
-  Platform,
   SafeAreaView,
-  Dimensions,
   ScrollView,
 } from "react-native";
 import trackerApi from "../api/tracker";
@@ -36,32 +32,14 @@ import { Rajdhani_400Regular } from "@expo-google-fonts/rajdhani";
 //   }),
 // });
 
-const Event = ({ title, date, time, desc, location }) => (
-  <TouchableOpacity
-    style={styles.row_container}
-    // onPress={async () => {
-    //   await schedulePushNotification("You clicked on");
-    // }}
-  >
-    <View style={styles.date_time}>
-      <View>
-        <Text style={styles.time_text}>{date}</Text>
-      </View>
-
-      <View>
-        <Text style={styles.time_text}>{time}</Text>
-      </View>
-    </View>
-
-    <View style={styles.desc_area}>
-      <Text style={styles.desc_title}>{title}</Text>
-      <Text style={styles.desc_text}>{location}</Text>
-    </View>
-  </TouchableOpacity>
-);
+// Part of notification handler
+// onPress={async () => {
+//   await schedulePushNotification("You clicked on");
+// }}
 
 export default function EventList() {
   const { state } = useContext(AuthContext);
+  const [eventList, setEventList] = useState([]);
 
   let [fontsLoaded] = useFonts({
     Asap_400Regular,
@@ -69,6 +47,10 @@ export default function EventList() {
     Montserrat_700Bold,
     Rajdhani_400Regular,
   });
+
+  useEffect(() => {
+    fetchEventList();
+  }, []);
   // -------------------expo notification----------------------------
   const [expoPushToken, setExpoPushToken] = useState("");
   //const [isSubscribed, setIsSubscribed] = useState(false);
@@ -76,63 +58,53 @@ export default function EventList() {
   const notiListener = useRef();
   const respListener = useRef();
 
-  const renderItem = ({ item }) => (
-    <Event
-      title={item.title}
-      location={item.location}
-      date={item.date}
-      time={item.time}
-      desc={item.desc}
-    />
-  );
-
   // ------------------------ end of Expo notif -----------------------------
-
-  const [eventList, setEventList] = useState("");
 
   // >>>>>>>>>>>>>>> event list back-end   >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
   const fetchEventList = async () => {
-    //Get all events from user's primary and secondary interests and set to state
-    const listEvents = await trackerApi.post("/api/events/getEventsForUser", {
-      id: state.user._id,
-      primaryInterest: state.user.primaryInterest,
-      secondaryInterest: state.user.secondaryInterest,
-      room: "events",
-    });
-    if (listEvents.data.response == "undefined") {
-      setEventList([
-        {
-          title: "Unable to fetch event",
-          location: "n/a",
-          date: "n/a",
-          time: "n/a",
-          desc: "n/a",
-        },
-      ]);
-    } else {
-      setEventList(listEvents.data);
+    try {
+      const listEvents = await trackerApi.post("/api/events/getEventsForUser", {
+        id: state.user._id,
+        primaryInterest: state.user.primaryInterest,
+        secondaryInterest: state.user.secondaryInterest,
+        room: "events",
+      });
+      if (listEvents.data.response == "undefined") {
+        setEventList([
+          {
+            title: "No events available.",
+            location: "",
+            date: "",
+            time: "",
+            desc: "",
+          },
+        ]);
+      } else {
+        setEventList(listEvents.data);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
-
-
 
   if (!fontsLoaded) {
     return <Apploading />;
   }
 
   return (
-     <SafeAreaView style={styles.container}>
-      {/* <Text style={styles.header}>Upcoming Events</Text> */}
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.header}>Upcoming events</Text>
 
-      <Text style={styles.header}>Work in Progress</Text>
-      {/* <FlatList
-        style={styles.event_container}
-        keyExtractor={(item) => item._id}
-        data={eventList}
-        
-        renderItem={renderItem}
-      /> */}
+      <ScrollView>
+        {eventList.map((item) => (
+          <View style={styles.row_container}>
+            <Text style={styles.desc_title}>{item.title}</Text>
+            <Text style={styles.desc_location}>{item.location}</Text>
+            <Text style={styles.desc_text}>{item.desc}</Text>
+          </View>
+        ))}
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -165,15 +137,15 @@ const styles = StyleSheet.create({
     textAlign: "center",
     alignItems: "center",
     fontSize: 25,
-    //alignSelf: "flex-start",
     fontFamily: "Montserrat_400Regular",
     color: "#03045e",
   },
   row_container: {
-    flexDirection: "row",
+    flexDirection: "column",
     backgroundColor: "#E6E6FB",
     borderRadius: 10,
     paddingTop: 15,
+    paddingLeft: 10,
     paddingBottom: 15,
     marginTop: 15,
     marginBottom: 15,
@@ -191,7 +163,7 @@ const styles = StyleSheet.create({
   time_text: {
     textAlign: "center",
     color: "#150578",
-    fontFamily: 'Montserrat_400Regular',
+    fontFamily: "Montserrat_400Regular",
     fontSize: 20,
     paddingBottom: 10,
   },
@@ -207,16 +179,22 @@ const styles = StyleSheet.create({
     width: 250,
     textAlign: "center",
     justifyContent: "space-around",
-    alignItems: 'center',
+    alignItems: "center",
+  },
+  desc_location: {
+    fontSize: 20,
+    flex: 1,
+    textAlign: "left",
+    fontFamily: "Montserrat_400Regular",
   },
   desc_title: {
     fontSize: 25,
     flex: 1,
     flexWrap: "wrap",
-    alignSelf: "center",
+    textAlign: "left",
     justifyContent: "flex-start",
     alignItems: "center",
-    fontFamily: 'Montserrat_400Regular',
+    fontFamily: "Montserrat_400Regular",
     color: "#150578",
     paddingTop: 5,
   },
@@ -225,8 +203,7 @@ const styles = StyleSheet.create({
     flex: 5,
     color: "#449dd1",
     flexWrap: "wrap",
-    fontFamily: 'Rajdhani_400Regular',
+    fontFamily: "Rajdhani_400Regular",
     padding: 5,
-    marginLeft: 5,
   },
 });

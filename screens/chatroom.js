@@ -9,17 +9,15 @@ import {
   FlatList,
   TouchableOpacity,
   TextInput,
-  KeyboardAvoidingView,
   ScrollView,
   ImageBackground,
   Dimensions,
   StatusBar,
-  Button,
 } from "react-native";
 import trackerApi from "../api/tracker";
-import { Modal, Portal, Provider } from "react-native-paper";
+import { Modal, Portal } from "react-native-paper";
 import { Context as AuthContext } from "./../context/AuthContext";
-import io from "socket.io-client";
+
 import { Ionicons } from "@expo/vector-icons";
 import * as Device from "expo-device";
 
@@ -33,18 +31,10 @@ import {
 } from "@expo-google-fonts/montserrat";
 import { Rajdhani_400Regular } from "@expo-google-fonts/rajdhani";
 
-// Current url is localhost, after deployment will change to url where application is deployed
-// Variables needed for socket.io
-// const ENDPOINT = "http://localhost:3000";
-// var socket, selectedChatCompare;
 
 const image = require("../assets/images/bg2.jpg");
 
-// const MembersList = ({ firstName }) => (
-//   <View>
-//     <Text>{firstName}</Text>
-//   </View>
-// );
+
 
 const Chatroom = ({ navigation }) => {
   const { state } = useContext(AuthContext);
@@ -55,11 +45,7 @@ const Chatroom = ({ navigation }) => {
   const [newMessage, setNewMessage] = useState();
   const [isMemberVisible, setIsMemberVisible] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [events, setEvents] = useState([
-    // { title: "Event 1", desc: "Description here", location: "Location here" },
-    // { title: "Event 2", desc: "Description here", location: "Location here" },
-    // { title: "Event 3", desc: "Description here", location: "Location here" },
-  ]);
+  const [events, setEvents] = useState([]);
   const userId = state.user._id;
 
   const fetchMessages = async () => {
@@ -86,11 +72,6 @@ const Chatroom = ({ navigation }) => {
     fetchMessages();
   }, [route.params._id]);
   console.log(events);
-  // useEffect to connect socket.io-client to socket.io server side
-  // useEffect(() => {
-  //   console.log("running");
-  //   socket = io(ENDPOINT);
-  // }, [])
 
   const sendMessage = async () => {
     if (newMessage != null || newMessage != "") {
@@ -114,7 +95,6 @@ const Chatroom = ({ navigation }) => {
   };
 
   const users = route.params.user;
-  //console.log("is this users?", users);
 
   const getEvents = async () => {
     try {
@@ -129,7 +109,11 @@ const Chatroom = ({ navigation }) => {
       });
       if (response.data.response == "undefined") {
         setEvents([
-          { title: "Unable to fetch events! Please try again.", desc: "", location: "" },
+          {
+            title: "Unable to fetch events! Please try again.",
+            desc: "",
+            location: "",
+          },
         ]);
       } else {
         if (response.data.length == 0) {
@@ -160,44 +144,59 @@ const Chatroom = ({ navigation }) => {
       <ImageBackground source={image} style={styles.bg_image}>
         {/* MODAL */}
 
-        <Modal
-          visible={isMemberVisible}
-          contentContainerStyle={styles.modal_container}
-          transparent={true}
-        >
-          <Text style={styles.modal_title}>
-            Members in {route.params.InterestName}{" "}
-          </Text>
-
-          <ScrollView>
-            {/* <Text>User ID: {route.params._id}</Text> */}
-            {users.map((item) => (
-              <View style={styles.modal_rows}>
-                <View style={styles.profileImage}>
-                  <Image
-                    source={{ uri: item.pic }}
-                    style={styles.img_size}
-                  ></Image>
-                </View>
-                <Text style={styles.each_modal_text}> {item.firstName} </Text>
-              </View>
-            ))}
-          </ScrollView>
-
-          <TouchableOpacity
-            style={styles.modal_close_btn}
-            onPress={() => setIsMemberVisible(!isMemberVisible)}
+        <Portal>
+          <Modal
+            visible={isMemberVisible}
+            contentContainerStyle={styles.modal_container}
           >
-            <Text>Close</Text>
-          </TouchableOpacity>
-        </Modal>
+            <Text style={styles.modal_title}>
+              Members in {route.params.InterestName}{" "}
+            </Text>
+
+            <ScrollView>
+              {users.map((item) => (
+                <View style={styles.modal_rows}>
+                  <View style={styles.profileImage}>
+                    <Image
+                      source={{ uri: item.pic }}
+                      style={styles.img_size}
+                    ></Image>
+                  </View>
+                  <Text style={styles.each_modal_text}> {item.firstName} </Text>
+                </View>
+              ))}
+            </ScrollView>
+
+            <TouchableOpacity
+              style={styles.modal_close_btn}
+              onPress={() => setIsMemberVisible(!isMemberVisible)}
+            >
+              <Text
+                style={{
+                  textAlign: "center",
+                  color: "white",
+                  fontFamily: "Montserrat_400Regular",
+                }}
+              >
+                Close
+              </Text>
+            </TouchableOpacity>
+          </Modal>
+        </Portal>
 
         <View style={styles.top_area}>
           <TouchableOpacity
             style={styles.top_btn_2}
+            onPress={() => setIsMemberVisible(true)}
+          >
+            <Ionicons name="people" size={30} color="black"></Ionicons>
+            <Text style={styles.top_btn_2_text}>Members</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.top_btn_2}
             onPress={() => navigation.navigate("CreateEvent", route.params)}
           >
-            <Ionicons name="today-sharp" size={30} color="black"></Ionicons>
+            <Ionicons name="ios-create-outline" size={30} color="black"></Ionicons>
             <Text style={styles.top_btn_2_text}>Make Event</Text>
           </TouchableOpacity>
 
@@ -209,11 +208,7 @@ const Chatroom = ({ navigation }) => {
               setIsVisible(true);
             }}
           >
-            <Ionicons
-              name="calendar-sharp"
-              size={30}
-              color="#ecebf3"
-            ></Ionicons>
+            <Ionicons name="calendar-sharp" size={30} color="black"></Ionicons>
             <Text style={styles.top_btn_2_text}>Event List</Text>
           </TouchableOpacity>
         </View>
@@ -228,9 +223,9 @@ const Chatroom = ({ navigation }) => {
             <ScrollView>
               {events.map((item) => (
                 <View style={styles.modal_rows}>
-                  <Text style={styles.each_modal_text}>{item.title}</Text>
-                  <Text style={styles.each_modal_text}>{item.desc}</Text>
-                  <Text style={styles.each_modal_text}>{item.location}</Text>
+                  <Text style={styles.eventTitle}>{item.title}</Text>
+                  <Text style={styles.eventDescription}>{item.desc}</Text>
+                  <Text style={styles.eventLocation}>{item.location}</Text>
                 </View>
               ))}
             </ScrollView>
@@ -402,49 +397,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     alignSelf: "center",
-    backgroundColor: "white",
+    backgroundColor: "#edf6f9",
     borderRadius: 10,
     borderWidth: 1,
-    borderStyle: "solid",
     elevation: 20,
-    margin: 5,
     width: "90%",
-    height: 200,
     marginTop: 50,
-    marginBottom: 150,
+    marginBottom: 50,
   },
-  // modalView: {
-  //   margin: 5,
-  //   flex: 1,
-  //   backgroundColor: "white",
-  //   borderRadius: 5,
-  //   padding: 5,
-  //   alignItems: "center",
-  //   shadowColor: "#000",
-  //   shadowOffset: {
-  //     width: 0,
-  //     height: 2,
-  //   },
-  //   shadowOpacity: 0.25,
-  //   shadowRadius: 4,
-  //   elevation: 5,
-  // },
-  // modal_flatlist: {
-  //   backgroundColor: "white",
-  //   flexDirection: "column",
-  //   justifyContent: "center",
-  //   width: 200,
-  //   borderRadius: 5,
-  //   shadowColor: "#000000",
-  //   shadowOpacity: 0.8,
-  //   shadowRadius: 2,
-  //   shadowOffset: {
-  //     height: 1,
-  //     width: 1,
-  //   },
-  //   elevation: 7,
-  // },
-
   each_modal_text: {
     textAlign: "center",
     fontFamily: "Rajdhani_400Regular",
@@ -460,9 +420,13 @@ const styles = StyleSheet.create({
   },
   modal_rows: {
     flexDirection: "row",
-    backgroundColor: "#E6E6FB",
+    backgroundColor: "white",
     borderRadius: 10,
-    height: 50,
+    borderWidth: 1,
+    borderColor: '#023e8a',
+    padding: 10,
+    margin: 10,
+    height: 60,
     textAlign: "center",
     shadowColor: "#000000",
     shadowOpacity: 0.8,
@@ -472,18 +436,51 @@ const styles = StyleSheet.create({
       width: 1,
     },
     elevation: 5,
+    justifyContent: "flex-start",
+    alignItems: "center",
+    alignContent: "center",
   },
   img_size: {
     width: 50,
     height: 50,
+    borderRadius: 25,
   },
   profileImage: {
     width: 50,
     height: 50,
-    borderRadius: 100,
   },
   modal_close_btn: {
-    marginBottom: 100,
+    borderRadius: 5,
+    backgroundColor: "#023e8a",
+    shadowColor: "#000000",
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    shadowOffset: {
+      height: 1,
+      width: 1,
+    },
+    height: 50,
+    width: 80,
+    marginBottom: 30,
+    justifyContent: "center",
+    alignItems: "center",
+    alignContent: "center",
+  },
+  eventTitle: {
+    textAlign: "left",
+    fontFamily: "Rajdhani_400Regular",
+    fontSize: 20,
+    color: "#150578",
+  },
+  eventDescription: {
+    textAlign: "left",
+    fontFamily: "Rajdhani_400Regular",
+    fontSize: 18,
+  },
+  eventLocation: {
+    textAlign: "left",
+    fontFamily: "Rajdhani_400Regular",
+    fontSize: 18,
   },
 });
 

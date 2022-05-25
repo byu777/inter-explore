@@ -1,4 +1,3 @@
-
 import React, {useState, useContext, useEffect} from 'react';
 import {
   View,
@@ -45,8 +44,8 @@ const EditProfileScreen = ({ navigation }) => {
 
     console.log(err)
   }
-    
-    
+
+  
   };
 
   return (
