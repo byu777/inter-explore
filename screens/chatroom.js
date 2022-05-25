@@ -186,7 +186,7 @@ const Chatroom = ({ navigation }) => {
               style={styles.modal_close_btn}
               onPress={() => setIsMemberVisible(!isMemberVisible)}
             >
-              <Text>Close</Text>
+              <Text style={{ textAlign: 'center', color: 'white', fontFamily: 'Montserrat_400Regular'}}>Close</Text>
             </TouchableOpacity>
           </Modal>
         </Portal>
@@ -218,7 +218,7 @@ const Chatroom = ({ navigation }) => {
             <Ionicons
               name="calendar-sharp"
               size={30}
-              color="#ecebf3"
+              color="black"
             ></Ionicons>
             <Text style={styles.top_btn_2_text}>Event List</Text>
           </TouchableOpacity>
@@ -408,49 +408,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     alignSelf: "center",
-    backgroundColor: "white",
+    backgroundColor: "#edf6f9",
     borderRadius: 10,
     borderWidth: 1,
-    borderStyle: "solid",
     elevation: 20,
-    margin: 5,
     width: "90%",
-    height: 200,
     marginTop: 50,
-    marginBottom: 150,
+    marginBottom: 50,
   },
-  // modalView: {
-  //   margin: 5,
-  //   flex: 1,
-  //   backgroundColor: "white",
-  //   borderRadius: 5,
-  //   padding: 5,
-  //   alignItems: "center",
-  //   shadowColor: "#000",
-  //   shadowOffset: {
-  //     width: 0,
-  //     height: 2,
-  //   },
-  //   shadowOpacity: 0.25,
-  //   shadowRadius: 4,
-  //   elevation: 5,
-  // },
-  // modal_flatlist: {
-  //   backgroundColor: "white",
-  //   flexDirection: "column",
-  //   justifyContent: "center",
-  //   width: 200,
-  //   borderRadius: 5,
-  //   shadowColor: "#000000",
-  //   shadowOpacity: 0.8,
-  //   shadowRadius: 2,
-  //   shadowOffset: {
-  //     height: 1,
-  //     width: 1,
-  //   },
-  //   elevation: 7,
-  // },
-
   each_modal_text: {
     textAlign: "center",
     fontFamily: "Rajdhani_400Regular",
@@ -465,12 +430,12 @@ const styles = StyleSheet.create({
     fontSize: 22,
   },
   modal_rows: {
-    flexDirection: "column",
-    backgroundColor: "#E6E6FB",
+    flexDirection: "row",
+    backgroundColor: "#caf0f8",
     borderRadius: 10,
     padding: 10,
     margin: 10,
-    height: 90,
+    height: 60,
     textAlign: "center",
     shadowColor: "#000000",
     shadowOpacity: 0.8,
@@ -480,19 +445,22 @@ const styles = StyleSheet.create({
       width: 1,
     },
     elevation: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignContent: 'center',
   },
   img_size: {
     width: 50,
     height: 50,
+    borderRadius: 25,
   },
   profileImage: {
     width: 50,
     height: 50,
-    borderRadius: 100,
   },
   modal_close_btn: {
-    borderRadius: 10,
-    backgroundColor: "#E6E6FB",
+    borderRadius: 5,
+    backgroundColor: "#023e8a",
     shadowColor: "#000000",
     shadowOpacity: 0.8,
     shadowRadius: 2,
@@ -500,11 +468,12 @@ const styles = StyleSheet.create({
       height: 1,
       width: 1,
     },
-    elevation: 10,
-    flex: 1,
-    width: 100,
-    padding: 20,
-    marginBottom: 10,
+    height: 50,
+    width: 80,
+    marginBottom: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignContent: 'center',
   },
   eventTitle: {
     textAlign: "left",

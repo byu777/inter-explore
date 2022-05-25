@@ -72,7 +72,7 @@ const Login = ({ navigation }) => {
         <InnerContainer>
           <PageLogo
             resizeMode="cover"
-            source={require("./../assets/logo/180w/Icon180.png")}
+            source={require("./../assets/logo/logo5.png")}
           />
           {/* <View style={{borderRadius: 10, width: 100, height: 100}}>
             <Image 
@@ -80,7 +80,7 @@ const Login = ({ navigation }) => {
             source={require("./../assets/logo/180w/Icon180.png")}>
               </Image>
               </View> */}
-          <PageTitle>Inter-Explore</PageTitle>
+          {/* <PageTitle>Inter-Explore</PageTitle> */}
           <Formik
             initialValues={{ email: "", password: "" }}
             onSubmit={(values) => {
