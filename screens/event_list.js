@@ -64,7 +64,6 @@ export default function EventList() {
   const { state } = useContext(AuthContext);
   const [eventList, setEventList] = useState([]);
 
-
   let [fontsLoaded] = useFonts({
     Asap_400Regular,
     Montserrat_400Regular,
@@ -74,7 +73,7 @@ export default function EventList() {
 
   useEffect(() => {
     fetchEventList();
-  }, [state.user._id])
+  }, []);
   // -------------------expo notification----------------------------
   const [expoPushToken, setExpoPushToken] = useState("");
   //const [isSubscribed, setIsSubscribed] = useState(false);
@@ -93,7 +92,6 @@ export default function EventList() {
   );
 
   // ------------------------ end of Expo notif -----------------------------
-
 
   // >>>>>>>>>>>>>>> event list back-end   >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -121,34 +119,24 @@ export default function EventList() {
     } catch (error) {
       console.log(error);
     }
-    
   };
-
-
 
   if (!fontsLoaded) {
     return <Apploading />;
   }
 
   return (
-     <SafeAreaView style={styles.container}>
-      {/* <Text style={styles.header}>Upcoming Events</Text> */}
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.header}>Upcoming events in your interests</Text>
 
-      <Text style={styles.header}>Work in Progress</Text>
-      {/* <FlatList
-        style={styles.event_container}
-        keyExtractor={(item) => item._id}
-        data={eventList}
-        renderItem={renderItem}
-      /> */}
       <ScrollView>
-      {eventList.map((item) => (
+        {eventList.map((item) => (
           <View>
             <Text>{item.title}</Text>
             <Text>{item.desc}</Text>
             <Text>{item.location}</Text>
           </View>
-      ))}
+        ))}
       </ScrollView>
     </SafeAreaView>
   );
@@ -208,7 +196,7 @@ const styles = StyleSheet.create({
   time_text: {
     textAlign: "center",
     color: "#150578",
-    fontFamily: 'Montserrat_400Regular',
+    fontFamily: "Montserrat_400Regular",
     fontSize: 20,
     paddingBottom: 10,
   },
@@ -224,7 +212,7 @@ const styles = StyleSheet.create({
     width: 250,
     textAlign: "center",
     justifyContent: "space-around",
-    alignItems: 'center',
+    alignItems: "center",
   },
   desc_title: {
     fontSize: 25,
@@ -233,7 +221,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     justifyContent: "flex-start",
     alignItems: "center",
-    fontFamily: 'Montserrat_400Regular',
+    fontFamily: "Montserrat_400Regular",
     color: "#150578",
     paddingTop: 5,
   },
@@ -242,7 +230,7 @@ const styles = StyleSheet.create({
     flex: 5,
     color: "#449dd1",
     flexWrap: "wrap",
-    fontFamily: 'Rajdhani_400Regular',
+    fontFamily: "Rajdhani_400Regular",
     padding: 5,
     marginLeft: 5,
   },
