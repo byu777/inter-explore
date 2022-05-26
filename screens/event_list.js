@@ -21,6 +21,7 @@ import {
 } from "@expo-google-fonts/montserrat";
 import { Rajdhani_400Regular } from "@expo-google-fonts/rajdhani";
 import { Button, Modal, Portal, Provider } from "react-native-paper";
+import { useFocusEffect } from '@react-navigation/native';
 
 // // expo notifications imports
 // import * as Device from "expo-device";
@@ -50,9 +51,15 @@ export default function EventList() {
     Rajdhani_400Regular,
   });
 
-  useEffect(() => {
-    fetchEventList();
-  }, [state.user._id]);
+  // useEffect(() => {
+  //   fetchEventList();
+  // }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchEventList();
+    }, [])
+  );
   // -------------------expo notification----------------------------
   const [expoPushToken, setExpoPushToken] = useState("");
   //const [isSubscribed, setIsSubscribed] = useState(false);
