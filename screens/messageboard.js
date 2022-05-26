@@ -94,7 +94,6 @@ export default function MessageBoardPage({ navigation }) {
         data={state.chatGroups}
         renderItem={renderItem}
       />
-      {/* <TouchableOpacity style={mb_styles.logutButton} onPress={() => signout()} > */}
       <TouchableOpacity style={mb_styles.logutButton} onPress={() => handleLogout()} >
         <Text style={mb_styles.logoutText}>Logout</Text>
       </TouchableOpacity>

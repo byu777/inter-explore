@@ -129,11 +129,11 @@ const Adminpage = () => {
             <Icon name="delete" size={20} color="white" />
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => editInterests(interests)}>
+        {/* <TouchableOpacity onPress={() => editInterests(interests)}>
           <View style={[styles.actionIcon, {backgroundColor: 'blue'}]}>
             <Icon name="edit" size={20} color="white" />
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     );
   };

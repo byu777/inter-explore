@@ -22,7 +22,8 @@ import {
   ExtraText,
   TextLink,
   TextLinkContent,
-  ErrorText
+  ErrorText,
+  StyledInputLabel
 } from "./../components/LoginStyles";
 import KeyboardAvoidingWrapper from "./../components/KeyboardAvoidingWrapper";
 import { Context as AuthContext } from './../context/AuthContext';
@@ -58,13 +59,6 @@ const Login = ({ navigation }) => {
 
 
 
-  // const createChannels = () => {
-  //   PushNotification.createChannel({
-  //     channelId: "test-channel",
-  //     channelName: "Test Channel",
-  //   })
-  // }
-
   return (
     <KeyboardAvoidingWrapper>
       <StyledContainer>
@@ -74,23 +68,16 @@ const Login = ({ navigation }) => {
             resizeMode="cover"
             source={require("./../assets/logo/logo5.png")}
           />
-          {/* <View style={{borderRadius: 10, width: 100, height: 100}}>
-            <Image 
-            style={{resizeMode: "cover"}}
-            source={require("./../assets/logo/180w/Icon180.png")}>
-              </Image>
-              </View> */}
-          {/* <PageTitle>Inter-Explore</PageTitle> */}
           <Formik
             initialValues={{ email: "", password: "" }}
             onSubmit={(values) => {
-              //console.log(values);
               signin(values)
             }}
           >
             {({ handleChange, handleBlur, handleSubmit, values }) => (
               <StyledFormArea>
                 <MyTextInput
+                  label="Email"
                   placeholder="Email"
                   placeholderTextColor={darkLight}
                   onChangeText={handleChange("email")}
@@ -99,6 +86,7 @@ const Login = ({ navigation }) => {
                   keyboardType="email-address"
                 />
                 <MyTextInput
+                  label="Password"
                   placeholder="Password"
                   placeholderTextColor={darkLight}
                   onChangeText={handleChange("password")}
@@ -133,10 +121,12 @@ const MyTextInput = ({
   isPassword,
   hidePassword,
   setHidePassword,
+  label,
   ...props
 }) => {
   return (
     <View>
+      <StyledInputLabel>{label}</StyledInputLabel>
       <StyledTextInput {...props} />
       {isPassword && (
         <RightIcon isLoginPassword={true} onPress={() => setHidePassword(!hidePassword)}>
