@@ -20,7 +20,7 @@ import {
   Montserrat_700Bold,
 } from "@expo-google-fonts/montserrat";
 import { Rajdhani_400Regular } from "@expo-google-fonts/rajdhani";
-import { Button } from "react-native-paper";
+import { Button, Modal, Portal, Provider } from "react-native-paper";
 
 // // expo notifications imports
 // import * as Device from "expo-device";
@@ -59,6 +59,8 @@ export default function EventList() {
   const [notification, setNotification] = useState(false);
   const notiListener = useRef();
   const respListener = useRef();
+  const [memberListVisible, setMemberListVisible] = useState(false);
+  const [members, setMembers] = useState([]);
 
   // ------------------------ end of Expo notif -----------------------------
 
@@ -103,10 +105,13 @@ export default function EventList() {
         );
       } else {
         console.log(leaveEvent.data);
-        const remainingEvents = eventList.filter(item => item._id != id);
+        const remainingEvents = eventList.filter((item) => item._id != id);
         console.log(remainingEvents);
         setEventList(remainingEvents);
-        Alert.alert("Removed from event", "You have successfully left the event");
+        Alert.alert(
+          "Removed from event",
+          "You have successfully left the event"
+        );
       }
     } catch (error) {
       console.log(error);
@@ -118,43 +123,74 @@ export default function EventList() {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.header}>Upcoming events</Text>
+    <Provider>
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.header}>Upcoming events</Text>
 
-      <ScrollView>
-        {eventList.map((item) => (
-          <View style={styles.row_container}>
-            <Text style={styles.desc_title}>{item.title}</Text>
-            <Text style={styles.desc_location}>{item.location}</Text>
-            <Text style={styles.desc_text}>{item.desc}</Text>
-            <Button
-              icon={"close"}
-              onPress={() => {
-                console.log(item._id);
-                console.log("User ID: " + state.user._id);
-                removeFromEvent(item._id);
-              }}
-            >
-              Leave
-            </Button>
-            <Button
-              icon={"account"}
-              // pass into modal to view
-              onPress={() => {
-                console.log(state.user._id);
-                console.log("People part of this event");
-                for (let person = 0; person < item.user.length; person++) {
-                  console.log(item.user[person].firstName)
-                }
-                // console.log(item.user[0].firstName);
-              }}
-            >
-              Members
-            </Button>
-          </View>
-        ))}
-      </ScrollView>
-    </SafeAreaView>
+        <ScrollView>
+          {eventList.map((item) => (
+            <View style={styles.row_container}>
+              <Text style={styles.desc_title}>{item.title}</Text>
+              <Text style={styles.desc_location}>{item.location}</Text>
+              <Text style={styles.desc_text}>{item.desc}</Text>
+              <Button
+                icon={"close"}
+                color={"red"}
+                onPress={() => {
+                  console.log(item._id);
+                  console.log("User ID: " + state.user._id);
+                  removeFromEvent(item._id);
+                }}
+              >
+                Leave
+              </Button>
+              <Button
+                icon={"account"}
+                color={"#023e8a"}
+                onPress={() => {
+                  console.log(state.user._id);
+                  console.log("People part of this event");
+                  for (let person = 0; person < item.user.length; person++) {
+                    members.push(item.user[person].firstName);
+                  }
+                  console.log(members);
+                  setMemberListVisible(true);
+                }}
+              >
+                Members
+              </Button>
+              <Portal>
+                <Modal
+                  visible={memberListVisible}
+                  contentContainerStyle={styles.modal_container}
+                >
+                  <Text style={styles.modal_title}>
+                    People attending this event
+                  </Text>
+                  <ScrollView>
+                    {members.map((item) => (
+                      <View style={styles.membersModalRow}>
+                        <Text style={styles.each_modal_text}>{item}</Text>
+                      </View>
+                    ))}
+                  </ScrollView>
+                  <Button
+                    icon={"close"}
+                    color={"#023e8a"}
+                    onPress={() => {
+                      setMemberListVisible(!memberListVisible);
+                      setMembers([]);
+                    }}
+                  >
+                    Close
+                  </Button>
+                </Modal>
+              </Portal>
+            </View>
+          ))}
+        </ScrollView>
+      </SafeAreaView>
+    </Provider>
   );
 }
 
@@ -254,5 +290,66 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     fontFamily: "Rajdhani_400Regular",
     padding: 5,
+  },
+  modal_container: {
+    flex: 1,
+    flexGrow: 1,
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
+    backgroundColor: "#edf6f9",
+    borderRadius: 10,
+    borderWidth: 1,
+    elevation: 20,
+    width: "90%",
+    marginTop: 50,
+    marginBottom: 50,
+  },
+  modal_rows: {
+    flexDirection: "row",
+    backgroundColor: "white",
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#023e8a",
+    padding: 10,
+    margin: 10,
+    height: 60,
+    textAlign: "center",
+    shadowColor: "#000000",
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    shadowOffset: {
+      height: 1,
+      width: 1,
+    },
+    elevation: 5,
+    justifyContent: "flex-start",
+    alignItems: "center",
+    alignContent: "center",
+  },
+  modal_title: {
+    textAlign: "center",
+    fontFamily: "Montserrat_400Regular",
+    fontWeight: "300",
+    marginVertical: 20,
+    paddingVertical: 15,
+    fontSize: 22,
+  },
+  membersModalRow: {
+    flexDirection: "column",
+    backgroundColor: "#E6E6FB",
+    borderRadius: 10,
+    padding: 10,
+    margin: 10,
+    height: 50,
+    textAlign: "center",
+    shadowColor: "#000000",
+    shadowOpacity: 0.8,
+  },
+  each_modal_text: {
+    textAlign: "center",
+    fontFamily: "Rajdhani_400Regular",
+    fontSize: 18,
   },
 });

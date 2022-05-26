@@ -16,7 +16,7 @@ import {
   Alert,
 } from "react-native";
 import trackerApi from "../api/tracker";
-import { Button, Modal, Portal } from "react-native-paper";
+import { Button, Modal, Portal, Provider } from "react-native-paper";
 import { Context as AuthContext } from "./../context/AuthContext";
 
 import { Ionicons } from "@expo/vector-icons";
@@ -32,10 +32,7 @@ import {
 } from "@expo-google-fonts/montserrat";
 import { Rajdhani_400Regular } from "@expo-google-fonts/rajdhani";
 
-
 const image = require("../assets/images/bg2.jpg");
-
-
 
 const Chatroom = ({ navigation }) => {
   const { state } = useContext(AuthContext);
@@ -47,6 +44,9 @@ const Chatroom = ({ navigation }) => {
   const [isMemberVisible, setIsMemberVisible] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [events, setEvents] = useState([]);
+  const [memberListVisible, setMemberListVisible] = useState(false);
+  // const [eventMembers, setEventMembers] = useState([]);
+  const [members, setMembers] = useState([]);
   const userId = state.user._id;
 
   const fetchMessages = async () => {
@@ -149,177 +149,228 @@ const Chatroom = ({ navigation }) => {
   }
 
   return (
-    <SafeAreaView style={styles.main_container}>
-      <ImageBackground source={image} style={styles.bg_image}>
-        {/* MODAL */}
+    <Provider>
+      <SafeAreaView style={styles.main_container}>
+        <ImageBackground source={image} style={styles.bg_image}>
+          {/* MODAL */}
+          <Portal>
+            <Modal
+              visible={isMemberVisible}
+              contentContainerStyle={styles.modal_container}
+            >
+              <Text style={styles.modal_title}>
+                Members in {route.params.InterestName}{" "}
+              </Text>
 
-        <Portal>
-          <Modal
-            visible={isMemberVisible}
-            contentContainerStyle={styles.modal_container}
-          >
-            <Text style={styles.modal_title}>
-              Members in {route.params.InterestName}{" "}
-            </Text>
-
-            <ScrollView>
-              {users.map((item) => (
-                <View style={styles.modal_rows}>
-                  <View style={styles.profileImage}>
-                    <Image
-                      source={{ uri: item.pic }}
-                      style={styles.img_size}
-                    ></Image>
+              <ScrollView>
+                {users.map((item) => (
+                  <View style={styles.modal_rows}>
+                    <View style={styles.profileImage}>
+                      <Image
+                        source={{ uri: item.pic }}
+                        style={styles.img_size}
+                      ></Image>
+                    </View>
+                    <Text style={styles.each_modal_text}>
+                      {" "}
+                      {item.firstName}{" "}
+                    </Text>
                   </View>
-                  <Text style={styles.each_modal_text}> {item.firstName} </Text>
-                </View>
-              ))}
-            </ScrollView>
+                ))}
+              </ScrollView>
+
+              <TouchableOpacity
+                style={styles.modal_close_btn}
+                onPress={() => setIsMemberVisible(!isMemberVisible)}
+              >
+                <Text
+                  style={{
+                    textAlign: "center",
+                    color: "white",
+                    fontFamily: "Montserrat_400Regular",
+                  }}
+                >
+                  Close
+                </Text>
+              </TouchableOpacity>
+            </Modal>
+          </Portal>
+
+          <View style={styles.top_area}>
+            <TouchableOpacity
+              style={styles.top_btn_2}
+              onPress={() => setIsMemberVisible(true)}
+            >
+              <Ionicons name="people" size={30} color="black"></Ionicons>
+              <Text style={styles.top_btn_2_text}>Members</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.top_btn_2}
+              onPress={() => navigation.navigate("CreateEvent", route.params)}
+            >
+              <Ionicons
+                name="ios-create-outline"
+                size={30}
+                color="black"
+              ></Ionicons>
+              <Text style={styles.top_btn_2_text}>Make Event</Text>
+            </TouchableOpacity>
 
             <TouchableOpacity
-              style={styles.modal_close_btn}
-              onPress={() => setIsMemberVisible(!isMemberVisible)}
+              style={styles.top_btn_2}
+              onPress={() => {
+                console.log(userId);
+                getEvents();
+                setIsVisible(true);
+              }}
             >
-              <Text
-                style={{
-                  textAlign: "center",
-                  color: "white",
-                  fontFamily: "Montserrat_400Regular",
+              <Ionicons
+                name="calendar-sharp"
+                size={30}
+                color="black"
+              ></Ionicons>
+              <Text style={styles.top_btn_2_text}>Event List</Text>
+            </TouchableOpacity>
+          </View>
+
+          <Portal>
+            {/* Modal here is used from react-native-paper */}
+            <Modal
+              visible={isVisible}
+              contentContainerStyle={styles.modal_container}
+            >
+              <Text style={styles.modal_title}>Upcoming Events</Text>
+              <ScrollView>
+                {events.map((item) => (
+                  <View style={styles.eventModalRow}>
+                    <Text style={styles.eventModalTitle}>{item.title}</Text>
+                    <Text style={styles.eventModalDescription}>
+                      {item.desc}
+                    </Text>
+                    <Text style={styles.eventModalLocation}>
+                      {item.location}
+                    </Text>
+                    <Button icon={"account"} onPress={() => {
+                      console.log(item._id);
+                      if (item.user.length == 0) {
+                        members.push(
+                          "No one attending this event! Be the first the join!"
+                        );
+                        setMemberListVisible(true);
+                      } else {
+                        for (
+                          let person = 0;
+                          person < item.user.length;
+                          person++
+                        ) {
+                          console.log(item.user[person].firstName);
+                          members.push(item.user[person].firstName);
+                        }
+                        console.log("Members array below:");
+                        console.log(members);
+                        console.log("eventMembers state below:");
+                        setMemberListVisible(true);
+                      }
+                    }} color={"#023e8a"}>Members attending</Button>
+
+                    <Button
+                      icon={"check"}
+                      mode="contained"
+                      color={"green"}
+                      onPress={() => {
+                        //Adds user ID to the list of users in that array - COMPLETE
+                        console.log("User ID: " + state.user._id);
+                        console.log("Event ID: " + item._id);
+                        addUserToEvent(item._id);
+                        Alert.alert(
+                          "Added to event!",
+                          "You have been successfully added to this event!"
+                        );
+                      }}
+                    >Join</Button>
+                  </View>
+                ))}
+              </ScrollView>
+              <TouchableOpacity
+                style={styles.modal_close_btn}
+                onPress={() => setIsVisible(!isVisible)}
+              >
+                <Text>Close</Text>
+              </TouchableOpacity>
+            </Modal>
+          </Portal>
+          <Portal>
+            <Modal
+              visible={memberListVisible}
+              contentContainerStyle={styles.modal_container}
+            >
+              <Text style={styles.modal_title}>
+                People attending this event
+              </Text>
+              <ScrollView>
+                {members.map((item) => (
+                  <View style={styles.modalMembersRow}>
+                    <Text style={styles.each_modal_text}>{item}</Text>
+                  </View>
+                ))}
+              </ScrollView>
+              <Button
+                icon={"close"}
+                color={"#023e8a"}
+                onPress={() => {
+                  setMemberListVisible(!memberListVisible);
+                  setMembers([]);
                 }}
               >
                 Close
-              </Text>
-            </TouchableOpacity>
-          </Modal>
-        </Portal>
-
-        <View style={styles.top_area}>
-          <TouchableOpacity
-            style={styles.top_btn_2}
-            onPress={() => setIsMemberVisible(true)}
-          >
-            <Ionicons name="people" size={30} color="black"></Ionicons>
-            <Text style={styles.top_btn_2_text}>Members</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.top_btn_2}
-            onPress={() => navigation.navigate("CreateEvent", route.params)}
-          >
-            <Ionicons name="ios-create-outline" size={30} color="black"></Ionicons>
-            <Text style={styles.top_btn_2_text}>Make Event</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.top_btn_2}
-            onPress={() => {
-              console.log(userId);
-              getEvents();
-              setIsVisible(true);
-            }}
-          >
-            <Ionicons name="calendar-sharp" size={30} color="black"></Ionicons>
-            <Text style={styles.top_btn_2_text}>Event List</Text>
-          </TouchableOpacity>
-        </View>
-
-        <Portal>
-          {/* Modal here is used from react-native-paper */}
-          <Modal
-            visible={isVisible}
-            contentContainerStyle={styles.modal_container}
-          >
-            <Text style={styles.modal_title}>Upcoming Events</Text>
-            <ScrollView>
-              {events.map((item) => (
-                <View style={styles.modal_rows}>
-                  <Text style={styles.eventTitle}>{item.title}</Text>
-                  <Text style={styles.eventDescription}>{item.desc}</Text>
-                  <Text style={styles.eventLocation}>{item.location}</Text>
-                  {/* Display users that are part of that event - new endpoint required*/}
-                  <TouchableOpacity
-                    onPress={() => {
-                      console.log(item._id);
-                      if (item.user.length == 0) {
-                        console.log("no users in event");
-                      }else {
-                        for (let person = 0; person < item.user.length; person++) {
-                          console.log(item.user[person].firstName)
-                        }
-                      }
-                    }}
-                  >
-                    <Text>Members</Text>
-                  </TouchableOpacity>
-                  <Button
-                    icon={"check"}
-                    mode="contained"
-                    onPress={() => {
-                      //Adds user ID to the list of users in that array - COMPLETE
-                      console.log("User ID: " + state.user._id);
-                      console.log("Event ID: " + item._id);
-                      addUserToEvent(item._id);
-                      Alert.alert(
-                        "Added to event!",
-                        "You have been successfully added to this event!"
-                      );
-                    }}
-                  ></Button>
+              </Button>
+            </Modal>
+          </Portal>
+          {/* container for chat messages area */}
+          <View style={styles.chat_area}>
+            <FlatList
+              data={messages}
+              style={styles.ChatMessages}
+              renderItem={({ item }) => (
+                <View
+                  style={{
+                    alignSelf: `${
+                      item.sender._id === state.user._id
+                        ? "flex-end"
+                        : "flex-start"
+                    }`,
+                    backgroundColor: `${
+                      item.sender._id === state.user._id ? "#c7d6d5" : "#6d7275"
+                    }`,
+                    borderRadius: 20,
+                    borderWidth: 1.5,
+                    borderColor: "black",
+                    maxWidth: Dimensions.get("window").width * 0.75,
+                    margin: 3,
+                    flex: 1,
+                    elevation: 5,
+                  }}
+                >
+                  <Text style={styles.chatMessagesText}>{item.content[0]}</Text>
                 </View>
-              ))}
-            </ScrollView>
-            <TouchableOpacity
-              style={styles.modal_close_btn}
-              onPress={() => setIsVisible(!isVisible)}
-            >
-              <Text>Close</Text>
+              )}
+            />
+          </View>
+
+          <View style={styles.sendMessageArea}>
+            <TextInput
+              style={styles.typeMessage}
+              placeholder="Message..."
+              onChangeText={onChangeMessageHandler}
+              value={newMessage}
+            />
+            <TouchableOpacity style={styles.send_msg} onPress={sendMessage}>
+              <Ionicons name="send-sharp" size={30} color="#0e0e52"></Ionicons>
             </TouchableOpacity>
-          </Modal>
-        </Portal>
-
-        {/* container for chat messages area */}
-        <View style={styles.chat_area}>
-          <FlatList
-            data={messages}
-            style={styles.ChatMessages}
-            renderItem={({ item }) => (
-              <View
-                style={{
-                  alignSelf: `${
-                    item.sender._id === state.user._id
-                      ? "flex-end"
-                      : "flex-start"
-                  }`,
-                  backgroundColor: `${
-                    item.sender._id === state.user._id ? "#c7d6d5" : "#6d7275"
-                  }`,
-                  borderRadius: 20,
-                  borderWidth: 1.5,
-                  borderColor: "black",
-                  maxWidth: Dimensions.get("window").width * 0.75,
-                  margin: 3,
-                  flex: 1,
-                  elevation: 5,
-                }}
-              >
-                <Text style={styles.chatMessagesText}>{item.content[0]}</Text>
-              </View>
-            )}
-          />
-        </View>
-
-        <View style={styles.sendMessageArea}>
-          <TextInput
-            style={styles.typeMessage}
-            placeholder="Message..."
-            onChangeText={onChangeMessageHandler}
-            value={newMessage}
-          />
-          <TouchableOpacity style={styles.send_msg} onPress={sendMessage}>
-            <Ionicons name="send-sharp" size={30} color="#0e0e52"></Ionicons>
-          </TouchableOpacity>
-        </View>
-      </ImageBackground>
-    </SafeAreaView>
+          </View>
+        </ImageBackground>
+      </SafeAreaView>
+    </Provider>
   );
 };
 
@@ -461,7 +512,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#023e8a',
+    borderColor: "#023e8a",
     padding: 10,
     margin: 10,
     height: 60,
@@ -519,6 +570,71 @@ const styles = StyleSheet.create({
     textAlign: "left",
     fontFamily: "Rajdhani_400Regular",
     fontSize: 18,
+  },
+  modalMembersRow: {
+    flexDirection: "column",
+    flex: 1,
+    backgroundColor: "#E6E6FB",
+    borderRadius: 10,
+    paddingTop: 15,
+    paddingLeft: 10,
+    paddingBottom: 15,
+    paddingRight: 20,
+    marginTop: 15,
+    marginBottom: 15,
+    marginHorizontal: 10,
+    margin: 10,
+    shadowColor: "#000000",
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    shadowOffset: {
+      height: 1,
+      width: 1,
+    },
+    elevation: 10,
+  },
+  eventModalClose: {
+    borderRadius: 10,
+    backgroundColor: "#E6E6FB",
+    shadowColor: "#000000",
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    shadowOffset: {
+      height: 1,
+      width: 1,
+    },
+    elevation: 10,
+    flex: 1,
+    width: 100,
+    padding: 20,
+    marginBottom: 10,
+  },
+  eventModalDescription: {
+    textAlign: "left",
+    fontFamily: "Rajdhani_400Regular",
+    fontSize: 18,
+  },
+  eventModalLocation: {
+    textAlign: "left",
+    fontFamily: "Rajdhani_400Regular",
+    fontSize: 18,
+  },
+  eventModalRow: {
+    flexDirection: "column",
+    backgroundColor: "#E6E6FB",
+    borderRadius: 10,
+    padding: 10,
+    margin: 10,
+    height: 160,
+    textAlign: "center",
+    shadowColor: "#000000",
+    shadowOpacity: 0.8,
+  },
+  eventModalTitle: {
+    textAlign: "left",
+    fontFamily: "Rajdhani_400Regular",
+    fontSize: 20,
+    color: "#150578",
   },
 });
 
